@@ -91,7 +91,7 @@
           else if (b.type === "fly") fillR(c, b.x, b.y, b.w, b.h, 6, RED);
           else fillR(c, b.x, this.gy - b.h, b.w, b.h, 4, b.type === "tall" ? ORA : "#f2f2f2");
         }
-        if (!this.blink()) { c.fillStyle = o.col || ORA; if (o.round) { c.beginPath(); c.arc(this.gx, this.py + this.ps / 2, this.ps / 2, 0, TAU); c.fill(); } else fillR(c, this.gx - this.ps / 2, this.py, this.ps, this.ps, 8, o.col || ORA); c.fillStyle = "#000"; c.beginPath(); c.arc(this.gx + 8, this.py + 11, 3, 0, TAU); c.fill(); }
+        if (!this.blink()) { c.fillStyle = o.col || ORA; if (o.round) { c.beginPath(); c.arc(this.gx, this.py + this.ps / 2, this.ps / 2, 0, TAU); c.fill(); } else fillR(c, this.gx - this.ps / 2, this.py, this.ps, this.ps, 8, o.col || ORA); face(c, this.gx + 3, this.py + this.ps / 2, this.ps / 2, 1); }
         this.ghost(this.gx + 100, this.py - 40, now);
       }
     });
@@ -203,7 +203,7 @@
   function mkFly(o) {
     var C = G("Fly_" + o.id, {
       ctl: "hold",
-      init: function () { this.bx = this.W * 0.28; this.r = 14; this.ground = this.H - this.pb + 14; this.mid = this.pt + (this.ground - this.pt) / 2; this.by = this.mid; this.vy = 0; this.waiting = true; this.obs = []; this.spawn = 0.5; this.gap = clamp(this.H * (o.gap || 0.3), 150, 260); },
+      init: function () { this.bx = this.W * 0.28; this.r = 17; this.ground = this.H - this.pb + 14; this.mid = this.pt + (this.ground - this.pt) / 2; this.by = this.mid; this.vy = 0; this.waiting = true; this.obs = []; this.spawn = 0.5; this.gap = clamp(this.H * (o.gap || 0.3), 150, 260); },
       press: function () { this.waiting = false; },
       step: function (dt) {
         if (this.waiting) { this.by = this.mid + Math.sin(this.t * 4) * 8; return; }
@@ -238,7 +238,7 @@
           else if (b.t === "ring") { c.strokeStyle = b.p ? "#555" : YEL; c.lineWidth = 6; c.beginPath(); c.ellipse(b.x, b.y, 10, b.r, 0, 0, TAU); c.stroke(); }
           else { c.fillStyle = YEL; c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill(); }
         }
-        if (!this.blink()) { c.fillStyle = o.col; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU); c.fill(); if (this.holding && this.state === "play") { c.fillStyle = ORA; c.beginPath(); c.moveTo(this.bx - 6, this.by + 12); c.lineTo(this.bx + 6, this.by + 12); c.lineTo(this.bx, this.by + 22 + Math.random() * 8); c.closePath(); c.fill(); } }
+        if (!this.blink()) { c.fillStyle = o.col; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU); c.fill(); face(c, this.bx + 2, this.by, this.r, 1); if (this.holding && this.state === "play") { c.fillStyle = ORA; c.beginPath(); c.moveTo(this.bx - 6, this.by + 12); c.lineTo(this.bx + 6, this.by + 12); c.lineTo(this.bx, this.by + 22 + Math.random() * 8); c.closePath(); c.fill(); } }
         this.ghostHold(this.bx, this.by + 80, now);
       }
     });

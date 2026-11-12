@@ -382,3 +382,78 @@ assert n==1
 s=s[:a]+seg+s[b:]
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok12')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+def rp(old,new,allow=False):
+    global s
+    n=s.count(old)
+    if n==0 or (n>1 and not allow): miss.append((n,old[:70])); return
+    s=s.replace(old,new)
+rp('  var SCENE_BY = {};', open('sprites2.js',encoding='utf-8').read()+'\n  var SCENE_BY = {};')
+# preguntas: cartel para la pregunta y letras en las opciones
+rp('else { var sz = clamp(520 / Math.max(6, q.q.length), 22, 54); txt(c, q.q, this.cx - 38, cy, sz, "#fff", "center", 700); }',
+   'else { var sz = clamp(520 / Math.max(6, q.q.length), 22, 54); fillR(c, 16, cy - 58, this.W - 108, 116, 22, TH.p1); c.strokeStyle = TH.p3; c.lineWidth = 3; rr(c, 22, cy - 52, this.W - 120, 104, 18); c.stroke(); txt(c, q.q, this.cx - 38, cy, sz, "#fff", "center", 700); }')
+rp('fillR(c, b.x, b.y, this.bw, this.bh, 16, bg);','fillR(c, b.x, b.y, this.bw, this.bh, 16, bg); dot(c, b.x + 17, b.y + 17, 10, "rgba(255,255,255,0.14)"); txt(c, "ABCD"[i], b.x + 17, b.y + 18, 12, "rgba(255,255,255,0.75)", "center", 700);')
+# deslizar: carta con borde y flechas a los costados
+rp('fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, TH.p1);','fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, "#f2efe6"); c.strokeStyle = TH.p3; c.lineWidth = 4; rr(c, this.cx - 38 - 105 + ox, y - 80, 210, 160, 16); c.stroke(); dot(c, 40, y, 22, "rgba(255,77,109,0.35)"); txt(c, "←", 40, y + 1, 24, "#fff"); dot(c, this.W - 104, y, 22, "rgba(61,220,132,0.35)"); txt(c, "→", this.W - 104, y + 1, 24, "#fff");')
+s=s.replace('txt(c, cd.t, x, y, clamp(340 / Math.max(5, cd.t.length), 20, 60), cd.col || "#fff", "center", 700);','txt(c, cd.t, x, y, clamp(340 / Math.max(5, cd.t.length), 20, 60), cd.col || "#17121f", "center", 700);')
+s=s.replace('else sh2(c, cd.sh || 0, x, y, cd.r || 34, cd.col || "#fff");','else sh2(c, cd.sh || 0, x, y, cd.r || 34, cd.col === "#fff" || !cd.col ? "#17121f" : cd.col);')
+s=s.replace('c.strokeStyle = "#fff"; c.lineWidth = 12; c.lineCap = "round"; c.lineJoin = "round"; var d = cd.arrow;','c.strokeStyle = "#17121f"; c.lineWidth = 12; c.lineCap = "round"; c.lineJoin = "round"; var d = cd.arrow;')
+# tocar blancos: números como bolas de pool
+rp('else if (t.txt !== undefined) { c.fillStyle = TH.p2; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); txt(c, String(t.txt), t.x, t.y + 1, t.r * 0.9, "#fff"); }','else if (t.txt !== undefined) spPool(c, t.x, t.y, t.r, t.txt);')
+# paletas
+rp('var c = this.ctx, i; fillR(c, this.px - this.pw / 2, this.py, this.pw, 12, 6, "#fff"); c.fillStyle = o.col;\n        for (i = 0; i < this.balls.length; i++) { c.beginPath(); c.arc(this.balls[i].x, this.balls[i].y, this.balls[i].r, 0, TAU); c.fill(); }',
+   'var c = this.ctx, i; spPaddle(c, this.px, this.py, this.pw);\n        for (i = 0; i < this.balls.length; i++) spBallLines(c, this.balls[i].x, this.balls[i].y, this.balls[i].r + 1, o.col);')
+# caminos: cerco de pasto y bordes de cordón
+rp('c.fillStyle = TH.p2; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); c.fillStyle = "#fff"; c.fillRect(ct - w / 2 - 2, y, 2, 7); c.fillRect(ct + w / 2, y, 2, 7); }',
+   'c.fillStyle = "hsl(115,35%,20%)"; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); var sg = Math.floor((d) / 18) % 2; c.fillStyle = sg ? "#ff4d6d" : "#f2f2f2"; c.fillRect(ct - w / 2 - 5, y, 5, 7); c.fillRect(ct + w / 2, y, 5, 7); if (Math.floor(d / 24) % 2) { c.fillStyle = "rgba(255,255,255,0.35)"; c.fillRect(ct - 2, y, 4, 7); } }')
+# equilibrio: tabla de madera
+rp('c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 10, 4, "#fff");','c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 12, 4, "#c98a4a"); c.fillStyle = "#8a5a2b"; for (var pk = -this.L + 30; pk < this.L; pk += 30) c.fillRect(pk, 2, 2, 8);')
+# lanzamientos: cañón y blanco
+rp('else { c.fillStyle = RED; c.beginPath(); c.arc(this.tx, this.gy - 14, 14, 0, TAU); c.fill(); c.fillStyle = "#fff"; c.beginPath(); c.arc(this.tx, this.gy - 14, 6, 0, TAU); c.fill(); }\n        if (!o.roll) { c.strokeStyle = "#fff"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(this.lx - 10, this.ly + 10 + (o.a < 0.6 ? 6 : 0)); c.lineTo(this.lx + Math.cos(o.a) * 22, this.ly + 10 - Math.sin(o.a) * 22); c.stroke(); c.lineCap = "butt"; }',
+   'else spTarget(c, this.tx, this.gy - 26, 18);\n        if (!o.roll) spCannon(c, this.lx, this.ly + 4, o.a);')
+# dardos
+rp('var c = this.ctx; c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 100, 0, TAU); c.fill();\n        c.fillStyle = TH.p3; c.beginPath(); c.arc(this.bx, this.by, 92, 0, TAU); c.fill(); c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 55, 0, TAU); c.fill(); c.fillStyle = RED; c.beginPath(); c.arc(this.bx, this.by, 22, 0, TAU); c.fill();',
+   'var c = this.ctx; spDartBoard(c, this.bx, this.by);')
+# platos
+rp('for (i = 0; i < this.ds.length; i++) { c.fillStyle = ORA; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y, this.ds[i].r, this.ds[i].r * 0.45, 0, 0, TAU); c.fill(); }',
+   'for (i = 0; i < this.ds.length; i++) { c.fillStyle = "#b5651d"; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y + 3, this.ds[i].r, this.ds[i].r * 0.45, 0, 0, TAU); c.fill(); c.fillStyle = ORA; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y, this.ds[i].r, this.ds[i].r * 0.42, 0, 0, TAU); c.fill(); c.fillStyle = "#ffd23f"; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y - 1, this.ds[i].r * 0.45, this.ds[i].r * 0.18, 0, 0, TAU); c.fill(); }')
+# parejas: dorso de carta y frente blanco
+rp('var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? TH.p1 : sh ? TH.p3 : TH.p3);','var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; if (sh) fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? TH.p1 : "#f2efe6"); else spCardBack(c, p.x, p.y, p.s, "#ff4d6d");')
+s=s.replace('''txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff");''','''txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#17121f");''')
+s=s.replace('''txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff");''','''txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#17121f");''')
+# secuencias: cada botón con su figura
+rp('fillR(c, p.x, p.y, p.s, p.s, 16, on ? col : mix(col, 0.6, 0));','fillR(c, p.x, p.y, p.s, p.s, 16, on ? col : mix(col, 0.6, 0)); if (!o.nums) sh2(c, [0, 1, 2, 3, 6][i % 5], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.2, on ? "#fff" : "rgba(255,255,255,0.35)");')
+# topos, reventalas, semáforo
+rp('else { ball(c, p.x, y, r, this.cfg.accent); c.fillStyle = "#000"; c.beginPath(); c.arc(p.x - r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.arc(p.x + r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.fill(); if (!ghost) ghost = { x: p.x, y: y }; }','else { spMole(c, p.x, y, r, "#8a5a2b"); if (!ghost) ghost = { x: p.x, y: y }; }')
+rp('c.fillStyle = "rgba(255,255,255,0.1)"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.36, gs * 0.14, 0, 0, TAU); c.fill();','c.fillStyle = "#6b4423"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.4, gs * 0.16, 0, 0, TAU); c.fill(); c.fillStyle = "#17121f"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.32, gs * 0.11, 0, 0, TAU); c.fill();')
+rp('''        ball(c, t.x, t.y, t.r, this.cfg.accent);
+        c.fillStyle = "rgba(0,0,0,0.16)"; c.beginPath(); c.arc(t.x, t.y, t.r * 0.45, 0, TAU); c.fill();''','''        spBalloon(c, t.x, t.y, t.r, ["#ff4d6d", "#ffd23f", "#3ddc84", "#c77dff", "#ff9f1c"][Math.floor(t.x + t.y) % 5]);''')
+rp('c.fillStyle = "rgba(255,255,255,0.08)"; c.beginPath(); c.arc(this.cx, this.cy, this.R + 18, 0, TAU); c.fill(); ball(c, this.cx, this.cy, this.R, col);',
+   'fillR(c, this.cx - this.R - 18, this.cy - this.R * 2.6 - 18, this.R * 2 + 36, this.R * 5.2 + 36, 26, "#2b2b33"); c.fillStyle = "#55555f"; c.fillRect(this.cx - 6, this.cy + this.R * 2.6 + 18, 12, this.H); dot(c, this.cx, this.cy - this.R * 1.75, this.R * 0.75, this.phase === "red" ? "#ff3b3b" : "#4a1f24"); dot(c, this.cx, this.cy, this.R * 0.75, this.phase === "wait" ? "#ffd23f" : "#4a4220"); dot(c, this.cx, this.cy + this.R * 1.75, this.R * 0.75, this.phase === "green" ? "#3ddc84" : "#1f4a2e");')
+# sueltos nuevos
+rp('fillR(c, b.x, b.y, b.w, b.h, 4, b.c);','spBrick(c, b.x, b.y, b.w, b.h, b.c);')
+rp('if (l.road) for (i = 0; i < l.cars.length; i++) fillR(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, 5, l.col);','if (l.road) for (i = 0; i < l.cars.length; i++) spCar(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, l.col, l.dir);')
+rp('fillR(c, p.x, p.y, p.w, 10, 5, p.m ? "#ff9f1c" : "#3ddc84");','spPlatform(c, p.x, p.y, p.w, p.m);')
+rp('c.fillStyle = f.bomb ? TH.p3 : f.c; c.beginPath(); c.arc(f.x, f.y, f.r, 0, TAU); c.fill();','if (f.bomb) spBomb(c, f.x, f.y, f.r); else spFruit(c, f.x, f.y, f.r, f.c);')
+rp('if (f.bomb) { c.strokeStyle = "#ff4d6d"; c.lineWidth = 4; c.beginPath(); c.moveTo(f.x - 8, f.y - 8); c.lineTo(f.x + 8, f.y + 8); c.moveTo(f.x + 8, f.y - 8); c.lineTo(f.x - 8, f.y + 8); c.stroke(); }','')
+rp('c.fillStyle = "#ff4d6d"; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill();','spBeach(c, x, y, r);')
+rp('c.fillStyle = "#8a8a8a"; for (i = 0; i < this.rocks.length; i++) { var r = this.rocks[i]; c.beginPath(); c.arc(r.x, r.y, r.r, 0, TAU); c.fill(); }','for (i = 0; i < this.rocks.length; i++) { var r = this.rocks[i]; spRock(c, r.x, r.y, r.r, "#8a8a8a", r.r * 17); }')
+rp('c.save(); c.translate(this.cx, this.cy); c.rotate(this.ang); c.fillStyle = "#fff"; c.beginPath(); c.moveTo(16, 0); c.lineTo(-12, 11); c.lineTo(-8, 0); c.lineTo(-12, -11); c.closePath(); c.fill(); c.restore();','c.save(); c.translate(this.cx, this.cy); c.rotate(this.ang + PI / 2); spShip(c, 0, 0, 15); c.restore();')
+print('MISSES', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok13')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Gracia al llegar: no se pierde vida en los primeros 3 s si todavía no tocaste
+rp('this.pops = []; this.parts = []; this.rings = []; this.streak = 0;','this.pops = []; this.parts = []; this.rings = []; this.streak = 0; this.inp = false;')
+rp('if (this.state !== "play" || this.invuln > 0) return false;','if (this.state !== "play" || this.invuln > 0) return false; if (!this.inp && this.t < 3) { this.invuln = 0.3; return false; }')
+rp('''    var sec = e.target.closest(".slide"); down = { id: e.pointerId, x: e.clientX, y: e.clientY, sec: sec };
+    if (view !== "play" || paused) return;
+    var g = gameOf(sec);''','''    var sec = e.target.closest(".slide"); down = { id: e.pointerId, x: e.clientX, y: e.clientY, sec: sec };
+    if (view !== "play" || paused) return;
+    var g = gameOf(sec); if (g) g.inp = true;''')
+rp('else if (e.key === " " || e.key === "Enter") { e.preventDefault(); g = activeGame(); if (!g) return;','else if (e.key === " " || e.key === "Enter") { e.preventDefault(); g = activeGame(); if (!g) return; g.inp = true;')
+print('MISSES14', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok14')

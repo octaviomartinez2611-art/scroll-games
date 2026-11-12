@@ -650,6 +650,26 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   function spBar(c, x, y, w, h) { c.fillStyle = "#ff4d6d"; rr(c, x, y, w, h, h / 2); c.fill(); c.save(); rr(c, x, y, w, h, h / 2); c.clip(); c.fillStyle = "#fff"; for (var sx = x - h; sx < x + w; sx += 14) poly(c, [sx, y + h, sx + 6, y + h, sx + 6 + h, y, sx + h, y], "#fff"); c.restore(); }
   function spHand(c, x, y) { c.fillStyle = "#fff"; rr(c, x - 6, y - 26, 12, 30, 6); c.fill(); rr(c, x - 13, y - 4, 30, 26, 10); c.fill(); c.fillStyle = "rgba(0,0,0,0.15)"; c.fillRect(x + 1, y - 4, 2, 10); c.fillRect(x + 8, y - 4, 2, 10); }
 
+  /* ===== Sprites 2: resto de las familias ===== */
+  var NUMCOL = ["#ffd23f", "#4d8bff", "#ff4d6d", "#c77dff", "#ff9f1c", "#3ddc84", "#a0522d", "#2b2b33", "#ffd23f"];
+  function spPool(c, x, y, r, n) { var col = NUMCOL[(Math.abs(+n || n.charCodeAt(0)) - 1 + 9) % 9]; dot(c, x, y, r, col); dot(c, x, y, r * 0.58, "#fff"); txt(c, String(n), x, y + 1, r * 0.7, "#17121f"); }
+  function spPaddle(c, x, y, w) { c.fillStyle = "#e9e4d7"; rr(c, x - w / 2, y, w, 12, 6); c.fill(); c.fillStyle = "#ff4d6d"; rr(c, x - w / 2, y, 10, 12, 5); c.fill(); rr(c, x + w / 2 - 10, y, 10, 12, 5); c.fill(); }
+  function spBallLines(c, x, y, r, col) { dot(c, x, y, r, col); c.strokeStyle = "rgba(255,255,255,0.75)"; c.lineWidth = 1.6; c.beginPath(); c.arc(x - r * 1.2, y, r, -0.7, 0.7); c.stroke(); c.beginPath(); c.arc(x + r * 1.2, y, r, PI - 0.7, PI + 0.7); c.stroke(); }
+  function spBeach(c, x, y, r) { var cols = ["#ff4d6d", "#fff", "#ffd23f", "#fff", "#3ddc84", "#fff"]; for (var k = 0; k < 6; k++) { c.fillStyle = cols[k]; c.beginPath(); c.moveTo(x, y); c.arc(x, y, r, k * TAU / 6, (k + 1) * TAU / 6); c.closePath(); c.fill(); } dot(c, x, y, r * 0.18, "#fff"); }
+  function spCar(c, x, y, w, h, col, dir) { c.fillStyle = col; rr(c, x, y + h * 0.15, w, h * 0.7, 6); c.fill(); c.fillStyle = "rgba(255,255,255,0.75)"; var wx = dir > 0 ? x + w * 0.55 : x + w * 0.15; rr(c, wx, y + h * 0.25, w * 0.28, h * 0.5, 3); c.fill(); dot(c, x + w * 0.22, y + h * 0.88, h * 0.16, "#17121f"); dot(c, x + w * 0.78, y + h * 0.88, h * 0.16, "#17121f"); dot(c, dir > 0 ? x + w - 3 : x + 3, y + h * 0.45, 3, "#ffd23f"); }
+  function spPlatform(c, x, y, w, moving) { c.fillStyle = moving ? "#b5651d" : "#8a5a2b"; rr(c, x, y + 3, w, 9, 4); c.fill(); c.fillStyle = moving ? "#ff9f1c" : "#3ddc84"; rr(c, x - 2, y, w + 4, 6, 3); c.fill(); }
+  function spCannon(c, x, y, a) { c.save(); c.translate(x, y); c.rotate(-a); c.fillStyle = "#3a3a44"; rr(c, -6, -9, 40, 18, 8); c.fill(); c.fillStyle = "#55555f"; c.fillRect(28, -11, 8, 22); c.restore(); dot(c, x, y + 10, 13, "#8a5a2b"); dot(c, x, y + 10, 5, "#3a2a1a"); }
+  function spTarget(c, x, y, r) { c.fillStyle = "#8a5a2b"; c.fillRect(x - 2, y, 4, r + 10); dot(c, x, y, r, "#ff4d6d"); dot(c, x, y, r * 0.7, "#fff"); dot(c, x, y, r * 0.42, "#ff4d6d"); dot(c, x, y, r * 0.16, "#fff"); }
+  function spDartBoard(c, x, y) {
+    dot(c, x, y, 104, "#2b2b33"); var k, a0;
+    for (k = 0; k < 20; k++) { a0 = k * TAU / 20 - PI / 20; c.fillStyle = k % 2 ? "#e9e4d7" : "#17121f"; c.beginPath(); c.moveTo(x, y); c.arc(x, y, 92, a0, a0 + TAU / 20); c.closePath(); c.fill(); }
+    for (k = 0; k < 20; k++) { a0 = k * TAU / 20 - PI / 20; c.strokeStyle = k % 2 ? "#3ddc84" : "#ff4d6d"; c.lineWidth = 8; c.beginPath(); c.arc(x, y, 88, a0, a0 + TAU / 20); c.stroke(); c.beginPath(); c.arc(x, y, 55, a0, a0 + TAU / 20); c.stroke(); }
+    dot(c, x, y, 22, "#3ddc84"); dot(c, x, y, 10, "#ff4d6d");
+  }
+  function spCardBack(c, x, y, s, col) { c.fillStyle = col; rr(c, x, y, s, s, 12); c.fill(); c.strokeStyle = "rgba(255,255,255,0.18)"; c.lineWidth = 2; rr(c, x + 6, y + 6, s - 12, s - 12, 8); c.stroke(); c.save(); rr(c, x + 6, y + 6, s - 12, s - 12, 8); c.clip(); for (var d = -s; d < s * 2; d += 14) { c.beginPath(); c.moveTo(x + d, y); c.lineTo(x + d + s, y + s); c.moveTo(x + d + s, y); c.lineTo(x + d, y + s); c.stroke(); } c.restore(); }
+  function spMole(c, x, y, r, col) { dot(c, x, y, r, col); dot(c, x, y + r * 0.35, r * 0.42, "#f2d2b6"); dot(c, x, y + r * 0.12, r * 0.13, "#ff8fa3"); dot(c, x - r * 0.35, y - r * 0.2, r * 0.11, "#17121f"); dot(c, x + r * 0.35, y - r * 0.2, r * 0.11, "#17121f"); c.fillStyle = "#fff"; c.fillRect(x - r * 0.1, y + r * 0.4, r * 0.2, r * 0.18); }
+  function spBulb(c, x, y, r, on) { dot(c, x, y, r, on ? "#ffd23f" : "#3a3a44"); if (on) dot(c, x - r * 0.3, y - r * 0.3, r * 0.2, "rgba(255,255,255,0.6)"); c.fillStyle = "#9aa1ab"; c.fillRect(x - r * 0.45, y + r * 0.8, r * 0.9, r * 0.45); }
+
   var SCENE_BY = {}; (function () { for (var k in SCENE_OF) SCENE_OF[k].split(" ").forEach(function (id) { if (id) SCENE_BY[id] = k; }); })();
   var SCENE_PREFIX = { c_: "farm", d_: "storm", t_: "arcade", q_: "school", p_: "workshop", r_: "desert", s_: "space", w_: "court", f_: "sky", m_: "table", e_: "table", k_: "school", g_: "arcade", l_: "forest", a_: "pub", z_: "sky", b_: "circus", h_: "garden", x_: "table", y_: "table" };
   function sceneOf(cfg) { var id = cfg.id || ""; if (SCENE_BY[id]) return SCENE_BY[id]; if (/^(hilo|more|truth|stroop)$/.test(id)) return "school"; if (id === "keep") return "beach"; return SCENE_PREFIX[id.slice(0, 2)] || "arcade"; }
@@ -696,7 +716,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   Game.prototype.reset = function () {
     this.state = "ready"; this.score = 0; this.lives = 3; this.invuln = 0; this.shake = 0; this.t = 0;
     this.combo = 0; this.acts = 0; this.hint = false; this.newBest = false; this.drawn = false; this.holding = false; this.ctlT = 0;
-    this.pops = []; this.parts = []; this.rings = []; this.streak = 0; this._rv = undefined; this._ls = 0;
+    this.pops = []; this.parts = []; this.rings = []; this.streak = 0; this.inp = false; this._rv = undefined; this._ls = 0;
     this.best = P.best[this.cfg.id] || 0;
     this.init(); this.hud();
   };
@@ -725,7 +745,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     this.hud();
   };
   Game.prototype.hurt = function () {
-    if (this.state !== "play" || this.invuln > 0) return false;
+    if (this.state !== "play" || this.invuln > 0) return false; if (!this.inp && this.t < 3) { this.invuln = 0.3; return false; }
     this.lives--; stOf(this.cfg.id).h++; this.combo = 0; this.streak = 0; this.shake = 0; this.invuln = 1.2;
     S.hurt(); this.hud();
     if (this.lives <= 0) { this.end(); return true; }
@@ -896,8 +916,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       for (var i = 0; i < this.tg.length; i++) {
         var t = this.tg[i], k = t.age / t.ttl;
         c.strokeStyle = "rgba(255,255,255,0.9)"; c.lineWidth = 3; c.beginPath(); c.arc(t.x, t.y, t.r + (1 - k) * t.r * 1.1, 0, TAU); c.stroke();
-        ball(c, t.x, t.y, t.r, this.cfg.accent);
-        c.fillStyle = "rgba(0,0,0,0.16)"; c.beginPath(); c.arc(t.x, t.y, t.r * 0.45, 0, TAU); c.fill();
+        spBalloon(c, t.x, t.y, t.r, ["#ff4d6d", "#ffd23f", "#3ddc84", "#c77dff", "#ff9f1c"][Math.floor(t.x + t.y) % 5]);
       }
       if (this.tg.length) this.ghost(this.tg[0].x, this.tg[0].y, now);
     }
@@ -1208,11 +1227,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var c = this.ctx, gs = this.gs, ghost = null;
       for (var i = 0; i < 9; i++) {
         var p = this.pos(i), m = this.cells[i];
-        c.fillStyle = "rgba(255,255,255,0.1)"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.36, gs * 0.14, 0, 0, TAU); c.fill();
+        c.fillStyle = "#6b4423"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.4, gs * 0.16, 0, 0, TAU); c.fill(); c.fillStyle = "#17121f"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.32, gs * 0.11, 0, 0, TAU); c.fill();
         if (m.st) {
           var u = Math.min(1, m.t / 0.15) * (1 - clamp((m.t - (m.ttl - 0.15)) / 0.15, 0, 1)), r = gs * 0.28 * (0.4 + 0.6 * u), y = p.y - u * gs * 0.12;
           if (m.bomb) { c.fillStyle = TH.p3; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.stroke(); txt(c, "!", p.x, y + 1, r * 1.1, "#ff4d4d"); }
-          else { ball(c, p.x, y, r, this.cfg.accent); c.fillStyle = "#000"; c.beginPath(); c.arc(p.x - r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.arc(p.x + r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.fill(); if (!ghost) ghost = { x: p.x, y: y }; }
+          else { spMole(c, p.x, y, r, "#8a5a2b"); if (!ghost) ghost = { x: p.x, y: y }; }
         }
       }
       if (ghost) this.ghost(ghost.x, ghost.y, now);
@@ -1277,7 +1296,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, col = this.phase === "red" ? "#ff3b3b" : this.phase === "green" ? "#3ddc84" : TH.p4;
-      c.fillStyle = "rgba(255,255,255,0.08)"; c.beginPath(); c.arc(this.cx, this.cy, this.R + 18, 0, TAU); c.fill(); ball(c, this.cx, this.cy, this.R, col);
+      fillR(c, this.cx - this.R - 18, this.cy - this.R * 2.6 - 18, this.R * 2 + 36, this.R * 5.2 + 36, 26, "#2b2b33"); c.fillStyle = "#55555f"; c.fillRect(this.cx - 6, this.cy + this.R * 2.6 + 18, 12, this.H); dot(c, this.cx, this.cy - this.R * 1.75, this.R * 0.75, this.phase === "red" ? "#ff3b3b" : "#4a1f24"); dot(c, this.cx, this.cy, this.R * 0.75, this.phase === "wait" ? "#ffd23f" : "#4a4220"); dot(c, this.cx, this.cy + this.R * 1.75, this.R * 0.75, this.phase === "green" ? "#3ddc84" : "#1f4a2e");
       if (this.ms) txt(c, this.ms, this.cx, this.cy + this.R + 44, 26, "#fff");
       if (this.phase === "green") this.ghost(this.cx, this.cy, now);
     }
@@ -1975,7 +1994,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, i;
-      for (i = 0; i < this.bricks.length; i++) { var b = this.bricks[i]; fillR(c, b.x, b.y, b.w, b.h, 4, b.c); }
+      for (i = 0; i < this.bricks.length; i++) { var b = this.bricks[i]; spBrick(c, b.x, b.y, b.w, b.h, b.c); }
       fillR(c, this.px - this.pw / 2, this.py, this.pw, 12, 6, "#fff");
       c.fillStyle = "#fff"; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU); c.fill();
       this.ghostDrag(this.py - 70, now);
@@ -2023,8 +2042,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       for (i = 0; i < this.hv.length; i++) { f = this.hv[i]; c.fillStyle = f.c; c.beginPath(); c.arc(f.x, f.y, f.r, f.s < 0 ? PI / 2 : -PI / 2, f.s < 0 ? PI * 1.5 : PI / 2); c.fill(); }
       for (i = 0; i < this.fr.length; i++) {
         f = this.fr[i]; if (f.dead) continue;
-        c.fillStyle = f.bomb ? TH.p3 : f.c; c.beginPath(); c.arc(f.x, f.y, f.r, 0, TAU); c.fill();
-        if (f.bomb) { c.strokeStyle = "#ff4d6d"; c.lineWidth = 4; c.beginPath(); c.moveTo(f.x - 8, f.y - 8); c.lineTo(f.x + 8, f.y + 8); c.moveTo(f.x + 8, f.y - 8); c.lineTo(f.x - 8, f.y + 8); c.stroke(); }
+        if (f.bomb) spBomb(c, f.x, f.y, f.r); else spFruit(c, f.x, f.y, f.r, f.c);
+        
       }
       if (this.trail.length > 1) {
         c.strokeStyle = "#fff"; c.lineWidth = 4; c.lineCap = "round"; c.beginPath(); c.moveTo(this.trail[0].x, this.trail[0].y);
@@ -2069,7 +2088,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, i;
-      for (i = 0; i < this.plats.length; i++) { var p = this.plats[i]; fillR(c, p.x, p.y, p.w, 10, 5, p.m ? "#ff9f1c" : "#3ddc84"); }
+      for (i = 0; i < this.plats.length; i++) { var p = this.plats[i]; spPlatform(c, p.x, p.y, p.w, p.m); }
       { this.ctx.globalAlpha = this.fadeA();
         fillR(c, this.px - 16, this.py - 18, 32, 36, 12, ORA); face(c, this.px, this.py - 2, 15, (this.tx - this.px) / 30);
        this.ctx.globalAlpha = 1; }
@@ -2115,7 +2134,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       for (r = r0; r <= r1; r++) {
         if (r < 0 || !this.lanes[r]) continue; var l = this.lanes[r], y = base - (r - this.cam + 1) * cs;
         c.fillStyle = l.road ? TH.p2 : "#24402a"; c.fillRect(0, y, this.W, cs);
-        if (l.road) for (i = 0; i < l.cars.length; i++) fillR(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, 5, l.col);
+        if (l.road) for (i = 0; i < l.cars.length; i++) spCar(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, l.col, l.dir);
       }
       var py = base - (this.sy - this.cam + 1) * cs; { this.ctx.globalAlpha = this.fadeA(); fillR(c, this.ox + this.sx * cs + 6, py + 6, cs - 12, cs - 12, 10, YEL); face(c, this.ox + (this.sx + 0.5) * cs, py + cs / 2 + 2, (cs - 12) / 2, 0);  this.ctx.globalAlpha = 1; }
       this.ghost(this.cx, this.H * 0.55, now);
@@ -2420,7 +2439,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, x = this.bx, y = this.by, r = this.r;
-      c.fillStyle = "#ff4d6d"; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); face(c, x, y, r, this.vx / 200);
+      spBeach(c, x, y, r); face(c, x, y, r, this.vx / 200);
       this.ghost(x, y + 10, now);
     }
   });
@@ -2495,9 +2514,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, i;
-      c.fillStyle = "#8a8a8a"; for (i = 0; i < this.rocks.length; i++) { var r = this.rocks[i]; c.beginPath(); c.arc(r.x, r.y, r.r, 0, TAU); c.fill(); }
+      for (i = 0; i < this.rocks.length; i++) { var r = this.rocks[i]; spRock(c, r.x, r.y, r.r, "#8a8a8a", r.r * 17); }
       c.fillStyle = "#fff"; for (i = 0; i < this.bul.length; i++) { c.beginPath(); c.arc(this.bul[i].x, this.bul[i].y, 3, 0, TAU); c.fill(); }
-      { this.ctx.globalAlpha = this.fadeA(); c.save(); c.translate(this.cx, this.cy); c.rotate(this.ang); c.fillStyle = "#fff"; c.beginPath(); c.moveTo(16, 0); c.lineTo(-12, 11); c.lineTo(-8, 0); c.lineTo(-12, -11); c.closePath(); c.fill(); c.restore();  this.ctx.globalAlpha = 1; }
+      { this.ctx.globalAlpha = this.fadeA(); c.save(); c.translate(this.cx, this.cy); c.rotate(this.ang + PI / 2); spShip(c, 0, 0, 15); c.restore();  this.ctx.globalAlpha = 1; }
       this.ghostHold(this.cx - this.W * 0.28, this.cy + 120, now);
     }
   });
@@ -2746,7 +2765,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         for (i = 0; i < this.tg.length; i++) {
           var t = this.tg[i], k = 1 - t.t / t.life; c.globalAlpha = k < 0.25 ? 0.4 + k : 1;
           if (t.face) { c.fillStyle = YEL; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); c.strokeStyle = "#000"; c.lineWidth = 3; c.beginPath(); c.arc(t.x, t.y + (t.face > 0 ? 2 : 12), 11, t.face > 0 ? 0.2 : PI + 0.4, t.face > 0 ? PI - 0.2 : TAU - 0.4); c.stroke(); c.fillStyle = "#000"; c.beginPath(); c.arc(t.x - 8, t.y - 8, 3, 0, TAU); c.arc(t.x + 8, t.y - 8, 3, 0, TAU); c.fill(); }
-          else if (t.txt !== undefined) { c.fillStyle = TH.p2; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); txt(c, String(t.txt), t.x, t.y + 1, t.r * 0.9, "#fff"); }
+          else if (t.txt !== undefined) spPool(c, t.x, t.y, t.r, t.txt);
           else if (t.bomb) dDraw(c, { x: t.x, y: t.y, bomb: 1 });
           else { sh2(c, t.s || 0, t.x, t.y, t.r * 0.85, t.col); if (!t.s && t.col !== WHT) face(c, t.x, t.y, t.r * 0.85, 0); }
           c.globalAlpha = 1;
@@ -2815,10 +2834,10 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         if (q.dots) { c.fillStyle = "#fff"; for (i = 0; i < q.pts.length; i++) { c.beginPath(); c.arc(this.cx - 40 + q.pts[i][0] * 150 - 75, cy + q.pts[i][1] * 90 - 40, 9, 0, TAU); c.fill(); } txt(c, q.q, this.cx - 40, cy - 90, 20, "rgba(255,255,255,0.7)", "center", 600); }
         else if (q.poly) { c.strokeStyle = "#fff"; c.lineWidth = 6; c.lineJoin = "round"; c.beginPath(); for (i = 0; i < q.poly; i++) { var a = -PI / 2 + i * TAU / q.poly; c.lineTo(this.cx - 40 + Math.cos(a) * 60, cy + Math.sin(a) * 60); } c.closePath(); c.stroke(); txt(c, q.q, this.cx - 40, cy - 95, 20, "rgba(255,255,255,0.7)", "center", 600); }
         else if (q.clock) { var cx0 = this.cx - 40; c.strokeStyle = "#fff"; c.lineWidth = 5; c.beginPath(); c.arc(cx0, cy, 66, 0, TAU); c.stroke(); for (i = 0; i < 12; i++) { var aa = i * PI / 6; c.lineWidth = 3; c.beginPath(); c.moveTo(cx0 + Math.sin(aa) * 56, cy - Math.cos(aa) * 56); c.lineTo(cx0 + Math.sin(aa) * 64, cy - Math.cos(aa) * 64); c.stroke(); } var ma = q.clock.m / 60 * TAU, ha = (q.clock.h % 12 + q.clock.m / 60) / 12 * TAU; c.lineWidth = 6; c.beginPath(); c.moveTo(cx0, cy); c.lineTo(cx0 + Math.sin(ha) * 34, cy - Math.cos(ha) * 34); c.stroke(); c.lineWidth = 4; c.beginPath(); c.moveTo(cx0, cy); c.lineTo(cx0 + Math.sin(ma) * 52, cy - Math.cos(ma) * 52); c.stroke(); txt(c, q.q, this.cx - 40, cy - 90, 20, "rgba(255,255,255,0.7)", "center", 600); }
-        else { var sz = clamp(520 / Math.max(6, q.q.length), 22, 54); txt(c, q.q, this.cx - 38, cy, sz, "#fff", "center", 700); }
+        else { var sz = clamp(520 / Math.max(6, q.q.length), 22, 54); fillR(c, 16, cy - 58, this.W - 108, 116, 22, TH.p1); c.strokeStyle = TH.p3; c.lineWidth = 3; rr(c, 22, cy - 52, this.W - 120, 104, 18); c.stroke(); txt(c, q.q, this.cx - 38, cy, sz, "#fff", "center", 700); }
         for (i = 0; i < q.o.length; i++) {
           var b = this.bx[i], op = q.o[i], bg = TH.p2; if (this.res >= 0 || this.res === -2) { if (i === q.a) bg = "#1d5a37"; else if (i === this.res) bg = "#6a1f2b"; }
-          fillR(c, b.x, b.y, this.bw, this.bh, 16, bg);
+          fillR(c, b.x, b.y, this.bw, this.bh, 16, bg); dot(c, b.x + 17, b.y + 17, 10, "rgba(255,255,255,0.14)"); txt(c, "ABCD"[i], b.x + 17, b.y + 18, 12, "rgba(255,255,255,0.75)", "center", 700);
           if (op.col) { if (op.r) { c.fillStyle = op.col; c.beginPath(); c.arc(b.x + this.bw / 2, b.y + this.bh / 2, op.r, 0, TAU); c.fill(); } else sh2(c, op.sh || 0, b.x + this.bw / 2, b.y + this.bh / 2, 26, op.col); }
           else txt(c, op.t, b.x + this.bw / 2, b.y + this.bh / 2 + 1, clamp(this.bw * 1.5 / Math.max(3, op.t.length), 18, 38), "#fff", "center", 700);
         }
@@ -3067,8 +3086,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         }
       },
       draw: function (now) {
-        var c = this.ctx, i; fillR(c, this.px - this.pw / 2, this.py, this.pw, 12, 6, "#fff"); c.fillStyle = o.col;
-        for (i = 0; i < this.balls.length; i++) { c.beginPath(); c.arc(this.balls[i].x, this.balls[i].y, this.balls[i].r, 0, TAU); c.fill(); }
+        var c = this.ctx, i; spPaddle(c, this.px, this.py, this.pw);
+        for (i = 0; i < this.balls.length; i++) spBallLines(c, this.balls[i].x, this.balls[i].y, this.balls[i].r + 1, o.col);
         this.ghostDrag(this.py - 80, now);
       }
     });
@@ -3167,7 +3186,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       draw: function (now) {
         var c = this.ctx, i; for (i = 0; i < this.n; i++) {
           var p = this.p[i], col = o.cols2 ? BCOL[i % 5] : BCOL[i % 5], on = this.lit === i || (this.fl > 0 && this.fi === i);
-          fillR(c, p.x, p.y, p.s, p.s, 16, on ? col : mix(col, 0.6, 0)); if (o.nums) txt(c, String(i + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.45, on ? "#000" : "rgba(255,255,255,0.7)");
+          fillR(c, p.x, p.y, p.s, p.s, 16, on ? col : mix(col, 0.6, 0)); if (!o.nums) sh2(c, [0, 1, 2, 3, 6][i % 5], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.2, on ? "#fff" : "rgba(255,255,255,0.35)"); if (o.nums) txt(c, String(i + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.45, on ? "#000" : "rgba(255,255,255,0.7)");
           if (!on) { c.fillStyle = "rgba(0,0,0,0.4)"; rr(c, p.x, p.y, p.s, p.s, 16); c.fill(); }
         }
         txt(c, this.phase === "input" ? "Tu turno" : "Mirá", this.cx - 38, this.p[0].y - 28, 20, "rgba(255,255,255,0.7)", "center", 600);
@@ -3229,11 +3248,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         var c = this.ctx, cd = this.cur, y = this.cy - 20, ox = this.fb > 0 ? this.last * 40 : 0;
         txt(c, o.l, 56, this.H - this.pb - 40, 17, "rgba(255,255,255,0.6)", "center", 600); txt(c, o.r, this.W - 120, this.H - this.pb - 40, 17, "rgba(255,255,255,0.6)", "center", 600);
         fillR(c, 20, this.pt + 4, this.W - 100, 6, 3, "rgba(255,255,255,0.12)"); fillR(c, 20, this.pt + 4, (this.W - 100) * clamp(this.tl / this.tm, 0, 1), 6, 3, "#fff");
-        fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, TH.p1);
+        fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, "#f2efe6"); c.strokeStyle = TH.p3; c.lineWidth = 4; rr(c, this.cx - 38 - 105 + ox, y - 80, 210, 160, 16); c.stroke(); dot(c, 40, y, 22, "rgba(255,77,109,0.35)"); txt(c, "←", 40, y + 1, 24, "#fff"); dot(c, this.W - 104, y, 22, "rgba(61,220,132,0.35)"); txt(c, "→", this.W - 104, y + 1, 24, "#fff");
         var x = this.cx - 38 + ox;
-        if (cd.arrow) { c.strokeStyle = "#fff"; c.lineWidth = 12; c.lineCap = "round"; c.lineJoin = "round"; var d = cd.arrow; c.beginPath(); c.moveTo(x - 36 * d, y); c.lineTo(x + 36 * d, y); c.moveTo(x + 14 * d, y - 22); c.lineTo(x + 36 * d, y); c.lineTo(x + 14 * d, y + 22); c.stroke(); c.lineCap = "butt"; }
-        else if (cd.t !== undefined) txt(c, cd.t, x, y, clamp(340 / Math.max(5, cd.t.length), 20, 60), cd.col || "#fff", "center", 700);
-        else sh2(c, cd.sh || 0, x, y, cd.r || 34, cd.col || "#fff");
+        if (cd.arrow) { c.strokeStyle = "#17121f"; c.lineWidth = 12; c.lineCap = "round"; c.lineJoin = "round"; var d = cd.arrow; c.beginPath(); c.moveTo(x - 36 * d, y); c.lineTo(x + 36 * d, y); c.moveTo(x + 14 * d, y - 22); c.lineTo(x + 36 * d, y); c.lineTo(x + 14 * d, y + 22); c.stroke(); c.lineCap = "butt"; }
+        else if (cd.t !== undefined) txt(c, cd.t, x, y, clamp(340 / Math.max(5, cd.t.length), 20, 60), cd.col || "#17121f", "center", 700);
+        else sh2(c, cd.sh || 0, x, y, cd.r || 34, cd.col === "#fff" || !cd.col ? "#17121f" : cd.col);
         if (cd.sub) txt(c, cd.sub, x, y + 64, 16, "rgba(255,255,255,0.5)", "center", 600);
         this.ghostDrag(this.H - this.pb - 90, now, true);
       }
@@ -3319,8 +3338,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       draw: function (now) {
         var c = this.ctx; c.fillStyle = o.roll ? "#1f3d26" : TH.p2; c.fillRect(0, this.gy, this.W, this.H - this.gy);
         if (o.roll) { c.fillStyle = "#000"; c.beginPath(); c.arc(this.tx, this.gy - 4, (o.tol || 36) * 0.5 + 6, 0, TAU); c.fill(); c.fillStyle = "#fff"; c.fillRect(this.tx - 1.5, this.gy - 46, 3, 42); c.fillStyle = RED; c.fillRect(this.tx, this.gy - 46, 16, 10); }
-        else { c.fillStyle = RED; c.beginPath(); c.arc(this.tx, this.gy - 14, 14, 0, TAU); c.fill(); c.fillStyle = "#fff"; c.beginPath(); c.arc(this.tx, this.gy - 14, 6, 0, TAU); c.fill(); }
-        if (!o.roll) { c.strokeStyle = "#fff"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(this.lx - 10, this.ly + 10 + (o.a < 0.6 ? 6 : 0)); c.lineTo(this.lx + Math.cos(o.a) * 22, this.ly + 10 - Math.sin(o.a) * 22); c.stroke(); c.lineCap = "butt"; }
+        else spTarget(c, this.tx, this.gy - 26, 18);
+        if (!o.roll) spCannon(c, this.lx, this.ly + 4, o.a);
         fillR(c, this.lx - 20, this.gy - 12, 40, 12, 3, "#8a8a8a");
         fillR(c, this.lx - 30, this.gy + 14, 60, 8, 4, "rgba(255,255,255,0.15)"); fillR(c, this.lx - 30, this.gy + 14, 60 * this.p, 8, 4, YEL);
         if (this.sh) { c.fillStyle = "#fff"; c.beginPath(); c.arc(this.sh.x, this.sh.y, 8, 0, TAU); c.fill(); }
@@ -3350,8 +3369,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         this.chx = this.bx + Math.sin(this.u * 1.3) * o.ax + Math.sin(this.u * 2.3 + 1) * o.ax * 0.4; this.chy = this.by + Math.cos(this.u * 1.7) * o.ay + Math.sin(this.u * 2.9) * o.ay * 0.4;
       },
       draw: function (now) {
-        var c = this.ctx; c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 100, 0, TAU); c.fill();
-        c.fillStyle = TH.p3; c.beginPath(); c.arc(this.bx, this.by, 92, 0, TAU); c.fill(); c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 55, 0, TAU); c.fill(); c.fillStyle = RED; c.beginPath(); c.arc(this.bx, this.by, 22, 0, TAU); c.fill();
+        var c = this.ctx; spDartBoard(c, this.bx, this.by);
         if (this.mark && this.mk > 0) { c.fillStyle = YEL; c.beginPath(); c.arc(this.mark.x, this.mark.y, 6, 0, TAU); c.fill(); }
         c.strokeStyle = "#fff"; c.lineWidth = 3; c.beginPath(); c.moveTo(this.chx - 18, this.chy); c.lineTo(this.chx + 18, this.chy); c.moveTo(this.chx, this.chy - 18); c.lineTo(this.chx, this.chy + 18); c.stroke(); c.beginPath(); c.arc(this.chx, this.chy, 10, 0, TAU); c.stroke();
         this.ghost(this.cx - 38, this.cy + 150, now);
@@ -3380,7 +3398,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       draw: function (now) {
         var c = this.ctx, i; c.fillStyle = this.fl > 0 ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.06)"; c.fillRect(this.mx - 14, this.pt, 28, this.H - this.pt - this.pb);
         c.strokeStyle = "#fff"; c.lineWidth = 3; c.beginPath(); c.moveTo(this.mx, this.pt); c.lineTo(this.mx, this.H - this.pb); c.stroke();
-        for (i = 0; i < this.ds.length; i++) { c.fillStyle = ORA; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y, this.ds[i].r, this.ds[i].r * 0.45, 0, 0, TAU); c.fill(); }
+        for (i = 0; i < this.ds.length; i++) { c.fillStyle = "#b5651d"; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y + 3, this.ds[i].r, this.ds[i].r * 0.45, 0, 0, TAU); c.fill(); c.fillStyle = ORA; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y, this.ds[i].r, this.ds[i].r * 0.42, 0, 0, TAU); c.fill(); c.fillStyle = "#ffd23f"; c.beginPath(); c.ellipse(this.ds[i].x, this.ds[i].y - 1, this.ds[i].r * 0.45, this.ds[i].r * 0.18, 0, 0, TAU); c.fill(); }
         this.ghost(this.mx, this.cy + 120, now);
       }
     });
@@ -3431,7 +3449,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       draw: function (now) {
         var c = this.ctx, py = this.H - this.pb - 70, px = this.cx - 38;
         c.fillStyle = TH.p4; c.beginPath(); c.moveTo(px, py + 6); c.lineTo(px + 22, py + 56); c.lineTo(px - 22, py + 56); c.closePath(); c.fill();
-        c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 10, 4, "#fff");
+        c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 12, 4, "#c98a4a"); c.fillStyle = "#8a5a2b"; for (var pk = -this.L + 30; pk < this.L; pk += 30) c.fillRect(pk, 2, 2, 8);
         for (var i = 0; i < this.balls.length; i++) { c.fillStyle = BCOL[i % 5]; c.beginPath(); c.arc(this.balls[i].s, -16, 16, 0, TAU); c.fill(); face(c, this.balls[i].s, -16, 16, this.balls[i].v / 120); }
         c.restore();
         if (o.wind) txt(c, this.wa > 20 ? "→" : this.wa < -20 ? "←" : "", px, this.pt + 60, 40, "rgba(255,255,255,0.5)");
@@ -3464,7 +3482,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, y, bot = this.H - this.pb + 10;
-        for (y = this.pt - 10; y < bot; y += 6) { var d = this.d + (this.py - y), w = this.wid(d), ct = this.cen(d, w / 2); c.fillStyle = TH.p2; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); c.fillStyle = "#fff"; c.fillRect(ct - w / 2 - 2, y, 2, 7); c.fillRect(ct + w / 2, y, 2, 7); }
+        for (y = this.pt - 10; y < bot; y += 6) { var d = this.d + (this.py - y), w = this.wid(d), ct = this.cen(d, w / 2); c.fillStyle = "hsl(115,35%,20%)"; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); var sg = Math.floor((d) / 18) % 2; c.fillStyle = sg ? "#ff4d6d" : "#f2f2f2"; c.fillRect(ct - w / 2 - 5, y, 5, 7); c.fillRect(ct + w / 2, y, 5, 7); if (Math.floor(d / 24) % 2) { c.fillStyle = "rgba(255,255,255,0.35)"; c.fillRect(ct - 2, y, 4, 7); } }
         { this.ctx.globalAlpha = this.fadeA(); c.fillStyle = o.col; c.beginPath(); c.arc(this.px, this.py, 14, 0, TAU); c.fill(); face(c, this.px, this.py, 14, (this.tx - this.px) / 30);  this.ctx.globalAlpha = 1; }
         this.ghostDrag(this.py - 100, now);
       }
@@ -3578,8 +3596,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, i; for (i = 0; i < this.n; i++) {
-          var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? TH.p1 : sh ? TH.p3 : TH.p3);
-          if (sh) { var v = this.sy[i]; if (o.kind === "num") txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "let") txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "col") { c.fillStyle = this.done[i] ? TH.p4 : BCOL[v % 5]; c.beginPath(); c.arc(p.x + p.s / 2, p.y + p.s / 2, p.s * 0.28, 0, TAU); c.fill(); } else sh2(c, [0, 1, 2, 3, 6, 0, 1, 2][v], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.27, this.done[i] ? TH.p4 : BCOL[(v + 1) % 5]); }
+          var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; if (sh) fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? TH.p1 : "#f2efe6"); else spCardBack(c, p.x, p.y, p.s, "#ff4d6d");
+          if (sh) { var v = this.sy[i]; if (o.kind === "num") txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#17121f"); else if (o.kind === "let") txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#17121f"); else if (o.kind === "col") { c.fillStyle = this.done[i] ? TH.p4 : BCOL[v % 5]; c.beginPath(); c.arc(p.x + p.s / 2, p.y + p.s / 2, p.s * 0.28, 0, TAU); c.fill(); } else sh2(c, [0, 1, 2, 3, 6, 0, 1, 2][v], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.27, this.done[i] ? TH.p4 : BCOL[(v + 1) % 5]); }
         }
         this.ghost(this.p[0].x + this.p[0].s / 2, this.p[0].y + this.p[0].s / 2, now);
       }
@@ -4113,7 +4131,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   feed.addEventListener("pointerdown", function (e) {
     var sec = e.target.closest(".slide"); down = { id: e.pointerId, x: e.clientX, y: e.clientY, sec: sec };
     if (view !== "play" || paused) return;
-    var g = gameOf(sec);
+    var g = gameOf(sec); if (g) g.inp = true;
     if (g && (g.ctl === "drag" || g.ctl === "hold") && g.state === "play") { var p = local(sec, e); g.pdown(p.x, p.y); }
   });
   feed.addEventListener("pointermove", function (e) {
@@ -4141,7 +4159,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     var h = feed.clientHeight, g;
     if (e.key === "ArrowDown") { e.preventDefault(); feed.scrollBy({ top: h, behavior: "smooth" }); }
     else if (e.key === "ArrowUp") { e.preventDefault(); feed.scrollBy({ top: -h, behavior: "smooth" }); }
-    else if (e.key === " " || e.key === "Enter") { e.preventDefault(); g = activeGame(); if (!g) return; if (g.ctl === "hold" && g.state === "play") { if (!g.holding) g.pdown(g.W / 2, g.H / 2); } else g.tap(g.W / 2, g.H / 2); }
+    else if (e.key === " " || e.key === "Enter") { e.preventDefault(); g = activeGame(); if (!g) return; g.inp = true; if (g.ctl === "hold" && g.state === "play") { if (!g.holding) g.pdown(g.W / 2, g.H / 2); } else g.tap(g.W / 2, g.H / 2); }
     else if (e.key === "ArrowLeft") { g = activeGame(); if (g) g.tap(1, g.H / 2); }
     else if (e.key === "ArrowRight") { g = activeGame(); if (g) g.tap(g.W - 1, g.H / 2); }
   });

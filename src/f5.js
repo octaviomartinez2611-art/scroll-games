@@ -134,7 +134,7 @@
         var c = this.ctx, py = this.H - this.pb - 70, px = this.cx - 38;
         c.fillStyle = "#555"; c.beginPath(); c.moveTo(px, py + 6); c.lineTo(px + 22, py + 56); c.lineTo(px - 22, py + 56); c.closePath(); c.fill();
         c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 10, 4, "#fff");
-        for (var i = 0; i < this.balls.length; i++) { c.fillStyle = BCOL[i % 5]; c.beginPath(); c.arc(this.balls[i].s, -14, 14, 0, TAU); c.fill(); }
+        for (var i = 0; i < this.balls.length; i++) { c.fillStyle = BCOL[i % 5]; c.beginPath(); c.arc(this.balls[i].s, -16, 16, 0, TAU); c.fill(); face(c, this.balls[i].s, -16, 16, this.balls[i].v / 120); }
         c.restore();
         if (o.wind) txt(c, this.wa > 20 ? "→" : this.wa < -20 ? "←" : "", px, this.pt + 60, 40, "rgba(255,255,255,0.5)");
         this.ghostDrag(py - 120, now);
@@ -167,7 +167,7 @@
       draw: function (now) {
         var c = this.ctx, y, bot = this.H - this.pb + 10;
         for (y = this.pt - 10; y < bot; y += 6) { var d = this.d + (this.py - y), w = this.wid(d), ct = this.cen(d, w / 2); c.fillStyle = "#262626"; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); c.fillStyle = "#fff"; c.fillRect(ct - w / 2 - 2, y, 2, 7); c.fillRect(ct + w / 2, y, 2, 7); }
-        if (!this.blink()) { c.fillStyle = o.col; c.beginPath(); c.arc(this.px, this.py, 11, 0, TAU); c.fill(); }
+        if (!this.blink()) { c.fillStyle = o.col; c.beginPath(); c.arc(this.px, this.py, 14, 0, TAU); c.fill(); face(c, this.px, this.py, 14, (this.tx - this.px) / 30); }
         this.ghostDrag(this.py - 100, now);
       }
     });

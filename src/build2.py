@@ -8,7 +8,7 @@ def rep(old,new,cnt=1):
     s=s.replace(old,new)
 # peloteo draws a ball
 ng=ng.replace('''c.fillStyle = "#ff4d6d"; c.beginPath(); c.ellipse(x, y, r * 0.88, r, 0, 0, TAU); c.fill();
-      c.beginPath(); c.moveTo(x - 6, y + r + 8); c.lineTo(x + 6, y + r + 8); c.lineTo(x, y + r - 2); c.closePath(); c.fill();''','''c.fillStyle = "#ff4d6d"; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill();''')
+      c.beginPath(); c.moveTo(x - 6, y + r + 8); c.lineTo(x + 6, y + r + 8); c.lineTo(x, y + r - 2); c.closePath(); c.fill();''','''c.fillStyle = "#ff4d6d"; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); face(c, x, y, r, this.vx / 200);''')
 ng=ng.replace('''      c.strokeStyle = "rgba(255,255,255,0.5)"; c.lineWidth = 2; c.beginPath(); c.moveTo(x, y + r + 8); c.lineTo(x - this.vx * 0.05, y + r + 50); c.stroke();\n''','')
 ng=ng.replace('/* Globito */','/* Peloteo */')
 k=s.index("  /* ================= catalog")

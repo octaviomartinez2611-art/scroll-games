@@ -29,7 +29,7 @@
       var c = this.ctx, i;
       c.fillStyle = RED; c.beginPath(); c.arc(this.food.x, this.food.y, 9, 0, TAU); c.fill();
       if (this.tr.length > 1) { c.strokeStyle = GRN; c.lineWidth = this.r * 2; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath(); c.moveTo(this.tr[0].x, this.tr[0].y); for (i = 1; i < this.tr.length; i++) c.lineTo(this.tr[i].x, this.tr[i].y); c.stroke(); c.lineCap = "butt"; }
-      if (!this.blink()) { c.fillStyle = "#fff"; c.beginPath(); c.arc(this.hx, this.hy, this.r + 1, 0, TAU); c.fill(); }
+      if (!this.blink()) { c.fillStyle = GRN; c.beginPath(); c.arc(this.hx, this.hy, this.r + 4, 0, TAU); c.fill(); face(c, this.hx, this.hy, this.r + 4, 0); }
       this.ghostHold(this.W * 0.22, this.H * 0.6, now);
     }
   });
@@ -162,8 +162,7 @@
       var c = this.ctx, i;
       for (i = 0; i < this.plats.length; i++) { var p = this.plats[i]; fillR(c, p.x, p.y, p.w, 10, 5, p.m ? "#ff9f1c" : "#3ddc84"); }
       if (!this.blink()) {
-        fillR(c, this.px - 14, this.py - 16, 28, 32, 8, "#fff");
-        c.fillStyle = "#000"; c.beginPath(); c.arc(this.px - 5, this.py - 5, 2.6, 0, TAU); c.arc(this.px + 5, this.py - 5, 2.6, 0, TAU); c.fill();
+        fillR(c, this.px - 16, this.py - 18, 32, 36, 12, ORA); face(c, this.px, this.py - 2, 15, (this.tx - this.px) / 30);
       }
       this.ghostDrag(this.H * 0.7, now);
     }
@@ -209,7 +208,7 @@
         c.fillStyle = l.road ? "#262626" : "#24402a"; c.fillRect(0, y, this.W, cs);
         if (l.road) for (i = 0; i < l.cars.length; i++) fillR(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, 5, l.col);
       }
-      var py = base - (this.sy - this.cam + 1) * cs; if (!this.blink()) { fillR(c, this.ox + this.sx * cs + 8, py + 8, cs - 16, cs - 16, 6, "#fff"); c.fillStyle = "#ff4d6d"; c.fillRect(this.ox + this.sx * cs + cs / 2 - 3, py + 10, 6, 6); }
+      var py = base - (this.sy - this.cam + 1) * cs; if (!this.blink()) { fillR(c, this.ox + this.sx * cs + 6, py + 6, cs - 12, cs - 12, 10, YEL); face(c, this.ox + (this.sx + 0.5) * cs, py + cs / 2 + 2, (cs - 12) / 2, 0); }
       this.ghost(this.cx, this.H * 0.55, now);
     }
   });

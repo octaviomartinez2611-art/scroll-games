@@ -35,7 +35,7 @@
         }
       },
       draw: function (now) {
-        var c = this.ctx, i; fillR(c, this.px - this.bw / 2, this.py - 4, this.bw, 20, 6, "#fff");
+        var c = this.ctx, i; fillR(c, this.px - this.bw / 2, this.py - 10, this.bw, 28, 12, o.bc || ORA); face(c, this.px, this.py + 3, 13, (this.tx - this.px) / 30);
         for (i = 0; i < this.its.length; i++) o.draw(c, this.its[i]);
         this.ghostDrag(this.py - 90, now);
       }
@@ -69,7 +69,7 @@
   function mkDodge(o) {
     var C = G("Dodge_" + o.id, {
       ctl: "drag",
-      init: function () { this.px = this.cx; this.tx = this.px; this.pr = 14; this.py = this.H - this.pb - 22; this.hz = []; this.sp = 0.6; },
+      init: function () { this.px = this.cx; this.tx = this.px; this.pr = 17; this.py = this.H - this.pb - 24; this.hz = []; this.sp = 0.6; },
       drag: function (x) { this.tx = clamp(x, this.pr, this.W - this.pr); },
       step: function (dt) {
         this.px += (this.tx - this.px) * Math.min(1, dt * 24); this.sp -= dt;
@@ -103,7 +103,7 @@
           if (o.shape === 0) { c.beginPath(); c.arc(0, 0, z.w / 2, 0, TAU); c.fill(); } else if (o.shape === 2) { c.beginPath(); c.moveTo(0, z.h / 2); c.lineTo(z.w / 2, -z.h / 2); c.lineTo(-z.w / 2, -z.h / 2); c.closePath(); c.fill(); } else { c.fillRect(-z.w / 2, -z.h / 2, z.w, z.h); }
           c.restore();
         }
-        if (!this.blink()) { c.fillStyle = "#fff"; c.beginPath(); c.arc(this.px, this.py, this.pr, 0, TAU); c.fill(); }
+        if (!this.blink()) { c.fillStyle = o.pc || YEL; c.beginPath(); c.arc(this.px, this.py, this.pr, 0, TAU); c.fill(); face(c, this.px, this.py, this.pr, (this.tx - this.px) / 30); }
         this.ghostDrag(this.py - 100, now);
       }
     });
@@ -165,7 +165,7 @@
           if (t.face) { c.fillStyle = YEL; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); c.strokeStyle = "#000"; c.lineWidth = 3; c.beginPath(); c.arc(t.x, t.y + (t.face > 0 ? 2 : 12), 11, t.face > 0 ? 0.2 : PI + 0.4, t.face > 0 ? PI - 0.2 : TAU - 0.4); c.stroke(); c.fillStyle = "#000"; c.beginPath(); c.arc(t.x - 8, t.y - 8, 3, 0, TAU); c.arc(t.x + 8, t.y - 8, 3, 0, TAU); c.fill(); }
           else if (t.txt !== undefined) { c.fillStyle = "#262626"; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); txt(c, String(t.txt), t.x, t.y + 1, t.r * 0.9, "#fff"); }
           else if (t.bomb) dDraw(c, { x: t.x, y: t.y, bomb: 1 });
-          else sh2(c, t.s || 0, t.x, t.y, t.r * 0.85, t.col);
+          else { sh2(c, t.s || 0, t.x, t.y, t.r * 0.85, t.col); if (!t.s && t.col !== WHT) face(c, t.x, t.y, t.r * 0.85, 0); }
           c.globalAlpha = 1;
         }
         this.ghost(this.cx - 30, this.cy, now);
