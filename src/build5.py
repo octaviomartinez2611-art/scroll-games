@@ -261,3 +261,14 @@ rep('  /* ---------- main loop ---------- */','''  function normTxt(t) { return 
   /* ---------- main loop ---------- */''')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok8')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- link directo a un juego: sitio/#id (guiones en vez de guion bajo, ej. #c-eggs) ----
+rep('  /* ---------- main loop ---------- */','''  function openFromHash() { var h = (location.hash || "").slice(1).replace(/-/g, "_"); if (h && byId[h]) setTimeout(function () { goTo(h); }, 60); }
+  window.addEventListener("hashchange", openFromHash); openFromHash();
+
+  /* ---------- main loop ---------- */''')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok9')

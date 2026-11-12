@@ -16,6 +16,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
   - No todo tiene que ser tocar: usar arrastrar, mantener apretado o deslizar cuando el juego lo pide.
   - Nada de azar puro en el feed: solo el algoritmo (lo pidió explícitamente).
   - Máximo espacio de juego: el nombre del juego va abajo a la izquierda, sin tira detrás y sin bloquear toques (se juega encima y al lado); HUD compacto; barra de navegación fina.
+  - Link directo a un juego: `sitio/#id` con guiones en vez de guion bajo (ej. `#snake`, `#c-eggs`, `#f-sub`).
   - Al elegir un juego para mandar hay un buscador (por nombre y por descripción, sin importar tildes).
   - Botones de la derecha (like, guardar, enviar, ayuda) se esconden mientras jugás y vuelven 1 s después de soltar. El botón 2× (velocidad doble) está arriba del corazón y nunca se esconde.
 
