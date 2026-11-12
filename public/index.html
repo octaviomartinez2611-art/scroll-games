@@ -3474,7 +3474,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     { id: "land", name: "Alunizaje", how: "Mantené apretado para encender el motor y arrastrá hacia donde querés ir. Aterrizá despacio en la zona verde.", accent: "#ff9f1c", ctor: Land },
     { id: "plink", name: "Bolitas", how: "Tocá donde querés soltar la bola. Evitá el 0.", accent: "#ffd23f", ctor: Plink }
   ];
-  CATALOG = CATALOG.concat(EXTRA);
+  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].indexOf(g.id) < 0; }); /* sin juegos de apuestas */
   (function () { var sd = 20260; function rn() { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; } for (var q = CATALOG.length - 1; q > 0; q--) { var w = Math.floor(rn() * (q + 1)), tt = CATALOG[q]; CATALOG[q] = CATALOG[w]; CATALOG[w] = tt; } })();
   var byId = {}; CATALOG.forEach(function (g) { byId[g.id] = g; });
   var NG = CATALOG.length, N = 0;
