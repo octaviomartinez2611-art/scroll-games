@@ -237,7 +237,7 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
 '''+s[j:]
 
 # start: check session before the main loop
-rep("  /* ---------- main loop ---------- */","""  if (TOK) api("me").then(signedIn).catch(function (x) { if (!TOK) return; }); else showLogin();
+rep("  /* ---------- main loop ---------- */","""  api("me").then(signedIn).catch(function () { if (!TOK) showLogin(); });
 
   /* ---------- main loop ---------- */""")
 

@@ -22,7 +22,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - El cartel "Powered by Netlify" (plan gratis) va abajo a la derecha: por eso la barra deja libres ~200 px a la derecha en pantallas angostas.
 - Versión sin servidor como Artifact de Claude: https://claude.ai/artifact/1Fm8HHioxx9KuSJ8m9dL3U (amigos y chat solo locales ahí).
 - `public/index.html`: la app generada (no editar a mano).
-- `netlify/functions/api.mjs`: servidor. Cuentas con usuario + PIN (scrypt), sesiones, estado del jugador, amigos, mensajes, reportes y panel de admin. Guarda en Netlify Blobs (store `arcade`), una clave por mensaje y por amistad para no pisar datos.
+- `netlify/functions/api.mjs`: servidor. Cuentas con usuario + PIN (scrypt), sesiones, estado del jugador, amigos, mensajes, reportes y panel de admin. Guarda en Netlify Blobs (store `arcade`), una clave por mensaje y por amistad para no pisar datos. La sesión se guarda en `localStorage` (`sa-token`) y además en una cookie HttpOnly de un año (`sa`), así el sitio recuerda al usuario sin pedir el PIN otra vez.
 - Código de admin: variable de entorno `ADMIN_CODE` en Netlify. NUNCA ponerlo en el repo (es público). Se usa una sola vez por cuenta desde Perfil → "Soy el administrador".
 
 ## Cómo se arma la app (src/)
