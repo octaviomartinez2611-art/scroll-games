@@ -316,3 +316,69 @@ rep('<button class="toggle" id="sndBtn" aria-pressed="true">','<button class="da
 rep('  function renderProfile() {\n    var inf = xpInfo(P.xp);','  $("dailyBtn").addEventListener("click", function () { goTo(dailyGame().id); });\n  function renderProfile() {\n    var inf = xpInfo(P.xp); $("dailyName").textContent = dailyGame().name + " · " + (P.best[dailyGame().id] || 0);')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok10')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- sprites con detalle en todas las familias ----
+rep('  var SCENE_BY = {};', open('sprites.js',encoding='utf-8').read()+'\n  var SCENE_BY = {};')
+# atrapar
+rep('''} else if (it.egg) { c.fillStyle = "#fff"; c.beginPath(); c.ellipse(it.x, it.y, 13, 17, 0, 0, TAU); c.fill(); } else if (it.bomb) { c.fillStyle = TH.p3; c.beginPath(); c.arc(it.x, it.y, 16, 0, TAU); c.fill(); c.strokeStyle = RED; c.lineWidth = 3; c.beginPath(); c.moveTo(it.x - 6, it.y - 6); c.lineTo(it.x + 6, it.y + 6); c.moveTo(it.x + 6, it.y - 6); c.lineTo(it.x - 6, it.y + 6); c.stroke(); } else sh2(c, it.s, it.x, it.y, it.r, it.col); }''',
+'''} else if (it.egg) spEgg(c, it.x, it.y); else if (it.bomb) spBomb(c, it.x, it.y, 15); else if (it.s === 0 && it.col === YEL) spCoin(c, it.x, it.y, it.r); else if (it.s === 0 && it.col === GRY) spRock(c, it.x, it.y, it.r, "#8a8a8a", it.x * 7); else if (it.s === 1 && it.col === GRY) spRock(c, it.x, it.y, it.r, "#8a8a8a", it.x * 7); else if (it.s === 0 && it.col !== WHT && it.col !== "#2ec4b6") spFruit(c, it.x, it.y, it.r, it.col); else if (it.col === "#2ec4b6") { poly(c, [it.x - it.r * 0.8, it.y, it.x, it.y - it.r * 1.8, it.x + it.r * 0.8, it.y], it.col); dot(c, it.x, it.y, it.r * 0.8, it.col); } else sh2(c, it.s, it.x, it.y, it.r, it.col); }''')
+# esquivar
+rep('''          if (o.shape === 0) { c.beginPath(); c.arc(0, 0, z.w / 2, 0, TAU); c.fill(); } else if (o.shape === 2) { c.beginPath(); c.moveTo(0, z.h / 2); c.lineTo(z.w / 2, -z.h / 2); c.lineTo(-z.w / 2, -z.h / 2); c.closePath(); c.fill(); } else { c.fillRect(-z.w / 2, -z.h / 2, z.w, z.h); }''',
+'''          var dk = DODGE_SP[o.id];
+          if (dk === "rock") spRock(c, 0, 0, z.w / 2, o.col === GRY ? "#8a8a8a" : "#a9a9b3", z.w * 13);
+          else if (dk === "fire") { c.restore(); spFire(c, z.x, z.y, z.w / 2); c.save(); }
+          else if (dk === "flake") spFlake(c, 0, 0, z.w / 2);
+          else if (dk === "saucer") spSaucer(c, 0, 0, z.w * 1.3, o.col);
+          else if (dk === "bubble") { c.strokeStyle = "rgba(255,255,255,0.75)"; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, z.w / 2, 0, TAU); c.stroke(); dot(c, -z.w * 0.18, -z.w * 0.18, z.w * 0.08, "rgba(255,255,255,0.6)"); }
+          else if (dk === "drop") { poly(c, [-z.w / 2, 0, 0, -z.w * 1.1, z.w / 2, 0], o.col); dot(c, 0, 0, z.w / 2, o.col); }
+          else if (dk === "brick") spBrick(c, -z.w / 2, -z.h / 2, z.w, z.h, o.col);
+          else if (dk === "saw") { c.restore(); spSaw(c, z.x, z.y, z.w / 2, z.t); c.save(); }
+          else if (dk === "crate") spCrate(c, -z.w / 2, -z.h / 2, z.w, z.h);
+          else if (dk === "column") { c.fillStyle = "#d9d4c7"; c.fillRect(-z.w / 2, -z.h / 2, z.w, z.h); c.fillStyle = "#b5ae9c"; for (var cx3 = -z.w / 2 + 5; cx3 < z.w / 2 - 2; cx3 += 8) c.fillRect(cx3, -z.h / 2 + 8, 2, z.h - 16); c.fillStyle = "#e9e4d7"; c.fillRect(-z.w / 2 - 4, -z.h / 2, z.w + 8, 8); c.fillRect(-z.w / 2 - 4, z.h / 2 - 8, z.w + 8, 8); }
+          else if (dk === "arrow") spArrow(c, 0, 0, z.w, z.h);
+          else if (dk === "leaf") spLeaf(c, 0, 0, z.w, z.h, o.col, z.t);
+          else if (dk === "missile") spMissile(c, 0, 0, z.w, z.h);
+          else if (dk === "spike") poly(c, [0, z.h / 2, z.w / 2, -z.h / 2, 0, -z.h / 4, -z.w / 2, -z.h / 2], "#d9dde3");
+          else if (dk === "ninja") { c.restore(); spStar4(c, z.x, z.y, z.w / 2 + 2, z.t); c.save(); }
+          else if (o.shape === 0) { c.beginPath(); c.arc(0, 0, z.w / 2, 0, TAU); c.fill(); } else if (o.shape === 2) { c.beginPath(); c.moveTo(0, z.h / 2); c.lineTo(z.w / 2, -z.h / 2); c.lineTo(-z.w / 2, -z.h / 2); c.closePath(); c.fill(); } else { c.fillRect(-z.w / 2, -z.h / 2, z.w, z.h); }''')
+rep('  function mkDodge(o) {','''  var DODGE_SP = { met: "rock", big: "rock", hail: "rock", aval: "rock", wind: "rock", fire: "fire", cnn: "fire", snow: "flake", ufo: "saucer", bub: "bubble", acid: "drop", brk: "brick", bar: "brick", saw: "saw", cube: "crate", mix: "crate", col: "column", arr: "arrow", need: "arrow", leaf: "leaf", mis: "missile", rkt2: "missile", spk: "spike", ninja: "ninja" };
+  function mkDodge(o) {''')
+# corredores
+rep('''          else if (b.type === "spike") { c.fillStyle = "#fff"; c.beginPath(); c.moveTo(b.x, this.gy); c.lineTo(b.x + b.w / 2, this.gy - b.h); c.lineTo(b.x + b.w, this.gy); c.closePath(); c.fill(); }
+          else if (b.type === "fly") fillR(c, b.x, b.y, b.w, b.h, 6, RED);
+          else fillR(c, b.x, this.gy - b.h, b.w, b.h, 4, b.type === "tall" ? ORA : "#f2f2f2");''','''          else if (b.type === "spike") spSpike(c, b.x, this.gy, b.w, b.h);
+          else if (b.type === "fly") spBar(c, b.x, b.y, b.w, b.h);
+          else if (b.type === "tall") spBrick(c, b.x, this.gy - b.h, b.w, b.h, ORA);
+          else spCrate(c, b.x, this.gy - b.h, b.w, b.h);''')
+# tiradores
+rep('''          if (o.sh === 0) { c.beginPath(); c.arc(e.x, e.y, e.w / 2, 0, TAU); c.fill(); } else if (o.sh === 2) { c.beginPath(); c.moveTo(e.x, e.y + e.w / 2); c.lineTo(e.x + e.w / 2, e.y - e.w / 2); c.lineTo(e.x - e.w / 2, e.y - e.w / 2); c.closePath(); c.fill(); } else if (o.sh === 3) { c.beginPath(); c.ellipse(e.x, e.y, e.w / 2, e.w / 3.2, 0, 0, TAU); c.fill(); } else fillR(c, e.x - e.w / 2, e.y - e.w / 2, e.w, e.w, 6, col);''','''          var ec = e.fr ? GRN : (k < 1 ? mix(col.length === 7 ? col : "#ff4d6d", 0.35 * (1 - k)) : col);
+          if (o.id === "bal") spBalloon(c, e.x, e.y, e.w / 2, ec); else if (o.id === "bug" || o.id === "swm") spBug(c, e.x, e.y, e.w / 2, ec);
+          else if (o.sh === 0) spRock(c, e.x, e.y, e.w / 2, e.fr ? GRN : "#8a8a8a", e.w * 11); else if (o.sh === 2) spFighter(c, e.x, e.y, e.w, ec); else if (o.sh === 3) spSaucer(c, e.x, e.y, e.w, ec); else spTank(c, e.x, e.y, e.w, ec);''')
+rep('''{ this.ctx.globalAlpha = this.fadeA(); c.fillStyle = "#fff"; c.beginPath(); c.moveTo(this.px, this.py - 16); c.lineTo(this.px + 16, this.py + 10); c.lineTo(this.px - 16, this.py + 10); c.closePath(); c.fill();  this.ctx.globalAlpha = 1; }''','''{ this.ctx.globalAlpha = this.fadeA(); spShip(c, this.px, this.py, 17);  this.ctx.globalAlpha = 1; }''')
+rep('''{ this.ctx.globalAlpha = this.fadeA(); c.fillStyle = "#fff"; c.beginPath(); c.moveTo(this.px, this.py - 14); c.lineTo(this.px + 18, this.py + 10); c.lineTo(this.px - 18, this.py + 10); c.closePath(); c.fill();  this.ctx.globalAlpha = 1; }''','''{ this.ctx.globalAlpha = this.fadeA(); spShip(c, this.px, this.py, 17);  this.ctx.globalAlpha = 1; }''')
+# vuelo
+rep('''if (b.t === "pipe") { fillR(c, b.x, -30, b.w, b.gy - this.gap / 2 + 30, 6, GRN); fillR(c, b.x, b.gy + this.gap / 2, b.w, this.H, 6, GRN); }''','''if (b.t === "pipe") { spPipe(c, b.x, -30, b.w, b.gy - this.gap / 2 + 30, false); spPipe(c, b.x, b.gy + this.gap / 2, b.w, this.H, true); }''')
+rep('''          else { c.fillStyle = YEL; c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill(); }
+        }
+        { this.ctx.globalAlpha = this.fadeA(); c.fillStyle = o.col; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU);''','''          else spCoin(c, b.x, b.y, b.r);
+        }
+        { this.ctx.globalAlpha = this.fadeA(); c.fillStyle = o.col; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU);''')
+# pista: mano que toca
+rep('''    var c = this.ctx; c.fillStyle = "rgba(255,255,255,0.9)"; c.beginPath(); c.arc(x, y, 16, 0, TAU); c.fill();
+    c.fillStyle = "rgba(0,0,0,0.25)"; c.beginPath(); c.arc(x, y, 6, 0, TAU); c.fill();''','''    var c = this.ctx, k = (now % 900) / 900, pr = k < 0.3 ? k / 0.3 : 1; c.globalAlpha = 0.92; spHand(c, x + 4, y + 22 - 6 * Math.sin(pr * PI)); c.globalAlpha = 1;''')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok11')
+import re
+s=open('swipe-arcade.html',encoding='utf-8').read()
+a=s.index('var Ship = G("Ship"'); b=s.index('\n  });', a)
+seg=s[a:b]
+seg=seg.replace('this.sy = this.H - this.pb + 10;','this.sy = this.H - this.pb - 46;')
+seg=seg.replace('c.fillStyle = e.c; c.beginPath(); c.moveTo(e.x, e.y + 17); c.lineTo(e.x + 17, e.y - 8); c.lineTo(e.x + 8, e.y - 15); c.lineTo(e.x - 8, e.y - 15); c.lineTo(e.x - 17, e.y - 8); c.closePath(); c.fill();','spFighter(c, e.x, e.y, 36, e.c);')
+seg,n=re.subn(r'\{ this\.ctx\.globalAlpha = this\.fadeA\(\); c\.fillStyle = vgrad\(c, this\.sy - 22.*?this\.ctx\.globalAlpha = 1; \}','{ this.ctx.globalAlpha = this.fadeA(); spShip(c, this.sx, this.sy, 19); this.ctx.globalAlpha = 1; }',seg,flags=re.S)
+assert n==1
+s=s[:a]+seg+s[b:]
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok12')
