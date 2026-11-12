@@ -412,7 +412,23 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
   /* ---------- base game ---------- */
   var UI = { onEnd: null };
+  /* Paletas: un tono por juego, lejos del color principal del juego para que todo se vea */
+  var HUES = [268, 292, 318, 340, 356, 14, 28, 40, 132, 152, 166, 178];
+  function hexHue(h) {
+    if (!h || h[0] !== "#" || h.length < 7) return -1; var r = parseInt(h.substr(1, 2), 16) / 255, g = parseInt(h.substr(3, 2), 16) / 255, b = parseInt(h.substr(5, 2), 16) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if (d < 0.15) return -1;
+    var hh = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return (hh * 60 + 360) % 360;
+  }
+  function themeFor(cfg) {
+    var id = cfg.id || "", hs = 0, k; for (k = 0; k < id.length; k++) hs = (hs * 31 + id.charCodeAt(k)) >>> 0;
+    var ah = hexHue(cfg.accent), ok = HUES.filter(function (h) { if (ah < 0) return true; var dd = Math.abs(h - ah) % 360; return Math.min(dd, 360 - dd) > 60; });
+    var h = ok[hs % ok.length], sat = (h > 120 && h < 190) ? 45 : 55;
+    function L(l) { return "hsl(" + h + "," + sat + "%," + l + "%)"; }
+    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40) };
+  }
+  var TH = themeFor({ id: "x" });
   function Game(sec, cfg) {
+    this.th = themeFor(cfg);
     this.sec = sec; this.cfg = cfg;
     this.cv = sec.querySelector("canvas"); this.ctx = this.cv.getContext("2d");
     this.el = { score: sec.querySelector(".score"), best: sec.querySelector(".best"), hearts: sec.querySelectorAll(".hearts svg") };
@@ -521,7 +537,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     c.fillStyle = "rgba(0,0,0,0.25)"; c.beginPath(); c.arc(x, y, 6, 0, TAU); c.fill();
   };
   Game.prototype.render = function (now) {
-    var c = this.ctx, i;
+    var c = this.ctx, i; TH = this.th;
     c.clearRect(0, 0, this.W, this.H); c.save();
     if (this.shake > 0) { var s = this.shake * 26; c.translate(rnd(-s, s), rnd(-s, s)); }
     this.draw(now);
@@ -882,7 +898,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var c = this.ctx, i;
       for (i = 0; i < this.items.length; i++) {
         var it = this.items[i];
-        if (it.bad) { c.fillStyle = "#444"; c.beginPath(); c.arc(it.x, it.y, 15, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; c.beginPath(); c.arc(it.x, it.y, 15, 0, TAU); c.stroke(); txt(c, "!", it.x, it.y + 1, 18, "#ff4d4d"); }
+        if (it.bad) { c.fillStyle = TH.p4; c.beginPath(); c.arc(it.x, it.y, 15, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; c.beginPath(); c.arc(it.x, it.y, 15, 0, TAU); c.stroke(); txt(c, "!", it.x, it.y + 1, 18, "#ff4d4d"); }
         else ball(c, it.x, it.y, 14, it.c);
       }
       var a = this.cfg.accent, x = this.bx, y = this.by;
@@ -925,7 +941,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         c.fillStyle = "rgba(255,255,255,0.1)"; c.beginPath(); c.ellipse(p.x, p.y + gs * 0.18, gs * 0.36, gs * 0.14, 0, 0, TAU); c.fill();
         if (m.st) {
           var u = Math.min(1, m.t / 0.15) * (1 - clamp((m.t - (m.ttl - 0.15)) / 0.15, 0, 1)), r = gs * 0.28 * (0.4 + 0.6 * u), y = p.y - u * gs * 0.12;
-          if (m.bomb) { c.fillStyle = "#3a3a3a"; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.stroke(); txt(c, "!", p.x, y + 1, r * 1.1, "#ff4d4d"); }
+          if (m.bomb) { c.fillStyle = TH.p3; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; c.beginPath(); c.arc(p.x, y, r, 0, TAU); c.stroke(); txt(c, "!", p.x, y + 1, r * 1.1, "#ff4d4d"); }
           else { ball(c, p.x, y, r, this.cfg.accent); c.fillStyle = "#000"; c.beginPath(); c.arc(p.x - r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.arc(p.x + r * 0.3, y - r * 0.1, r * 0.1, 0, TAU); c.fill(); if (!ghost) ghost = { x: p.x, y: y }; }
         }
       }
@@ -990,7 +1006,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       }
     },
     draw: function (now) {
-      var c = this.ctx, col = this.phase === "red" ? "#ff3b3b" : this.phase === "green" ? "#3ddc84" : "#555";
+      var c = this.ctx, col = this.phase === "red" ? "#ff3b3b" : this.phase === "green" ? "#3ddc84" : TH.p4;
       c.fillStyle = "rgba(255,255,255,0.08)"; c.beginPath(); c.arc(this.cx, this.cy, this.R + 18, 0, TAU); c.fill(); ball(c, this.cx, this.cy, this.R, col);
       if (this.ms) txt(c, this.ms, this.cx, this.cy + this.R + 44, 26, "#fff");
       if (this.phase === "green") this.ghost(this.cx, this.cy, now);
@@ -1157,7 +1173,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var edge = this.phase === "reveal" ? (this.ok ? "#3ddc84" : "#ff4d4d") : "#fff";
       c.fillStyle = edge; rr(c, this.cx - w / 2 - 5, this.cy - h / 2 - 5, w + 10, h + 10, 24); c.fill();
       c.fillStyle = "#f4f4f4"; rr(c, this.cx - w / 2, this.cy - h / 2, w, h, 20); c.fill();
-      txt(c, String(shown), this.cx, this.cy + 4, 92, "#111");
+      txt(c, String(shown), this.cx, this.cy + 4, 92, TH.p1);
       c.fillStyle = "rgba(255,95,110,0.85)"; c.beginPath(); c.moveTo(this.W * 0.1, this.cy - 22); c.lineTo(this.W * 0.22, this.cy - 22); c.lineTo(this.W * 0.16, this.cy + 22); c.closePath(); c.fill();
       c.fillStyle = "rgba(61,220,132,0.85)"; c.beginPath(); c.moveTo(this.W * 0.78, this.cy + 22); c.lineTo(this.W * 0.9, this.cy + 22); c.lineTo(this.W * 0.84, this.cy - 22); c.closePath(); c.fill();
       this.ghost(Math.floor(now / 1500) % 2 ? this.W * 0.84 : this.W * 0.16, this.cy + 80, now);
@@ -1221,7 +1237,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       for (var i = 0; i < 12; i++) {
         var cd = this.cards[i], x = this.gx + (i % 4) * cs + 5, y = this.gy + Math.floor(i / 4) * cs + 5, s = cs - 10, up = cd.st > 0 || this.reveal > 0;
         if (cd.st === 0 && this.reveal <= 0 && first < 0) first = i;
-        if (up) { c.fillStyle = cd.st === 2 ? "#2a2a2a" : "#f2f2f2"; rr(c, x, y, s, s, 14); c.fill(); shape(c, cd.id, x + s / 2, y + s / 2, s * 0.24, cd.st === 2 ? "rgba(255,255,255,0.35)" : PAL[cd.id]); }
+        if (up) { c.fillStyle = cd.st === 2 ? TH.p3 : "#f2f2f2"; rr(c, x, y, s, s, 14); c.fill(); shape(c, cd.id, x + s / 2, y + s / 2, s * 0.24, cd.st === 2 ? "rgba(255,255,255,0.35)" : PAL[cd.id]); }
         else { c.fillStyle = "#1e1e1e"; rr(c, x, y, s, s, 14); c.fill(); c.strokeStyle = "rgba(255,255,255,0.14)"; c.lineWidth = 2; rr(c, x, y, s, s, 14); c.stroke(); c.fillStyle = this.cfg.accent; c.beginPath(); c.arc(x + s / 2, y + s / 2, 5, 0, TAU); c.fill(); }
       }
       if (first >= 0) this.ghost(this.gx + (first % 4 + 0.5) * cs, this.gy + (Math.floor(first / 4) + 0.5) * cs, now);
@@ -1419,7 +1435,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       c.strokeStyle = "#fff"; c.lineWidth = 4; c.beginPath(); c.arc(this.hx, this.hy + 8, 8, 0, PI); c.stroke();
       for (i = 0; i < this.fish.length; i++) {
         var f = this.fish[i]; c.save(); c.translate(f.x, f.y); c.scale(f.dir, 1);
-        if (f.bad) { c.fillStyle = "#444"; c.beginPath(); c.arc(0, 0, 17, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.beginPath(); c.moveTo(Math.cos(a) * 17, Math.sin(a) * 17); c.lineTo(Math.cos(a) * 25, Math.sin(a) * 25); c.stroke(); } }
+        if (f.bad) { c.fillStyle = TH.p4; c.beginPath(); c.arc(0, 0, 17, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.beginPath(); c.moveTo(Math.cos(a) * 17, Math.sin(a) * 17); c.lineTo(Math.cos(a) * 25, Math.sin(a) * 25); c.stroke(); } }
         else { c.fillStyle = f.c; c.beginPath(); c.ellipse(0, 0, 22, 13, 0, 0, TAU); c.fill(); c.beginPath(); c.moveTo(-18, 0); c.lineTo(-33, -11); c.lineTo(-33, 11); c.closePath(); c.fill(); c.fillStyle = "#000"; c.beginPath(); c.arc(11, -3, 2.6, 0, TAU); c.fill(); }
         c.restore();
       }
@@ -1612,7 +1628,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       c.strokeStyle = "#fff"; c.lineWidth = 4; c.beginPath(); c.arc(this.bx, this.hy + 8, 8, 0, PI); c.stroke();
       for (i = 0; i < this.fish.length; i++) {
         var f = this.fish[i]; c.save(); c.translate(f.x, f.y); c.scale(f.dir, 1);
-        if (f.bad) { c.fillStyle = "#444"; c.beginPath(); c.arc(0, 0, 17, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.beginPath(); c.moveTo(Math.cos(a) * 17, Math.sin(a) * 17); c.lineTo(Math.cos(a) * 25, Math.sin(a) * 25); c.stroke(); } }
+        if (f.bad) { c.fillStyle = TH.p4; c.beginPath(); c.arc(0, 0, 17, 0, TAU); c.fill(); c.strokeStyle = "#ff4d4d"; c.lineWidth = 3; for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.beginPath(); c.moveTo(Math.cos(a) * 17, Math.sin(a) * 17); c.lineTo(Math.cos(a) * 25, Math.sin(a) * 25); c.stroke(); } }
         else { c.fillStyle = f.c; c.beginPath(); c.ellipse(0, 0, 22, 13, 0, 0, TAU); c.fill(); c.beginPath(); c.moveTo(-18, 0); c.lineTo(-33, -11); c.lineTo(-33, 11); c.closePath(); c.fill(); c.fillStyle = "#000"; c.beginPath(); c.arc(11, -3, 2.6, 0, TAU); c.fill(); }
         c.restore();
       }
@@ -1737,7 +1753,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       for (i = 0; i < this.hv.length; i++) { f = this.hv[i]; c.fillStyle = f.c; c.beginPath(); c.arc(f.x, f.y, f.r, f.s < 0 ? PI / 2 : -PI / 2, f.s < 0 ? PI * 1.5 : PI / 2); c.fill(); }
       for (i = 0; i < this.fr.length; i++) {
         f = this.fr[i]; if (f.dead) continue;
-        c.fillStyle = f.bomb ? "#3a3a3a" : f.c; c.beginPath(); c.arc(f.x, f.y, f.r, 0, TAU); c.fill();
+        c.fillStyle = f.bomb ? TH.p3 : f.c; c.beginPath(); c.arc(f.x, f.y, f.r, 0, TAU); c.fill();
         if (f.bomb) { c.strokeStyle = "#ff4d6d"; c.lineWidth = 4; c.beginPath(); c.moveTo(f.x - 8, f.y - 8); c.lineTo(f.x + 8, f.y + 8); c.moveTo(f.x + 8, f.y - 8); c.lineTo(f.x - 8, f.y + 8); c.stroke(); }
       }
       if (this.trail.length > 1) {
@@ -1829,7 +1845,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var c = this.ctx, cs = this.cs, r, i, r0 = Math.floor(this.cam) - 1, r1 = Math.ceil(this.cam + (this.H - this.pb) / cs) + 1, base = this.H - this.pb;
       for (r = r0; r <= r1; r++) {
         if (r < 0 || !this.lanes[r]) continue; var l = this.lanes[r], y = base - (r - this.cam + 1) * cs;
-        c.fillStyle = l.road ? "#262626" : "#24402a"; c.fillRect(0, y, this.W, cs);
+        c.fillStyle = l.road ? TH.p2 : "#24402a"; c.fillRect(0, y, this.W, cs);
         if (l.road) for (i = 0; i < l.cars.length; i++) fillR(c, this.ox + this.carX(l, i) * cs, y + 6, l.w * cs, cs - 12, 5, l.col);
       }
       var py = base - (this.sy - this.cam + 1) * cs; { this.ctx.globalAlpha = this.fadeA(); fillR(c, this.ox + this.sx * cs + 8, py + 8, cs - 16, cs - 16, 6, "#fff"); c.fillStyle = "#ff4d6d"; c.fillRect(this.ox + this.sx * cs + cs / 2 - 3, py + 10, 6, 6);  this.ctx.globalAlpha = 1; }
@@ -1858,7 +1874,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx;
-      c.fillStyle = "#262626"; c.fillRect(0, this.gy, this.W, this.H - this.gy);
+      c.fillStyle = TH.p2; c.fillRect(0, this.gy, this.W, this.H - this.gy);
       c.fillStyle = "#ff4d6d"; c.beginPath(); c.arc(this.tx, this.gy - 14, 14, 0, TAU); c.fill();
       c.fillStyle = "#fff"; c.beginPath(); c.arc(this.tx, this.gy - 14, 6, 0, TAU); c.fill();
       c.strokeStyle = "#fff"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(this.lx - 10, this.ly + 10); c.lineTo(this.lx + 14, this.ly - 8); c.stroke(); c.lineCap = "butt";
@@ -1910,7 +1926,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, cs = this.cs, r, k;
-      fillR(c, this.ox - 6, this.oy - 6, 7 * cs + 12, 6 * cs + 12, 10, "#222");
+      fillR(c, this.ox - 6, this.oy - 6, 7 * cs + 12, 6 * cs + 12, 10, TH.p2);
       for (r = 0; r < 6; r++) for (k = 0; k < 7; k++) {
         var v = this.b[r][k]; c.fillStyle = v === 1 ? "#ff4d6d" : v === 2 ? "#ffd23f" : "#000"; c.beginPath(); c.arc(this.ox + (k + 0.5) * cs, this.oy + (r + 0.5) * cs, cs * 0.4, 0, TAU); c.fill();
       }
@@ -1988,7 +2004,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var c = this.ctx, cs = this.cs, i, NC = ["", "#3ddc84", "#ffd23f", "#ff9f1c", "#ff4d6d", "#c77dff", "#ff5fd2", "#fff", "#fff"];
       for (i = 0; i < 63; i++) {
         var cell = this.cells[i], x = this.ox + (i % 7) * cs, y = this.oy + Math.floor(i / 7) * cs;
-        fillR(c, x + 1.5, y + 1.5, cs - 3, cs - 3, 4, cell.x ? "#ff4d6d" : cell.o ? "#141414" : "#3a3a3a");
+        fillR(c, x + 1.5, y + 1.5, cs - 3, cs - 3, 4, cell.x ? "#ff4d6d" : cell.o ? TH.p1 : TH.p3);
         if (cell.o && cell.n) txt(c, String(cell.n), x + cs / 2, y + cs / 2 + 1, cs * 0.5, NC[cell.n]);
         if (cell.x) { c.fillStyle = "#000"; c.beginPath(); c.arc(x + cs / 2, y + cs / 2, cs * 0.2, 0, TAU); c.fill(); }
       }
@@ -2015,11 +2031,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     step: function (dt) { if (this.rev > 0) { this.rev -= dt; if (this.rev <= 0) { this.mine = -1; this.opp = -1; } } },
     draw: function (now) {
       var c = this.ctx, i, N = ["Piedra", "Papel", "Tijera"];
-      fillR(c, this.cx - 64 - 20, this.cy - 120, 128, 128, 18, "#1a1a1a");
+      fillR(c, this.cx - 64 - 20, this.cy - 120, 128, 128, 18, TH.p1);
       if (this.opp >= 0) this.sym(c, this.opp, this.cx - 20, this.cy - 56, 34, "#ff4d6d"); else txt(c, "?", this.cx - 20, this.cy - 54, 54, "rgba(255,255,255,0.3)");
       for (i = 0; i < 3; i++) {
         var x = this.bx0 + i * (this.bw + 10);
-        fillR(c, x, this.by, this.bw, this.bh, 14, this.mine === i ? "#333" : "#1c1c1c");
+        fillR(c, x, this.by, this.bw, this.bh, 14, this.mine === i ? TH.p3 : TH.p1);
         this.sym(c, i, x + this.bw / 2, this.by + 44, 22, "#fff"); txt(c, N[i], x + this.bw / 2, this.by + 90, 15, "rgba(255,255,255,0.7)", "center", 700);
       }
       this.ghost(this.bx0 + this.bw / 2, this.by + this.bh / 2, now);
@@ -2045,7 +2061,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     draw: function (now) {
       var c = this.ctx, cs = this.cs, i;
       fillR(c, this.ox, this.oy - 24, 4 * cs, 8, 4, "rgba(255,255,255,0.12)"); fillR(c, this.ox, this.oy - 24, 4 * cs * Math.max(0, this.tl / this.tm), 8, 4, "#fff");
-      for (i = 0; i < 16; i++) fillR(c, this.ox + (i % 4) * cs + 3, this.oy + Math.floor(i / 4) * cs + 3, cs - 6, cs - 6, 10, this.b[i] ? "#ffd23f" : "#262626");
+      for (i = 0; i < 16; i++) fillR(c, this.ox + (i % 4) * cs + 3, this.oy + Math.floor(i / 4) * cs + 3, cs - 6, cs - 6, 10, this.b[i] ? "#ffd23f" : TH.p2);
       this.ghost(this.ox + 1.5 * cs, this.oy + 1.5 * cs, now);
     }
   });
@@ -2237,7 +2253,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     },
     draw: function (now) {
       var c = this.ctx, x = this.x, y = this.y;
-      c.fillStyle = "#262626"; c.fillRect(0, this.gy, this.W, this.H - this.gy); fillR(c, this.padx, this.gy - 3, this.pw, 6, 2, "#3ddc84");
+      c.fillStyle = TH.p2; c.fillRect(0, this.gy, this.W, this.H - this.gy); fillR(c, this.padx, this.gy - 3, this.pw, 6, 2, "#3ddc84");
       if (this.holding && this.state === "play") { c.fillStyle = "#ff9f1c"; c.beginPath(); c.moveTo(x - 7, y + 12); c.lineTo(x + 7, y + 12); c.lineTo(x, y + 26 + Math.random() * 8); c.closePath(); c.fill(); }
       c.strokeStyle = "#fff"; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 10, y + 6); c.lineTo(x - 15, y + 14); c.moveTo(x + 10, y + 6); c.lineTo(x + 15, y + 14); c.stroke();
       fillR(c, x - 12, y - 12, 24, 20, 6, "#fff");
@@ -2272,7 +2288,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     draw: function (now) {
       var c = this.ctx, i;
       c.fillStyle = "#fff"; for (i = 0; i < this.pegs.length; i++) { c.beginPath(); c.arc(this.pegs[i].x, this.pegs[i].y, 4, 0, TAU); c.fill(); }
-      for (i = 0; i < 8; i++) { fillR(c, this.x0 + i * this.sp + 2, this.slotY, this.sp - 4, 40, 6, this.vals[i] ? "#222" : "#4a1a22"); txt(c, String(this.vals[i]), this.x0 + (i + 0.5) * this.sp, this.slotY + 21, 18, this.vals[i] ? "#fff" : "#ff4d6d"); }
+      for (i = 0; i < 8; i++) { fillR(c, this.x0 + i * this.sp + 2, this.slotY, this.sp - 4, 40, 6, this.vals[i] ? TH.p2 : "#4a1a22"); txt(c, String(this.vals[i]), this.x0 + (i + 0.5) * this.sp, this.slotY + 21, 18, this.vals[i] ? "#fff" : "#ff4d6d"); }
       if (this.ball) { c.fillStyle = "#ffd23f"; c.beginPath(); c.arc(this.ball.x, this.ball.y, 7, 0, TAU); c.fill(); }
       else this.ghost(this.x0 + this.sp * 1, this.top - 10, now);
     }
@@ -2324,14 +2340,14 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     reg("c_" + o.id, o.name, o.how, o.acc, C);
   }
   function dItem(col, s, good, extra) { var it = { col: col, s: s, good: good }; if (extra) for (var k in extra) it[k] = extra[k]; return it; }
-  function dDraw(c, it) { if (it.n !== undefined) { c.fillStyle = "#222"; c.beginPath(); c.arc(it.x, it.y, 20, 0, TAU); c.fill(); txt(c, String(it.n), it.x, it.y + 1, 22, "#fff"); } else if (it.egg) { c.fillStyle = "#fff"; c.beginPath(); c.ellipse(it.x, it.y, 13, 17, 0, 0, TAU); c.fill(); } else if (it.bomb) { c.fillStyle = "#3a3a3a"; c.beginPath(); c.arc(it.x, it.y, 16, 0, TAU); c.fill(); c.strokeStyle = RED; c.lineWidth = 3; c.beginPath(); c.moveTo(it.x - 6, it.y - 6); c.lineTo(it.x + 6, it.y + 6); c.moveTo(it.x + 6, it.y - 6); c.lineTo(it.x - 6, it.y + 6); c.stroke(); } else sh2(c, it.s, it.x, it.y, it.r, it.col); }
+  function dDraw(c, it) { if (it.n !== undefined) { c.fillStyle = TH.p2; c.beginPath(); c.arc(it.x, it.y, 20, 0, TAU); c.fill(); txt(c, String(it.n), it.x, it.y + 1, 22, "#fff"); } else if (it.egg) { c.fillStyle = "#fff"; c.beginPath(); c.ellipse(it.x, it.y, 13, 17, 0, 0, TAU); c.fill(); } else if (it.bomb) { c.fillStyle = TH.p3; c.beginPath(); c.arc(it.x, it.y, 16, 0, TAU); c.fill(); c.strokeStyle = RED; c.lineWidth = 3; c.beginPath(); c.moveTo(it.x - 6, it.y - 6); c.lineTo(it.x + 6, it.y + 6); c.moveTo(it.x + 6, it.y - 6); c.lineTo(it.x - 6, it.y + 6); c.stroke(); } else sh2(c, it.s, it.x, it.y, it.r, it.col); }
   var CC = [RED, YEL, GRN, PUR];
   var cvars = [
     ["coins", "Monedas", "Arrastrá la canasta y juntá las monedas. Las piedras grises restan una vida.", YEL, function () { return Math.random() < 0.78 ? dItem(YEL, 0, true) : dItem(GRY, 1, false); }],
-    ["fruit", "Fruta madura", "Atrapá la fruta y esquivá las bombas.", ORA, function () { return Math.random() < 0.8 ? dItem(pickOf([RED, ORA, GRN, YEL]), 0, true) : dItem("#333", 0, false, { bomb: 1 }); }],
+    ["fruit", "Fruta madura", "Atrapá la fruta y esquivá las bombas.", ORA, function () { return Math.random() < 0.8 ? dItem(pickOf([RED, ORA, GRN, YEL]), 0, true) : dItem(TH.p3, 0, false, { bomb: 1 }); }],
     ["eggs", "Huevos", "Atrapá todos los huevos. Si se cae uno, perdés una vida.", WHT, function () { return dItem(WHT, 0, true, { egg: 1 }); }, 1],
     ["stars", "Estrellas", "Juntá las estrellas y esquivá los pinchos.", YEL, function () { return Math.random() < 0.75 ? dItem(YEL, 6, true) : dItem(GRY, 2, false); }],
-    ["pizza", "Delivery", "Atrapá los pedidos. Si se cae uno perdés una vida. Evitá las bolsas negras.", ORA, function () { return Math.random() < 0.8 ? dItem(ORA, 0, true) : dItem("#333", 1, false); }, 1],
+    ["pizza", "Delivery", "Atrapá los pedidos. Si se cae uno perdés una vida. Evitá las bolsas negras.", ORA, function () { return Math.random() < 0.8 ? dItem(ORA, 0, true) : dItem(TH.p3, 1, false); }, 1],
     ["onlyred", "Solo rojos", "Atrapá solamente los rojos.", RED, function () { var c = pickOf(CC); return dItem(c, 0, c === RED); }],
     ["onlygrn", "Solo verdes", "Atrapá solamente los verdes.", GRN, function () { var c = pickOf(CC); return dItem(c, 0, c === GRN); }],
     ["notred", "Todo menos rojo", "Atrapá todo lo que no sea rojo.", PUR, function () { var c = pickOf(CC); return dItem(c, 0, c !== RED); }],
@@ -2444,7 +2460,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         for (i = 0; i < this.tg.length; i++) {
           var t = this.tg[i], k = 1 - t.t / t.life; c.globalAlpha = k < 0.25 ? 0.4 + k : 1;
           if (t.face) { c.fillStyle = YEL; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); c.strokeStyle = "#000"; c.lineWidth = 3; c.beginPath(); c.arc(t.x, t.y + (t.face > 0 ? 2 : 12), 11, t.face > 0 ? 0.2 : PI + 0.4, t.face > 0 ? PI - 0.2 : TAU - 0.4); c.stroke(); c.fillStyle = "#000"; c.beginPath(); c.arc(t.x - 8, t.y - 8, 3, 0, TAU); c.arc(t.x + 8, t.y - 8, 3, 0, TAU); c.fill(); }
-          else if (t.txt !== undefined) { c.fillStyle = "#262626"; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); txt(c, String(t.txt), t.x, t.y + 1, t.r * 0.9, "#fff"); }
+          else if (t.txt !== undefined) { c.fillStyle = TH.p2; c.beginPath(); c.arc(t.x, t.y, t.r, 0, TAU); c.fill(); txt(c, String(t.txt), t.x, t.y + 1, t.r * 0.9, "#fff"); }
           else if (t.bomb) dDraw(c, { x: t.x, y: t.y, bomb: 1 });
           else sh2(c, t.s || 0, t.x, t.y, t.r * 0.85, t.col);
           c.globalAlpha = 1;
@@ -2459,7 +2475,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   [
     ["dots", "Puntos veloces", "Tocá cada punto antes de que desaparezca.", YEL, function () { return tg(YEL, 0, true); }, 0.7, 1.6, 1.0],
     ["gr", "Verde sí, rojo no", "Tocá los verdes. No toques los rojos.", GRN, function () { var g = Math.random() < 0.65; return tg(g ? GRN : RED, 0, g); }, 0.8, 1.8, 0],
-    ["bomb", "No toques la bomba", "Tocá todo menos las bombas.", RED, function () { return Math.random() < 0.7 ? tg(pickOf([YEL, GRN, ORA, PUR]), 0, true) : tg("#333", 0, false, { bomb: 1 }); }, 0.8, 1.8, 0],
+    ["bomb", "No toques la bomba", "Tocá todo menos las bombas.", RED, function () { return Math.random() < 0.7 ? tg(pickOf([YEL, GRN, ORA, PUR]), 0, true) : tg(TH.p3, 0, false, { bomb: 1 }); }, 0.8, 1.8, 0],
     ["yel", "Solo amarillos", "Tocá solamente los amarillos.", YEL, function () { var c = pickOf(CC); return tg(c, 0, c === YEL); }, 0.7, 1.8, 0],
     ["tri", "Triángulos", "Tocá solamente los triángulos.", GRN, function () { var k = ri(0, 4); return tg(WHT, k, k === 2); }, 0.7, 1.8, 0],
     ["cir", "Círculos", "Tocá solamente los círculos.", PNK, function () { var k = ri(0, 4); return tg(WHT, k, k === 0); }, 0.7, 1.8, 0],
@@ -2515,7 +2531,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         else if (q.clock) { var cx0 = this.cx - 40; c.strokeStyle = "#fff"; c.lineWidth = 5; c.beginPath(); c.arc(cx0, cy, 66, 0, TAU); c.stroke(); for (i = 0; i < 12; i++) { var aa = i * PI / 6; c.lineWidth = 3; c.beginPath(); c.moveTo(cx0 + Math.sin(aa) * 56, cy - Math.cos(aa) * 56); c.lineTo(cx0 + Math.sin(aa) * 64, cy - Math.cos(aa) * 64); c.stroke(); } var ma = q.clock.m / 60 * TAU, ha = (q.clock.h % 12 + q.clock.m / 60) / 12 * TAU; c.lineWidth = 6; c.beginPath(); c.moveTo(cx0, cy); c.lineTo(cx0 + Math.sin(ha) * 34, cy - Math.cos(ha) * 34); c.stroke(); c.lineWidth = 4; c.beginPath(); c.moveTo(cx0, cy); c.lineTo(cx0 + Math.sin(ma) * 52, cy - Math.cos(ma) * 52); c.stroke(); txt(c, q.q, this.cx - 40, cy - 90, 20, "rgba(255,255,255,0.7)", "center", 600); }
         else { var sz = clamp(520 / Math.max(6, q.q.length), 22, 54); txt(c, q.q, this.cx - 38, cy, sz, "#fff", "center", 700); }
         for (i = 0; i < q.o.length; i++) {
-          var b = this.bx[i], op = q.o[i], bg = "#1f1f1f"; if (this.res >= 0 || this.res === -2) { if (i === q.a) bg = "#1d5a37"; else if (i === this.res) bg = "#6a1f2b"; }
+          var b = this.bx[i], op = q.o[i], bg = TH.p2; if (this.res >= 0 || this.res === -2) { if (i === q.a) bg = "#1d5a37"; else if (i === this.res) bg = "#6a1f2b"; }
           fillR(c, b.x, b.y, this.bw, this.bh, 16, bg);
           if (op.col) { if (op.r) { c.fillStyle = op.col; c.beginPath(); c.arc(b.x + this.bw / 2, b.y + this.bh / 2, op.r, 0, TAU); c.fill(); } else sh2(c, op.sh || 0, b.x + this.bw / 2, b.y + this.bh / 2, 26, op.col); }
           else txt(c, op.t, b.x + this.bw / 2, b.y + this.bh / 2 + 1, clamp(this.bw * 1.5 / Math.max(3, op.t.length), 18, 38), "#fff", "center", 700);
@@ -2596,19 +2612,19 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       draw: function (now) {
         var c = this.ctx, cx = this.cx - 30, cy = this.cy, p = this.pos, z0 = this.zc - this.zw / 2, z1 = this.zc + this.zw / 2, tw = this.W - 100;
         if (o.type === "bar") {
-          fillR(c, 24, cy - 28, tw, 56, 14, "#1f1f1f"); fillR(c, 24 + z0 * tw, cy - 28, this.zw * tw, 56, 14, o.zc || GRN); fillR(c, 24 + p * tw - 3, cy - 40, 6, 80, 3, "#fff");
+          fillR(c, 24, cy - 28, tw, 56, 14, TH.p2); fillR(c, 24 + z0 * tw, cy - 28, this.zw * tw, 56, 14, o.zc || GRN); fillR(c, 24 + p * tw - 3, cy - 40, 6, 80, 3, "#fff");
         } else if (o.type === "vert") {
-          var h = this.H - this.pb - this.pt - 120, y0 = this.pt + 60; fillR(c, cx - 30, y0, 60, h, 14, "#1f1f1f"); fillR(c, cx - 30, y0 + (1 - z1) * h, 60, this.zw * h, 14, o.zc || GRN);
+          var h = this.H - this.pb - this.pt - 120, y0 = this.pt + 60; fillR(c, cx - 30, y0, 60, h, 14, TH.p2); fillR(c, cx - 30, y0 + (1 - z1) * h, 60, this.zw * h, 14, o.zc || GRN);
           if (o.fill) fillR(c, cx - 22, y0 + (1 - p) * h, 44, p * h, 8, "#fff"); else fillR(c, cx - 44, y0 + (1 - p) * h - 3, 88, 6, 3, "#fff");
         } else if (o.type === "ring") {
-          c.lineWidth = 26; c.strokeStyle = "#1f1f1f"; c.beginPath(); c.arc(cx, cy, 90, 0, TAU); c.stroke(); c.strokeStyle = o.zc || GRN; c.beginPath(); c.arc(cx, cy, 90, -PI / 2 + z0 * TAU, -PI / 2 + z1 * TAU); c.stroke();
+          c.lineWidth = 26; c.strokeStyle = TH.p2; c.beginPath(); c.arc(cx, cy, 90, 0, TAU); c.stroke(); c.strokeStyle = o.zc || GRN; c.beginPath(); c.arc(cx, cy, 90, -PI / 2 + z0 * TAU, -PI / 2 + z1 * TAU); c.stroke();
           var a = -PI / 2 + p * TAU; c.strokeStyle = "#fff"; c.lineWidth = 6; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(a) * 104, cy + Math.sin(a) * 104); c.stroke();
         } else if (o.type === "arc") {
-          var px = cx, py = this.pt + 40, L = 200, am = 0.9, ang = -am + p * 2 * am; c.lineWidth = 22; c.strokeStyle = "#1f1f1f"; c.beginPath(); c.arc(px, py, L, PI / 2 - am, PI / 2 + am); c.stroke();
+          var px = cx, py = this.pt + 40, L = 200, am = 0.9, ang = -am + p * 2 * am; c.lineWidth = 22; c.strokeStyle = TH.p2; c.beginPath(); c.arc(px, py, L, PI / 2 - am, PI / 2 + am); c.stroke();
           c.strokeStyle = o.zc || GRN; c.beginPath(); c.arc(px, py, L, PI / 2 - am + z0 * 2 * am, PI / 2 - am + z1 * 2 * am); c.stroke();
           var bx = px + Math.sin(ang) * L, by = py + Math.cos(ang) * L; c.strokeStyle = "rgba(255,255,255,0.4)"; c.lineWidth = 2; c.beginPath(); c.moveTo(px, py); c.lineTo(bx, by); c.stroke(); c.fillStyle = "#fff"; c.beginPath(); c.arc(bx, by, 16, 0, TAU); c.fill();
         } else if (o.type === "shrink") {
-          var rt = 200 * (1 - this.zc), R = 200 * (1 - p), tol = this.zw * 100; c.lineWidth = 8; c.strokeStyle = "#1f1f1f"; c.beginPath(); c.arc(cx, cy, rt, 0, TAU); c.stroke();
+          var rt = 200 * (1 - this.zc), R = 200 * (1 - p), tol = this.zw * 100; c.lineWidth = 8; c.strokeStyle = TH.p2; c.beginPath(); c.arc(cx, cy, rt, 0, TAU); c.stroke();
           c.strokeStyle = o.zc || GRN; c.lineWidth = 4; c.beginPath(); c.arc(cx, cy, Math.max(2, rt + tol), 0, TAU); c.stroke(); c.beginPath(); c.arc(cx, cy, Math.max(2, rt - tol), 0, TAU); c.stroke();
           c.strokeStyle = "#fff"; c.lineWidth = 6; c.beginPath(); c.arc(cx, cy, Math.max(2, R), 0, TAU); c.stroke();
         }
@@ -2662,7 +2678,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       idle: function (dt) { this.scroll += 120 * dt; },
       draw: function (now) {
-        var c = this.ctx, i; c.fillStyle = "#262626"; c.fillRect(0, this.gy, this.W, this.H - this.gy);
+        var c = this.ctx, i; c.fillStyle = TH.p2; c.fillRect(0, this.gy, this.W, this.H - this.gy);
         for (i = 0; i < this.obs.length; i++) {
           var b = this.obs[i];
           if (b.type === "pit") { c.fillStyle = "#000"; c.fillRect(b.x, this.gy, b.w, this.H - this.gy); }
@@ -2809,12 +2825,12 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       after: function (dt) { if (this.by + this.r < this.ground) { this.vy += 1450 * dt; this.by = Math.min(this.ground - this.r, this.by + this.vy * dt); } },
       draw: function (now) {
-        var c = this.ctx, i; c.fillStyle = "#262626"; c.fillRect(0, this.ground, this.W, this.H - this.ground);
+        var c = this.ctx, i; c.fillStyle = TH.p2; c.fillRect(0, this.ground, this.W, this.H - this.ground);
         for (i = 0; i < this.obs.length; i++) {
           var b = this.obs[i];
           if (b.t === "pipe") { fillR(c, b.x, -30, b.w, b.gy - this.gap / 2 + 30, 6, GRN); fillR(c, b.x, b.gy + this.gap / 2, b.w, this.H, 6, GRN); }
-          else if (b.t === "mine") { c.fillStyle = "#3a3a3a"; c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill(); c.strokeStyle = RED; c.lineWidth = 3; c.beginPath(); for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.moveTo(b.x + Math.cos(a) * b.r, b.y + Math.sin(a) * b.r); c.lineTo(b.x + Math.cos(a) * (b.r + 7), b.y + Math.sin(a) * (b.r + 7)); } c.stroke(); }
-          else if (b.t === "ring") { c.strokeStyle = b.p ? "#555" : YEL; c.lineWidth = 6; c.beginPath(); c.ellipse(b.x, b.y, 10, b.r, 0, 0, TAU); c.stroke(); }
+          else if (b.t === "mine") { c.fillStyle = TH.p3; c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill(); c.strokeStyle = RED; c.lineWidth = 3; c.beginPath(); for (var k = 0; k < 8; k++) { var a = k * TAU / 8; c.moveTo(b.x + Math.cos(a) * b.r, b.y + Math.sin(a) * b.r); c.lineTo(b.x + Math.cos(a) * (b.r + 7), b.y + Math.sin(a) * (b.r + 7)); } c.stroke(); }
+          else if (b.t === "ring") { c.strokeStyle = b.p ? TH.p4 : YEL; c.lineWidth = 6; c.beginPath(); c.ellipse(b.x, b.y, 10, b.r, 0, 0, TAU); c.stroke(); }
           else { c.fillStyle = YEL; c.beginPath(); c.arc(b.x, b.y, b.r, 0, TAU); c.fill(); }
         }
         { this.ctx.globalAlpha = this.fadeA(); c.fillStyle = o.col; c.beginPath(); c.arc(this.bx, this.by, this.r, 0, TAU); c.fill(); if (this.holding && this.state === "play") { c.fillStyle = ORA; c.beginPath(); c.moveTo(this.bx - 6, this.by + 12); c.lineTo(this.bx + 6, this.by + 12); c.lineTo(this.bx, this.by + 22 + Math.random() * 8); c.closePath(); c.fill(); }  this.ctx.globalAlpha = 1; }
@@ -2892,7 +2908,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, i; for (i = 0; i < this.n; i++) {
-          var p = this.p[i], on = this.phase === "show" && this.tg.indexOf(i) >= 0 || this.found[i], col = on ? YEL : this.wrong === i ? RED : "#262626"; fillR(c, p.x + 2, p.y + 2, p.s - 4, p.s - 4, 10, col);
+          var p = this.p[i], on = this.phase === "show" && this.tg.indexOf(i) >= 0 || this.found[i], col = on ? YEL : this.wrong === i ? RED : TH.p2; fillR(c, p.x + 2, p.y + 2, p.s - 4, p.s - 4, 10, col);
         }
         txt(c, this.phase === "show" ? "Memorizá" : "Tocá las casillas", this.cx - 38, this.p[0].y - 24, 20, "rgba(255,255,255,0.7)", "center", 600);
         if (this.phase === "input") this.ghost(this.p[0].x + this.p[0].s / 2, this.p[0].y + this.p[0].s / 2, now);
@@ -2924,7 +2940,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         var c = this.ctx, cd = this.cur, y = this.cy - 20, ox = this.fb > 0 ? this.last * 40 : 0;
         txt(c, o.l, 56, this.H - this.pb - 40, 17, "rgba(255,255,255,0.6)", "center", 600); txt(c, o.r, this.W - 120, this.H - this.pb - 40, 17, "rgba(255,255,255,0.6)", "center", 600);
         fillR(c, 20, this.pt + 4, this.W - 100, 6, 3, "rgba(255,255,255,0.12)"); fillR(c, 20, this.pt + 4, (this.W - 100) * clamp(this.tl / this.tm, 0, 1), 6, 3, "#fff");
-        fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, "#1c1c1c");
+        fillR(c, this.cx - 38 - 115 + ox, y - 90, 230, 180, 22, TH.p1);
         var x = this.cx - 38 + ox;
         if (cd.arrow) { c.strokeStyle = "#fff"; c.lineWidth = 12; c.lineCap = "round"; c.lineJoin = "round"; var d = cd.arrow; c.beginPath(); c.moveTo(x - 36 * d, y); c.lineTo(x + 36 * d, y); c.moveTo(x + 14 * d, y - 22); c.lineTo(x + 36 * d, y); c.lineTo(x + 14 * d, y + 22); c.stroke(); c.lineCap = "butt"; }
         else if (cd.t !== undefined) txt(c, cd.t, x, y, clamp(340 / Math.max(5, cd.t.length), 20, 60), cd.col || "#fff", "center", 700);
@@ -3012,7 +3028,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       res: function (x) { var ok = Math.abs(x - this.tx) <= (o.tol || 36); this.sh = null; if (ok) { this.good(1, this.tx, this.gy - 30, false); this.newT(); } else this.hurt(); },
       draw: function (now) {
-        var c = this.ctx; c.fillStyle = o.roll ? "#1f3d26" : "#262626"; c.fillRect(0, this.gy, this.W, this.H - this.gy);
+        var c = this.ctx; c.fillStyle = o.roll ? "#1f3d26" : TH.p2; c.fillRect(0, this.gy, this.W, this.H - this.gy);
         if (o.roll) { c.fillStyle = "#000"; c.beginPath(); c.arc(this.tx, this.gy - 4, (o.tol || 36) * 0.5 + 6, 0, TAU); c.fill(); c.fillStyle = "#fff"; c.fillRect(this.tx - 1.5, this.gy - 46, 3, 42); c.fillStyle = RED; c.fillRect(this.tx, this.gy - 46, 16, 10); }
         else { c.fillStyle = RED; c.beginPath(); c.arc(this.tx, this.gy - 14, 14, 0, TAU); c.fill(); c.fillStyle = "#fff"; c.beginPath(); c.arc(this.tx, this.gy - 14, 6, 0, TAU); c.fill(); }
         if (!o.roll) { c.strokeStyle = "#fff"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(this.lx - 10, this.ly + 10 + (o.a < 0.6 ? 6 : 0)); c.lineTo(this.lx + Math.cos(o.a) * 22, this.ly + 10 - Math.sin(o.a) * 22); c.stroke(); c.lineCap = "butt"; }
@@ -3045,8 +3061,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         this.chx = this.bx + Math.sin(this.u * 1.3) * o.ax + Math.sin(this.u * 2.3 + 1) * o.ax * 0.4; this.chy = this.by + Math.cos(this.u * 1.7) * o.ay + Math.sin(this.u * 2.9) * o.ay * 0.4;
       },
       draw: function (now) {
-        var c = this.ctx; c.fillStyle = "#1c1c1c"; c.beginPath(); c.arc(this.bx, this.by, 100, 0, TAU); c.fill();
-        c.fillStyle = "#2c2c2c"; c.beginPath(); c.arc(this.bx, this.by, 92, 0, TAU); c.fill(); c.fillStyle = "#1c1c1c"; c.beginPath(); c.arc(this.bx, this.by, 55, 0, TAU); c.fill(); c.fillStyle = RED; c.beginPath(); c.arc(this.bx, this.by, 22, 0, TAU); c.fill();
+        var c = this.ctx; c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 100, 0, TAU); c.fill();
+        c.fillStyle = TH.p3; c.beginPath(); c.arc(this.bx, this.by, 92, 0, TAU); c.fill(); c.fillStyle = TH.p1; c.beginPath(); c.arc(this.bx, this.by, 55, 0, TAU); c.fill(); c.fillStyle = RED; c.beginPath(); c.arc(this.bx, this.by, 22, 0, TAU); c.fill();
         if (this.mark && this.mk > 0) { c.fillStyle = YEL; c.beginPath(); c.arc(this.mark.x, this.mark.y, 6, 0, TAU); c.fill(); }
         c.strokeStyle = "#fff"; c.lineWidth = 3; c.beginPath(); c.moveTo(this.chx - 18, this.chy); c.lineTo(this.chx + 18, this.chy); c.moveTo(this.chx, this.chy - 18); c.lineTo(this.chx, this.chy + 18); c.stroke(); c.beginPath(); c.arc(this.chx, this.chy, 10, 0, TAU); c.stroke();
         this.ghost(this.cx - 38, this.cy + 150, now);
@@ -3098,7 +3114,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       }
     },
     draw: function (now) {
-      var c = this.ctx, r, k, n = 0; fillR(c, this.mx - 130, this.pt + 20, 260, this.ly - this.pt, 8, "#1c1c1c");
+      var c = this.ctx, r, k, n = 0; fillR(c, this.mx - 130, this.pt + 20, 260, this.ly - this.pt, 8, TH.p1);
       for (r = 0; r < 4; r++) for (k = 0; k <= r; k++) { n++; if (n <= this.pins) { c.fillStyle = "#fff"; c.beginPath(); c.arc(this.mx + (k - r / 2) * 26, this.ty + r * 24, 9, 0, TAU); c.fill(); } }
       if (!this.ball && this.rs <= 0) { c.fillStyle = "rgba(255,255,255,0.22)"; c.fillRect(this.ox - 1.5, this.ty + 90, 3, this.ly - this.ty - 90); }
       var b = this.ball; c.fillStyle = PUR; c.beginPath(); c.arc(b ? b.x : this.ox, b ? b.y : this.ly, 16, 0, TAU); c.fill();
@@ -3125,7 +3141,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, py = this.H - this.pb - 70, px = this.cx - 38;
-        c.fillStyle = "#555"; c.beginPath(); c.moveTo(px, py + 6); c.lineTo(px + 22, py + 56); c.lineTo(px - 22, py + 56); c.closePath(); c.fill();
+        c.fillStyle = TH.p4; c.beginPath(); c.moveTo(px, py + 6); c.lineTo(px + 22, py + 56); c.lineTo(px - 22, py + 56); c.closePath(); c.fill();
         c.save(); c.translate(px, py); c.rotate(this.tilt); fillR(c, -this.L, 0, this.L * 2, 10, 4, "#fff");
         for (var i = 0; i < this.balls.length; i++) { c.fillStyle = BCOL[i % 5]; c.beginPath(); c.arc(this.balls[i].s, -14, 14, 0, TAU); c.fill(); }
         c.restore();
@@ -3159,7 +3175,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, y, bot = this.H - this.pb + 10;
-        for (y = this.pt - 10; y < bot; y += 6) { var d = this.d + (this.py - y), w = this.wid(d), ct = this.cen(d, w / 2); c.fillStyle = "#262626"; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); c.fillStyle = "#fff"; c.fillRect(ct - w / 2 - 2, y, 2, 7); c.fillRect(ct + w / 2, y, 2, 7); }
+        for (y = this.pt - 10; y < bot; y += 6) { var d = this.d + (this.py - y), w = this.wid(d), ct = this.cen(d, w / 2); c.fillStyle = TH.p2; c.fillRect(0, y, ct - w / 2, 7); c.fillRect(ct + w / 2, y, this.W - (ct + w / 2), 7); c.fillStyle = "#fff"; c.fillRect(ct - w / 2 - 2, y, 2, 7); c.fillRect(ct + w / 2, y, 2, 7); }
         { this.ctx.globalAlpha = this.fadeA(); c.fillStyle = o.col; c.beginPath(); c.arc(this.px, this.py, 11, 0, TAU); c.fill();  this.ctx.globalAlpha = 1; }
         this.ghostDrag(this.py - 100, now);
       }
@@ -3197,7 +3213,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       var c = this.ctx, i, bw = (this.W - 100) / 3, by = this.H - this.pb - 100;
       txt(c, "El que toma el último palito pierde", this.cx - 38, this.pt + 40, 17, "rgba(255,255,255,0.6)", "center", 600);
       for (i = 0; i < 15; i++) { var x = 30 + (i % 8) * 36 + (i >= 8 ? 18 : 0), y = this.cy - 60 + Math.floor(i / 8) * 90; if (i < this.n) fillR(c, x, y, 12, 70, 5, "#fff"); else fillR(c, x, y, 12, 70, 5, "rgba(255,255,255,0.06)"); }
-      for (i = 1; i <= 3; i++) { var on = i <= this.n && this.turn === 1; fillR(c, 12 + (i - 1) * bw + 4, by, bw - 8, 80, 16, on ? "#262626" : "#141414"); txt(c, String(i), 12 + (i - 1) * bw + bw / 2, by + 41, 34, on ? "#fff" : "#555"); }
+      for (i = 1; i <= 3; i++) { var on = i <= this.n && this.turn === 1; fillR(c, 12 + (i - 1) * bw + 4, by, bw - 8, 80, 16, on ? TH.p2 : TH.p1); txt(c, String(i), 12 + (i - 1) * bw + bw / 2, by + 41, 34, on ? "#fff" : TH.p4); }
       this.ghost(12 + bw * 1.5, by + 40, now);
     }
   });
@@ -3214,7 +3230,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     doStand: function () { this.stand = true; while (this.sum(this.dl) < 17) this.dl.push(ri(1, 11)); var m = this.sum(this.me), d = this.sum(this.dl); this.fin(d > 21 || m > d ? 1 : m < d ? -1 : 0); },
     fin: function (r) { this.res = r || 2; this.rr = r; this.pend = true; this.wait = 1.1; if (r > 0) { this.add(1); S.perfect(); } else if (r < 0) this.hurt(); },
     step: function (dt) { if (this.pend) { this.wait -= dt; if (this.wait <= 0 && this.state === "play") this.deal(); } },
-    card: function (c, v, x, y, hid) { fillR(c, x, y, 64, 90, 10, hid ? "#333" : "#f2f2f2"); if (!hid) txt(c, String(v), x + 32, y + 46, 34, "#000"); },
+    card: function (c, v, x, y, hid) { fillR(c, x, y, 64, 90, 10, hid ? TH.p3 : "#f2f2f2"); if (!hid) txt(c, String(v), x + 32, y + 46, 34, "#000"); },
     draw: function (now) {
       var c = this.ctx, i, uw = this.W - 76, by = this.H - this.pb - 100;
       txt(c, "Pasate de 21 y perdés", this.cx - 38, this.pt + 36, 17, "rgba(255,255,255,0.6)", "center", 600);
@@ -3223,7 +3239,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       if (!this.stand) this.card(c, 0, 16 + this.dl.length * 70, this.cy - 130, true);
       txt(c, "Vos · " + this.sum(this.me), 16, this.cy - 10, 16, "rgba(255,255,255,0.6)", "left", 600);
       for (i = 0; i < this.me.length; i++) this.card(c, this.me[i], 16 + i * 62, this.cy + 10);
-      fillR(c, 8, by, uw / 2 - 4, 80, 16, "#262626"); fillR(c, 8 + uw / 2 + 4, by, uw / 2 - 4, 80, 16, "#262626"); txt(c, "Pedir", 8 + uw / 4, by + 41, 24, "#fff"); txt(c, "Plantarse", 8 + uw * 0.75 + 4, by + 41, 24, "#fff");
+      fillR(c, 8, by, uw / 2 - 4, 80, 16, TH.p2); fillR(c, 8 + uw / 2 + 4, by, uw / 2 - 4, 80, 16, TH.p2); txt(c, "Pedir", 8 + uw / 4, by + 41, 24, "#fff"); txt(c, "Plantarse", 8 + uw * 0.75 + 4, by + 41, 24, "#fff");
       this.ghost(8 + uw / 4, by + 40, now);
     }
   });
@@ -3273,8 +3289,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
       },
       draw: function (now) {
         var c = this.ctx, i; for (i = 0; i < this.n; i++) {
-          var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? "#141414" : sh ? "#2a2a2a" : "#333");
-          if (sh) { var v = this.sy[i]; if (o.kind === "num") txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "let") txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "col") { c.fillStyle = this.done[i] ? "#444" : BCOL[v % 5]; c.beginPath(); c.arc(p.x + p.s / 2, p.y + p.s / 2, p.s * 0.28, 0, TAU); c.fill(); } else sh2(c, [0, 1, 2, 3, 6, 0, 1, 2][v], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.27, this.done[i] ? "#555" : BCOL[(v + 1) % 5]); }
+          var p = this.p[i], sh = this.open.indexOf(i) >= 0 || this.done[i]; fillR(c, p.x, p.y, p.s, p.s, 12, this.done[i] ? TH.p1 : sh ? TH.p3 : TH.p3);
+          if (sh) { var v = this.sy[i]; if (o.kind === "num") txt(c, String(v + 1), p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "let") txt(c, "ABCDEFGHIJK"[v], p.x + p.s / 2, p.y + p.s / 2 + 1, p.s * 0.5, this.done[i] ? "#666" : "#fff"); else if (o.kind === "col") { c.fillStyle = this.done[i] ? TH.p4 : BCOL[v % 5]; c.beginPath(); c.arc(p.x + p.s / 2, p.y + p.s / 2, p.s * 0.28, 0, TAU); c.fill(); } else sh2(c, [0, 1, 2, 3, 6, 0, 1, 2][v], p.x + p.s / 2, p.y + p.s / 2, p.s * 0.27, this.done[i] ? TH.p4 : BCOL[(v + 1) % 5]); }
         }
         this.ghost(this.p[0].x + this.p[0].s / 2, this.p[0].y + this.p[0].s / 2, now);
       }
@@ -3513,7 +3529,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     s.className = "slide"; s.dataset.i = i;
     s.innerHTML = '<div class="hud"><div class="l"><span class="hearts">' + HEART + HEART + HEART + '</span><b class="gname"></b></div><div class="c"><span class="score">0</span><span class="best">Mejor 0</span></div><div></div></div>';
     s.querySelector(".gname").textContent = cfg.name;
-    s.cfg = cfg; feed.appendChild(s); slides.push(s); N = slides.length;
+    s.cfg = cfg; s.style.background = themeFor(cfg).bg; feed.appendChild(s); slides.push(s); N = slides.length;
   }
   function fillFeed(a) { while (slides.length < a + 4) addSlide(pickNext()); }
   function trimAfter(a) { while (slides.length > a + 1) { var sl = slides.pop(); drop(slides.length); sl.remove(); } N = slides.length; }

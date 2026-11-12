@@ -6,7 +6,8 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - Hablarle en español rioplatense (voseo), corto y simple. Él escribe rápido y con errores: interpretar con buena fe.
 - Quiere ver el resultado publicado, no explicaciones largas. Avisar qué se probó y qué no.
 - Gustos de diseño ya decididos (no volver atrás sin que lo pida):
-  - Todo negro, estética TikTok. Nada de azul en la interfaz.
+  - Interfaz negra, estética TikTok. Nada de azul en la interfaz.
+  - Cada juego tiene su propio fondo de color plano y oscuro (un tono por juego, `themeFor` en build5.py) y los paneles del juego en el mismo tono. Lo pidió: "más colores, que enganche más". Sigue sin degradados ni sombras.
   - Que NO parezca hecho con IA: formas planas, sin degradados, sin sombras, sin brillos, sin animaciones de más (sin aritos al tocar, sin partículas, sin "+1" flotando, sin temblor, sin parpadeo al perder: el jugador se pone semitransparente).
   - Sin carteles para leer: nada de instrucciones al empezar, nada de cartel de "perdiste", nada de avisos tipo "guardado". La ayuda está solo en el botón "?".
   - Sin monedas. Sin emojis en la interfaz.

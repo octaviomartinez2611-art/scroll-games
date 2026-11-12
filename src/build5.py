@@ -114,3 +114,36 @@ assert s.count(old)==1
 s=s.replace(old,'  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].indexOf(g.id) < 0; }); /* sin juegos de apuestas */')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok5')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- color: cada juego tiene su fondo de color (plano) y sus paneles en el mismo tono ----
+i=s.index('  function Game(sec, cfg) {'); j=s.index('  var CATALOG = [')
+region=s[i:j]
+for lits,tk in [(['"#111"','"#141414"','"#1a1a1a"','"#1c1c1c"'],'TH.p1'),(['"#1f1f1f"','"#222"','"#262626"'],'TH.p2'),(['"#2a2a2a"','"#2c2c2c"','"#333"','"#3a3a3a"'],'TH.p3'),(['"#444"','"#555"'],'TH.p4')]:
+    for l in lits: region=region.replace(l,tk)
+s=s[:i]+region+s[j:]
+rep('  function Game(sec, cfg) {','''  /* Paletas: un tono por juego, lejos del color principal del juego para que todo se vea */
+  var HUES = [268, 292, 318, 340, 356, 14, 28, 40, 132, 152, 166, 178];
+  function hexHue(h) {
+    if (!h || h[0] !== "#" || h.length < 7) return -1; var r = parseInt(h.substr(1, 2), 16) / 255, g = parseInt(h.substr(3, 2), 16) / 255, b = parseInt(h.substr(5, 2), 16) / 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if (d < 0.15) return -1;
+    var hh = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return (hh * 60 + 360) % 360;
+  }
+  function themeFor(cfg) {
+    var id = cfg.id || "", hs = 0, k; for (k = 0; k < id.length; k++) hs = (hs * 31 + id.charCodeAt(k)) >>> 0;
+    var ah = hexHue(cfg.accent), ok = HUES.filter(function (h) { if (ah < 0) return true; var dd = Math.abs(h - ah) % 360; return Math.min(dd, 360 - dd) > 60; });
+    var h = ok[hs % ok.length], sat = (h > 120 && h < 190) ? 45 : 55;
+    function L(l) { return "hsl(" + h + "," + sat + "%," + l + "%)"; }
+    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40) };
+  }
+  var TH = themeFor({ id: "x" });
+  function Game(sec, cfg) {
+    this.th = themeFor(cfg);''')
+rep('''  Game.prototype.render = function (now) {
+    var c = this.ctx, i;''','''  Game.prototype.render = function (now) {
+    var c = this.ctx, i; TH = this.th;''')
+rep('    s.cfg = cfg; feed.appendChild(s); slides.push(s); N = slides.length;','    s.cfg = cfg; s.style.background = themeFor(cfg).bg; feed.appendChild(s); slides.push(s); N = slides.length;')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok6')
