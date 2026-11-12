@@ -198,3 +198,66 @@ rep('''  Game.prototype.hud = function () {
 rep('.score { font: 600 40px/0.95 var(--display);','.score { transition: transform 0.11s ease-out; font: 600 40px/0.95 var(--display);')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok7')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new,allow=False):
+    global s
+    n=s.count(old); assert n==1 or (allow and n>=1),(n,old[:80]); s=s.replace(old,new)
+# ---- caras para los personajes y un escenario propio para cada juego ----
+rep('    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), deco: L(18), seed: hs };',
+    '    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), lt: L(52), deco: L(18), seed: hs, h: h };')
+rep('  var TH = themeFor({ id: "x" });','''  var TH = themeFor({ id: "x" });
+  /* Cara: ojos con pupilas que miran hacia donde se mueve el personaje y una sonrisa */
+  function face(c, x, y, r, look) {
+    var e = r * 0.3, ex = r * 0.36, ey = -r * 0.14, lk = Math.max(-1, Math.min(1, look || 0)) * e * 0.4;
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(x - ex, y + ey, e, 0, TAU); c.moveTo(x + ex + e, y + ey); c.arc(x + ex, y + ey, e, 0, TAU); c.fill();
+    c.fillStyle = "#17121f"; c.beginPath(); c.arc(x - ex + lk, y + ey + e * 0.12, e * 0.52, 0, TAU); c.moveTo(x + ex + lk + e * 0.52, y + ey + e * 0.12); c.arc(x + ex + lk, y + ey + e * 0.12, e * 0.52, 0, TAU); c.fill();
+    c.strokeStyle = "#17121f"; c.lineWidth = Math.max(1.6, r * 0.09); c.lineCap = "round"; c.beginPath(); c.arc(x, y + r * 0.2, r * 0.2, 0.15 * PI, 0.85 * PI); c.stroke(); c.lineCap = "butt";
+  }
+''')
+# caras en juegos viejos
+rep('ball(c, tx + this.mx * tw, ty, 22, inside ? "#3ddc84" : "#ff4d6d");','ball(c, tx + this.mx * tw, ty, 22, inside ? "#3ddc84" : "#ff4d6d"); face(c, tx + this.mx * tw, ty, 22, (this.tm - this.mx) * 6);')
+rep('ball(c, this.cx, this.cy, Math.max(4, this.rad), inb ? "#3ddc84" : "#ff4d6d");','ball(c, this.cx, this.cy, Math.max(4, this.rad), inb ? "#3ddc84" : "#ff4d6d"); if (this.rad > 14) face(c, this.cx, this.cy, this.rad, 0);', True)
+rep('''glossy(c, this.px - this.ps / 2, this.py - this.ps / 2, this.ps, this.ps, 12, "#ffffff", "#cfcfcf");
+        c.fillStyle = this.cfg.accent; c.beginPath(); c.arc(this.px, this.py, this.ps * 0.17, 0, TAU); c.fill();''','''glossy(c, this.px - this.ps / 2, this.py - this.ps / 2, this.ps, this.ps, 12, "#ffd23f", "#ffd23f"); face(c, this.px, this.py + 1, this.ps / 2, (this.tx - this.px) / 30);''')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok8')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- escenarios relacionados con cada juego ----
+rep('  /* Paletas: un tono por juego,', open('scenes.js',encoding='utf-8').read()+'\n  /* Paletas: un tono por juego,')
+rep('    var h = ok[hs % ok.length], sat = (h > 120 && h < 190) ? 45 : 55;','    var scn = sceneOf(cfg), sc = SCENES[scn], h = sc.h, sat = sc.s;')
+rep("    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), lt: L(52), deco: L(18), seed: hs, h: h };","    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), lt: L(52), deco: L(18), seed: hs || 1, h: h, scene: scn };")
+i=s.index('  function decor(c, g) {'); j=s.index('  Game.prototype.render = function (now) {', i)
+s=s[:i]+'''  function decor(c, g) {
+    if (!g.bgc || g.bgc.width !== g.cv.width || g.bgc.height !== g.cv.height) {
+      var d = g.cv.width / g.W, b = document.createElement("canvas"); b.width = g.cv.width; b.height = g.cv.height;
+      var bc = b.getContext("2d"); bc.setTransform(d, 0, 0, d, 0, 0);
+      var sd = g.th.seed, rn = function () { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; };
+      try { SCENES[g.th.scene].paint(bc, g.W, g.H, rn); } catch (e) { bc.fillStyle = g.th.bg; bc.fillRect(0, 0, g.W, g.H); }
+      g.bgc = b;
+    }
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(g.bgc, 0, 0); c.restore();
+  }
+'''+s[j:]
+s=s.replace("this.deco = null;","this.deco = null; this.bgc = null;",1)
+# ---- nombre abajo, transparente, no tapa ni bloquea el juego ----
+rep('''<div class="l"><span class="hearts">' + HEART + HEART + HEART + '</span><b class="gname"></b></div>''','''<div class="l"><span class="hearts">' + HEART + HEART + HEART + '</span></div>''')
+rep('''</div><div></div></div>';''','''</div><div></div></div><b class="gname"></b>';''')
+rep('.gname { font: 600 13px/1.15 var(--body); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 38vw; }',
+    '.gname { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 12px; z-index: 2; pointer-events: none; font: 700 16px/1.15 var(--body); color: rgba(255, 255, 255, 0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%; }')
+# ---- buscador al elegir un juego para mandar ----
+rep('<h2 id="pkT">Elegí un juego</h2><div id="pickList"','<h2 id="pkT">Elegí un juego</h2><input id="pickQ" class="pickq" placeholder="Buscar juego" autocomplete="off" aria-label="Buscar juego"><div id="pickList"')
+rep('/* ---- sheets ---- */','.pickq { flex: none; background: var(--panel2); border: 0; border-radius: 12px; padding: 12px 14px; color: #fff; font: 500 16px/1.2 var(--body); user-select: text; -webkit-user-select: text; }\n.pickq:focus { outline: 2px solid var(--brand); }\n/* ---- sheets ---- */')
+rep('  /* ---------- main loop ---------- */','''  function normTxt(t) { return String(t).toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, ""); }
+  var HOW_BY_NAME = {}; CATALOG.forEach(function (g) { HOW_BY_NAME[g.name] = g.how || ""; });
+  $("pickQ").addEventListener("input", function () {
+    var q = normTxt(this.value.trim());
+    [].forEach.call($("pickList").children, function (b) { var n = b.textContent; b.hidden = !!q && normTxt(n + " " + (HOW_BY_NAME[n] || "")).indexOf(q) < 0; });
+  });
+  $("chatGame").addEventListener("click", function () { $("pickQ").value = ""; [].forEach.call($("pickList").children, function (b) { b.hidden = false; }); });
+
+  /* ---------- main loop ---------- */''')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok8')
