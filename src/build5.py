@@ -272,3 +272,47 @@ rep('  /* ---------- main loop ---------- */','''  function openFromHash() { var
   /* ---------- main loop ---------- */''')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok9')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- enganche: racha x2, rival entre amigos, récord, desafío del día ----
+rep('  var UI = { onEnd: null };','''  var UI = { onEnd: null };
+  var FB = {}; /* récords de los amigos: { amigo: { juego: puntos } } (lo llena la versión con servidor) */
+  function rivalFor(id, sc) { var r = null; for (var n in FB) { var b = (FB[n] || {})[id] || 0; if (b > sc && (!r || b < r.best)) r = { name: n, best: b }; } return r; }
+  function friendsPlayed(id) { for (var n in FB) if ((FB[n] || {})[id]) return true; return false; }
+  function rankFor(id) { var a = [{ name: "Vos", best: P.best[id] || 0, me: 1 }]; for (var n in FB) if ((FB[n] || {})[id]) a.push({ name: n, best: FB[n][id] }); a.sort(function (x, y) { return y.best - x.best; }); return a; }''')
+rep('''    this.score += n; this.combo++; this.acts++;''','''    this.score += n * (this.streak >= 10 ? 2 : 1); this.streak += n; this.combo++; this.acts++;''')
+rep('''    this.score += (n || 1); if (performance.now() - lastSfx > 90) S.hit(Math.min(this.score, 12));''','''    var was = this.streak >= 10; this.score += (n || 1) * (was ? 2 : 1); this.streak += (n || 1);
+    if (!was && this.streak >= 10) S.perfect(); else if (performance.now() - lastSfx > 90) S.hit(Math.min(this.streak, 12));''')
+rep("this.lives--; stOf(this.cfg.id).h++; this.combo = 0;","this.lives--; stOf(this.cfg.id).h++; this.combo = 0; this.streak = 0;")
+rep("this.pops = []; this.parts = []; this.rings = [];","this.pops = []; this.parts = []; this.rings = []; this.streak = 0; this._rv = undefined; this._ls = 0;")
+rep('''    this.el.score.textContent = this.score; this.el.best.textContent = "Mejor " + this.best;''','''    var id = this.cfg.id, hot = this.streak >= 10, rv = rivalFor(id, this.score), top = Math.max(this.best, this.score), bt;
+    if (this._rv && (!rv || rv.name !== this._rv) && this.state === "play") S.perfect();
+    this._rv = rv ? rv.name : null;
+    if (rv) bt = "Superá a " + rv.name + " · " + rv.best; else if (friendsPlayed(id) && top > 0) bt = "1º entre amigos · " + top; else if (this.newBest && this.score >= 3) bt = "Récord nuevo"; else bt = "Mejor " + this.best;
+    se.classList.toggle("hot", hot); this.el.score.textContent = this.score; this.el.best.textContent = (hot ? "×2 · " : "") + bt;''')
+rep('.best { font: 700 11px/1 var(--body);','.score.hot { color: var(--gold); }\n.best { white-space: nowrap; font: 700 11px/1 var(--body);')
+# ranking en la hoja de ayuda
+rep('$("shT").textContent = sl.cfg.name; $("shP").textContent = sl.cfg.how;','''$("shT").textContent = sl.cfg.name; $("shP").textContent = sl.cfg.how;
+    var rk = $("shRank"), ra = rankFor(sl.cfg.id); rk.innerHTML = "";
+    if (ra.length > 1) ra.slice(0, 6).forEach(function (r, i) { var d = document.createElement("div"); d.className = "rk" + (r.me ? " me" : ""); d.innerHTML = "<span>" + (i + 1) + "º " + esc(r.name) + "</span><b>" + r.best + "</b>"; rk.appendChild(d); });''')
+import re
+m=re.search(r'<p id="shP"[^>]*></p>',s); assert m
+s=s.replace(m.group(0),m.group(0)+'<div id="shRank" class="rank"></div>',1)
+rep('/* ---- sheets ---- */','''.rank { display: flex; flex-direction: column; gap: 6px; }
+.rk { display: flex; justify-content: space-between; background: var(--panel2); border-radius: 10px; padding: 10px 12px; font: 600 15px/1 var(--body); }
+.rk.me { outline: 2px solid var(--brand); }
+.daily { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border-radius: 16px; padding: 14px 16px; font: 600 15px/1.2 var(--body); width: 100%; text-align: left; }
+.daily em { font-style: normal; color: var(--brand); font-weight: 700; }
+/* ---- sheets ---- */''')
+# desafío del día: el mismo juego para todos, primer juego del día
+rep('  fillFeed(0);\n','''  function today() { var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function dailyGame() { var t = today(), h = 7, k; for (k = 0; k < t.length; k++) h = (h * 31 + t.charCodeAt(k)) >>> 0; return CATALOG[h % NG]; }
+  if (P.dailyDay !== today()) { P.dailyDay = today(); addSlide(dailyGame()); slides[0].querySelector(".gname").textContent = "Desafío de hoy · " + dailyGame().name; }
+  fillFeed(0);
+''')
+rep('<button class="toggle" id="sndBtn" aria-pressed="true">','<button class="daily" id="dailyBtn"><span>Desafío de hoy</span><em id="dailyName"></em></button>\n      <button class="toggle" id="sndBtn" aria-pressed="true">')
+rep('  function renderProfile() {\n    var inf = xpInfo(P.xp);','  $("dailyBtn").addEventListener("click", function () { goTo(dailyGame().id); });\n  function renderProfile() {\n    var inf = xpInfo(P.xp); $("dailyName").textContent = dailyGame().name + " · " + (P.best[dailyGame().id] || 0);')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok10')

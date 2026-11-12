@@ -106,6 +106,7 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
   function hueOf(s) { var h = 0; for (var k = 0; k < s.length; k++) h = (h * 31 + s.charCodeAt(k)) % 360; return h; }
   function isNew(f) { return !!f.last && f.last.from !== ME && f.lastKey > (P.read[f.name] || ""); }
   function badge() { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.classList.toggle("dot", FR.some(isNew)); }
+  function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; var g = cache[activeIdx()]; if (g) g.hud(); }).catch(function () {}); }
   function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; badge(); if (view === "friends") renderFriends(); }).catch(function () {}); }
   function renderFriends() {
     var l = $("flist"); l.innerHTML = ""; $("addForm").hidden = !TOK;
@@ -175,6 +176,7 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
   setInterval(function () {
     if (!TOK || document.hidden) return; tickN++;
     if (view === "chat") { if (tickN % 3 === 0) loadMsgs(); } else if (view === "friends") { if (tickN % 10 === 0) loadFriends(); } else if (tickN % 60 === 0) loadFriends();
+    if (tickN % 90 === 0) loadBests();
   }, 1000);
 
   /* cuenta: entrar, crear, salir */
@@ -182,11 +184,11 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
   function hideLogin() { $("login").hidden = true; paused = false; }
   function signedIn(d) {
     TOK = d.token || TOK; ME = d.name; ADMIN = !!d.admin; try { localStorage.setItem("sa-token", TOK); } catch (e) {}
-    applyState(d.state); hideLogin(); loadFriends(); if (view === "profile") renderProfile(); if (view === "friends") renderFriends();
+    applyState(d.state); hideLogin(); loadFriends(); loadBests(); if (view === "profile") renderProfile(); if (view === "friends") renderFriends();
   }
   function signOut(expired) {
     if (!expired && TOK) { pushState(true); api("logout", { method: "POST" }).catch(function () {}); }
-    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; try { localStorage.removeItem("sa-token"); } catch (e) {}
+    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; FB = {}; try { localStorage.removeItem("sa-token"); } catch (e) {}
     badge(); setView("play"); showLogin(); if (expired) $("lgErr").textContent = "Tu sesión venció. Entrá de nuevo.";
   }
   function doAuth(kind) {

@@ -92,6 +92,11 @@ export default async (req) => {
       friends.sort((a, b) => (b.lastKey > a.lastKey ? 1 : -1));
       return J({ friends });
     }
+    if (path === "bests" && m === "GET") {
+      const pre = "f/" + me + "/", { blobs } = await st.list({ prefix: pre }), bests = {};
+      await Promise.all(blobs.map(async (b) => { const n = b.key.slice(pre.length), s = await st.get("st/" + n, { type: "json" }); bests[n] = (s && s.best) || {}; }));
+      return J({ bests });
+    }
     if (path === "friends" && m === "POST") {
       const n = String(body.name || "").trim().replace(/^@/, "").toLowerCase();
       if (n === me) return J({ error: "No te podés agregar a vos mismo." }, 400);

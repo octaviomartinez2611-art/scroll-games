@@ -44,5 +44,12 @@ w_g = [t<3 ? 1,6 : (0,5 + 0,35·ln(1+t/20) + 0,6·ln(1+r)) · (t/(h+1)>45 ? 0,5 
 - t = segundos jugados, r = veces que perdió y siguió jugando, h = vidas perdidas, k = veces que lo pasó en menos de 3 s sin tocar (baja 1 si después juega más de 10 s).
 - Se guarda en `P.st` (en la cuenta del jugador en Netlify; en el navegador si juega sin cuenta).
 
+## Enganche (pedido: "mucho más adictivo")
+- Racha: 10 puntos seguidos sin perder vida → los puntos valen ×2 (puntaje en amarillo, "×2" al lado del récord) hasta perder una vida.
+- Rival: debajo del puntaje dice "Superá a <amigo> · N" con el récord del amigo más cercano por encima; al pasarlo suena y pasa al siguiente; si no queda nadie, "1º entre amigos". Datos de `/api/bests` (`FB` en el cliente).
+- Ranking del juego entre amigos dentro de la hoja del botón "?".
+- Desafío de hoy: mismo juego para todos según la fecha; es el primer juego del día y hay un botón en Perfil.
+- Decidido NO hacer: notificaciones, premios al azar, ni castigos por no entrar (los usuarios son menores).
+
 ## Pendientes ofrecidos (no pedidos todavía)
 - Aviso de descanso tras un rato largo, tiempo de juego del día en el Perfil, texto de privacidad y botón para borrar la cuenta.

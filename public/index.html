@@ -54,7 +54,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .hearts svg.off { fill: none; stroke: rgba(255, 255, 255, 0.35); }
 .hud .c { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .score { transition: transform 0.11s ease-out; font: 600 40px/0.95 var(--display); font-variant-numeric: tabular-nums; }
-.best { font: 700 11px/1 var(--body);  color: var(--dim); font-variant-numeric: tabular-nums; }
+.score.hot { color: var(--gold); }
+.best { white-space: nowrap; font: 700 11px/1 var(--body);  color: var(--dim); font-variant-numeric: tabular-nums; }
 .cap {
   position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 16px; pointer-events: none;
   display: flex; flex-direction: column; gap: 3px; max-width: 60%;
@@ -107,6 +108,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .rail .spd[aria-pressed="true"] { color: #000; background: #fff; }
 .pickq { flex: none; background: var(--panel2); border: 0; border-radius: 12px; padding: 12px 14px; color: #fff; font: 500 16px/1.2 var(--body); user-select: text; -webkit-user-select: text; }
 .pickq:focus { outline: 2px solid var(--brand); }
+.rank { display: flex; flex-direction: column; gap: 6px; }
+.rk { display: flex; justify-content: space-between; background: var(--panel2); border-radius: 10px; padding: 10px 12px; font: 600 15px/1 var(--body); }
+.rk.me { outline: 2px solid var(--brand); }
+.daily { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border-radius: 16px; padding: 14px 16px; font: 600 15px/1.2 var(--body); width: 100%; text-align: left; }
+.daily em { font-style: normal; color: var(--brand); font-weight: 700; }
 .login { position: fixed; inset: 0; z-index: 30; background: #000; display: flex; align-items: center; justify-content: center; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
 .lgbox { width: min(100%, 380px); display: flex; flex-direction: column; gap: 14px; }
 .lgbox h1 { font: 700 34px/1.05 var(--display); }
@@ -274,6 +280,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
         <button role="tab" id="tabLiked" aria-selected="false">Me gusta</button>
       </div>
       <div class="tiles" id="tiles"></div>
+      <button class="daily" id="dailyBtn"><span>Desafío de hoy</span><em id="dailyName"></em></button>
       <button class="toggle" id="sndBtn" aria-pressed="true">Sonido <em id="sndState">Sí</em></button>
       <div class="acct" id="acct"></div>
       <div id="adminBox"></div>
@@ -281,7 +288,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
     <div class="sheet" id="sheet" hidden>
       <div class="card" role="dialog" aria-modal="true" aria-labelledby="shT">
-        <h2 id="shT"></h2><p id="shP"></p><button class="btn" id="shOk">Entendido</button>
+        <h2 id="shT"></h2><p id="shP"></p><div id="shRank" class="rank"></div><button class="btn" id="shOk">Entendido</button>
       </div>
     </div>
     <div class="sheet" id="sendSheet" hidden>
@@ -414,6 +421,10 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
   /* ---------- base game ---------- */
   var UI = { onEnd: null };
+  var FB = {}; /* récords de los amigos: { amigo: { juego: puntos } } (lo llena la versión con servidor) */
+  function rivalFor(id, sc) { var r = null; for (var n in FB) { var b = (FB[n] || {})[id] || 0; if (b > sc && (!r || b < r.best)) r = { name: n, best: b }; } return r; }
+  function friendsPlayed(id) { for (var n in FB) if ((FB[n] || {})[id]) return true; return false; }
+  function rankFor(id) { var a = [{ name: "Vos", best: P.best[id] || 0, me: 1 }]; for (var n in FB) if ((FB[n] || {})[id]) a.push({ name: n, best: FB[n][id] }); a.sort(function (x, y) { return y.best - x.best; }); return a; }
   /* ===== Escenarios: cada juego tiene un fondo relacionado con lo que se juega ===== */
   function hsl(h, s, l, a) { return a === undefined ? "hsl(" + h + "," + s + "%," + l + "%)" : "hsla(" + h + "," + s + "%," + l + "%," + a + ")"; }
   function poly(c, pts, col) { c.fillStyle = col; c.beginPath(); c.moveTo(pts[0], pts[1]); for (var i = 2; i < pts.length; i += 2) c.lineTo(pts[i], pts[i + 1]); c.closePath(); c.fill(); }
@@ -654,7 +665,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   Game.prototype.reset = function () {
     this.state = "ready"; this.score = 0; this.lives = 3; this.invuln = 0; this.shake = 0; this.t = 0;
     this.combo = 0; this.acts = 0; this.hint = false; this.newBest = false; this.drawn = false; this.holding = false; this.ctlT = 0;
-    this.pops = []; this.parts = []; this.rings = [];
+    this.pops = []; this.parts = []; this.rings = []; this.streak = 0; this._rv = undefined; this._ls = 0;
     this.best = P.best[this.cfg.id] || 0;
     this.init(); this.hud();
   };
@@ -669,7 +680,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     else if (this.state === "over" && performance.now() - this.overAt > 450) { this.reset(); this.begin(); }
   };
   Game.prototype.good = function (n, x, y, perfect) {
-    this.score += n; this.combo++; this.acts++;
+    this.score += n * (this.streak >= 10 ? 2 : 1); this.streak += n; this.combo++; this.acts++;
     if (this.score > this.best) { this.best = this.score; this.newBest = true; }
     this.pop(x, y, "+" + n, perfect ? "#ffd23f" : "#fff");
     this.burst(x, y, perfect ? "#ffd23f" : "#fff", perfect ? 12 : 7);
@@ -677,13 +688,14 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     this.hud();
   };
   Game.prototype.add = function (n) {
-    this.score += (n || 1); if (performance.now() - lastSfx > 90) S.hit(Math.min(this.score, 12));
+    var was = this.streak >= 10; this.score += (n || 1) * (was ? 2 : 1); this.streak += (n || 1);
+    if (!was && this.streak >= 10) S.perfect(); else if (performance.now() - lastSfx > 90) S.hit(Math.min(this.streak, 12));
     if (this.score > this.best) { this.best = this.score; this.newBest = true; }
     this.hud();
   };
   Game.prototype.hurt = function () {
     if (this.state !== "play" || this.invuln > 0) return false;
-    this.lives--; stOf(this.cfg.id).h++; this.combo = 0; this.shake = 0; this.invuln = 1.2;
+    this.lives--; stOf(this.cfg.id).h++; this.combo = 0; this.streak = 0; this.shake = 0; this.invuln = 1.2;
     S.hurt(); this.hud();
     if (this.lives <= 0) { this.end(); return true; }
     return false;
@@ -777,7 +789,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     var se = this.el.score;
     if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)"; clearTimeout(this._bt); this._bt = setTimeout(function () { se.style.transform = ""; }, 110); }
     this._ls = this.score;
-    this.el.score.textContent = this.score; this.el.best.textContent = "Mejor " + this.best;
+    var id = this.cfg.id, hot = this.streak >= 10, rv = rivalFor(id, this.score), top = Math.max(this.best, this.score), bt;
+    if (this._rv && (!rv || rv.name !== this._rv) && this.state === "play") S.perfect();
+    this._rv = rv ? rv.name : null;
+    if (rv) bt = "Superá a " + rv.name + " · " + rv.best; else if (friendsPlayed(id) && top > 0) bt = "1º entre amigos · " + top; else if (this.newBest && this.score >= 3) bt = "Récord nuevo"; else bt = "Mejor " + this.best;
+    se.classList.toggle("hot", hot); this.el.score.textContent = this.score; this.el.best.textContent = (hot ? "×2 · " : "") + bt;
     for (var i = 0; i < this.el.hearts.length; i++) this.el.hearts[i].setAttribute("class", i < this.lives ? "" : "off");
   };
   Game.prototype.init = function () {}; Game.prototype.step = function () {};
@@ -3756,6 +3772,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   }
   function fillFeed(a) { while (slides.length < a + 4) addSlide(pickNext()); }
   function trimAfter(a) { while (slides.length > a + 1) { var sl = slides.pop(); drop(slides.length); sl.remove(); } N = slides.length; }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function dailyGame() { var t = today(), h = 7, k; for (k = 0; k < t.length; k++) h = (h * 31 + t.charCodeAt(k)) >>> 0; return CATALOG[h % NG]; }
+  if (P.dailyDay !== today()) { P.dailyDay = today(); addSlide(dailyGame()); slides[0].querySelector(".gname").textContent = "Desafío de hoy · " + dailyGame().name; }
   fillFeed(0);
   function ensure(i) {
     if (i < 0 || i >= N) return null;
@@ -3802,7 +3821,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     save(); syncRail();
   });
   $("rHelp").addEventListener("click", function () {
-    var sl = slides[activeIdx()]; $("shT").textContent = sl.cfg.name; $("shP").textContent = sl.cfg.how; $("sheet").hidden = false; paused = true;
+    var sl = slides[activeIdx()]; $("shT").textContent = sl.cfg.name; $("shP").textContent = sl.cfg.how;
+    var rk = $("shRank"), ra = rankFor(sl.cfg.id); rk.innerHTML = "";
+    if (ra.length > 1) ra.slice(0, 6).forEach(function (r, i) { var d = document.createElement("div"); d.className = "rk" + (r.me ? " me" : ""); d.innerHTML = "<span>" + (i + 1) + "º " + esc(r.name) + "</span><b>" + r.best + "</b>"; rk.appendChild(d); }); $("sheet").hidden = false; paused = true;
   });
   $("shOk").addEventListener("click", closeSheets);
   $("rSend").addEventListener("click", function () {
@@ -3840,6 +3861,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   function hueOf(s) { var h = 0; for (var k = 0; k < s.length; k++) h = (h * 31 + s.charCodeAt(k)) % 360; return h; }
   function isNew(f) { return !!f.last && f.last.from !== ME && f.lastKey > (P.read[f.name] || ""); }
   function badge() { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.classList.toggle("dot", FR.some(isNew)); }
+  function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; var g = cache[activeIdx()]; if (g) g.hud(); }).catch(function () {}); }
   function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; badge(); if (view === "friends") renderFriends(); }).catch(function () {}); }
   function renderFriends() {
     var l = $("flist"); l.innerHTML = ""; $("addForm").hidden = !TOK;
@@ -3909,6 +3931,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   setInterval(function () {
     if (!TOK || document.hidden) return; tickN++;
     if (view === "chat") { if (tickN % 3 === 0) loadMsgs(); } else if (view === "friends") { if (tickN % 10 === 0) loadFriends(); } else if (tickN % 60 === 0) loadFriends();
+    if (tickN % 90 === 0) loadBests();
   }, 1000);
 
   /* cuenta: entrar, crear, salir */
@@ -3916,11 +3939,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   function hideLogin() { $("login").hidden = true; paused = false; }
   function signedIn(d) {
     TOK = d.token || TOK; ME = d.name; ADMIN = !!d.admin; try { localStorage.setItem("sa-token", TOK); } catch (e) {}
-    applyState(d.state); hideLogin(); loadFriends(); if (view === "profile") renderProfile(); if (view === "friends") renderFriends();
+    applyState(d.state); hideLogin(); loadFriends(); loadBests(); if (view === "profile") renderProfile(); if (view === "friends") renderFriends();
   }
   function signOut(expired) {
     if (!expired && TOK) { pushState(true); api("logout", { method: "POST" }).catch(function () {}); }
-    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; try { localStorage.removeItem("sa-token"); } catch (e) {}
+    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; FB = {}; try { localStorage.removeItem("sa-token"); } catch (e) {}
     badge(); setView("play"); showLogin(); if (expired) $("lgErr").textContent = "Tu sesión venció. Entrá de nuevo.";
   }
   function doAuth(kind) {
@@ -3988,8 +4011,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     };
     rd.readAsDataURL(f);
   });
+  $("dailyBtn").addEventListener("click", function () { goTo(dailyGame().id); });
   function renderProfile() {
-    var inf = xpInfo(P.xp);
+    var inf = xpInfo(P.xp); $("dailyName").textContent = dailyGame().name + " · " + (P.best[dailyGame().id] || 0);
     $("nameIn").value = ME ? "@" + ME : P.name; $("nameIn").readOnly = !!ME; paintAv(); renderAcct();
     $("pLvl").textContent = "Nivel " + inf.lvl; $("pXp").textContent = inf.rem + " / " + inf.need + " XP";
     $("pBar").style.width = Math.round(inf.rem / inf.need * 100) + "%";
