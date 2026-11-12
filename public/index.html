@@ -53,7 +53,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .hearts svg { width: 18px; height: 18px; fill: var(--brand); stroke: var(--brand); stroke-width: 2; }
 .hearts svg.off { fill: none; stroke: rgba(255, 255, 255, 0.35); }
 .hud .c { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.score { font: 600 40px/0.95 var(--display); font-variant-numeric: tabular-nums; }
+.score { transition: transform 0.11s ease-out; font: 600 40px/0.95 var(--display); font-variant-numeric: tabular-nums; }
 .best { font: 700 11px/1 var(--body);  color: var(--dim); font-variant-numeric: tabular-nums; }
 .cap {
   position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: 16px; pointer-events: none;
@@ -424,7 +424,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     var ah = hexHue(cfg.accent), ok = HUES.filter(function (h) { if (ah < 0) return true; var dd = Math.abs(h - ah) % 360; return Math.min(dd, 360 - dd) > 60; });
     var h = ok[hs % ok.length], sat = (h > 120 && h < 190) ? 45 : 55;
     function L(l) { return "hsl(" + h + "," + sat + "%," + l + "%)"; }
-    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40) };
+    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), deco: L(18), seed: hs };
   }
   var TH = themeFor({ id: "x" });
   function Game(sec, cfg) {
@@ -438,7 +438,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   Game.prototype.resize = function () {
     this.W = this.sec.clientWidth; this.H = this.sec.clientHeight;
     var d = Math.min(window.devicePixelRatio || 1, 2);
-    this.cv.width = Math.round(this.W * d); this.cv.height = Math.round(this.H * d);
+    this.cv.width = Math.round(this.W * d); this.cv.height = Math.round(this.H * d); this.deco = null;
     this.ctx.setTransform(d, 0, 0, d, 0, 0);
     this.pt = this.sec.querySelector(".hud").offsetHeight + 8; this.pb = 24;
     this.cx = this.W / 2; this.cy = (this.pt + this.H - this.pb) / 2;
@@ -536,22 +536,42 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     c.fillStyle = "rgba(255,255,255,0.9)"; c.beginPath(); c.arc(x, y, 15, 0, TAU); c.fill();
     c.fillStyle = "rgba(0,0,0,0.25)"; c.beginPath(); c.arc(x, y, 6, 0, TAU); c.fill();
   };
+  /* Render en capas:
+     1) fondo con formas grandes y quietas en un tono apenas más claro que el fondo del juego
+     2) el juego se dibuja en una capa aparte
+     3) esa capa se copia oscurecida y corrida 4 px hacia abajo (la base sólida) y encima va la capa normal */
+  var LAY = null, TMP = null;
+  function layers(w, h) {
+    if (!LAY) { LAY = document.createElement("canvas"); TMP = document.createElement("canvas"); }
+    if (LAY.width !== w || LAY.height !== h) { LAY.width = TMP.width = w; LAY.height = TMP.height = h; }
+  }
+  function decor(c, g) {
+    if (!g.deco) {
+      var sd = g.th.seed || 1, rn = function () { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; }, a = [], k;
+      for (k = 0; k < 4; k++) a.push({ x: rn() * g.W, y: g.pt + rn() * (g.H - g.pt), r: 70 + rn() * 150, sq: rn() < 0.35, an: rn() * PI });
+      g.deco = a;
+    }
+    c.fillStyle = g.th.deco;
+    for (var i = 0; i < g.deco.length; i++) {
+      var o = g.deco[i];
+      if (o.sq) { c.save(); c.translate(o.x, o.y); c.rotate(o.an); rr(c, -o.r * 0.8, -o.r * 0.8, o.r * 1.6, o.r * 1.6, o.r * 0.35); c.fill(); c.restore(); }
+      else { c.beginPath(); c.arc(o.x, o.y, o.r, 0, TAU); c.fill(); }
+    }
+  }
   Game.prototype.render = function (now) {
-    var c = this.ctx, i; TH = this.th;
-    c.clearRect(0, 0, this.W, this.H); c.save();
-    if (this.shake > 0) { var s = this.shake * 26; c.translate(rnd(-s, s), rnd(-s, s)); }
-    this.draw(now);
-    for (i = 0; i < this.rings.length; i++) {
-      var r = this.rings[i]; c.strokeStyle = r.c; c.globalAlpha = 1 - r.t / 0.4; c.lineWidth = 4;
-      c.beginPath(); c.arc(r.x, r.y, 20 + r.t * 130, 0, TAU); c.stroke();
-    }
-    for (i = 0; i < this.parts.length; i++) {
-      var p = this.parts[i]; c.globalAlpha = 1 - p.t / p.life; c.fillStyle = p.c; c.beginPath(); c.arc(p.x, p.y, p.r, 0, TAU); c.fill();
-    }
-    for (i = 0; i < this.pops.length; i++) { var q = this.pops[i]; c.globalAlpha = 1 - q.t / 0.8; txt(c, q.txt, q.x, q.y - 14 - q.t * 60, 24, q.c); }
-    c.globalAlpha = 1; c.restore();
+    var c = this.ctx, d = this.cv.width / this.W; TH = this.th;
+    c.clearRect(0, 0, this.W, this.H); decor(c, this);
+    layers(this.cv.width, this.cv.height);
+    var L = LAY.getContext("2d"); L.setTransform(1, 0, 0, 1, 0, 0); L.clearRect(0, 0, LAY.width, LAY.height); L.setTransform(d, 0, 0, d, 0, 0);
+    this.ctx = L; L.save(); try { this.draw(now); } finally { L.restore(); L.globalAlpha = 1; this.ctx = c; }
+    var T = TMP.getContext("2d"); T.setTransform(1, 0, 0, 1, 0, 0); T.globalCompositeOperation = "copy"; T.drawImage(LAY, 0, 0);
+    T.globalCompositeOperation = "source-atop"; T.fillStyle = "rgba(0,0,0,0.4)"; T.fillRect(0, 0, TMP.width, TMP.height); T.globalCompositeOperation = "source-over";
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();
   };
   Game.prototype.hud = function () {
+    var se = this.el.score;
+    if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)"; clearTimeout(this._bt); this._bt = setTimeout(function () { se.style.transform = ""; }, 110); }
+    this._ls = this.score;
     this.el.score.textContent = this.score; this.el.best.textContent = "Mejor " + this.best;
     for (var i = 0; i < this.el.hearts.length; i++) this.el.hearts[i].setAttribute("class", i < this.lives ? "" : "off");
   };

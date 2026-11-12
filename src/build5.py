@@ -147,3 +147,54 @@ rep('''  Game.prototype.render = function (now) {
 rep('    s.cfg = cfg; feed.appendChild(s); slides.push(s); N = slides.length;','    s.cfg = cfg; s.style.background = themeFor(cfg).bg; feed.appendChild(s); slides.push(s); N = slides.length;')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok6')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+def rep(old,new):
+    global s
+    assert s.count(old)==1,(s.count(old),old[:80]); s=s.replace(old,new)
+# ---- volumen tipo juguete: todo lo que dibuja un juego tiene una base sólida más oscura debajo (sin difuminado) ----
+rep('    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40) };','    return { bg: L(15), p1: L(20), p2: L(25), p3: L(31), p4: L(40), deco: L(18), seed: hs };')
+i=s.index("  Game.prototype.render = function (now) {"); j=s.index("  Game.prototype.hud = function () {")
+s=s[:i]+'''  /* Render en capas:
+     1) fondo con formas grandes y quietas en un tono apenas más claro que el fondo del juego
+     2) el juego se dibuja en una capa aparte
+     3) esa capa se copia oscurecida y corrida 4 px hacia abajo (la base sólida) y encima va la capa normal */
+  var LAY = null, TMP = null;
+  function layers(w, h) {
+    if (!LAY) { LAY = document.createElement("canvas"); TMP = document.createElement("canvas"); }
+    if (LAY.width !== w || LAY.height !== h) { LAY.width = TMP.width = w; LAY.height = TMP.height = h; }
+  }
+  function decor(c, g) {
+    if (!g.deco) {
+      var sd = g.th.seed || 1, rn = function () { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; }, a = [], k;
+      for (k = 0; k < 4; k++) a.push({ x: rn() * g.W, y: g.pt + rn() * (g.H - g.pt), r: 70 + rn() * 150, sq: rn() < 0.35, an: rn() * PI });
+      g.deco = a;
+    }
+    c.fillStyle = g.th.deco;
+    for (var i = 0; i < g.deco.length; i++) {
+      var o = g.deco[i];
+      if (o.sq) { c.save(); c.translate(o.x, o.y); c.rotate(o.an); rr(c, -o.r * 0.8, -o.r * 0.8, o.r * 1.6, o.r * 1.6, o.r * 0.35); c.fill(); c.restore(); }
+      else { c.beginPath(); c.arc(o.x, o.y, o.r, 0, TAU); c.fill(); }
+    }
+  }
+  Game.prototype.render = function (now) {
+    var c = this.ctx, d = this.cv.width / this.W; TH = this.th;
+    c.clearRect(0, 0, this.W, this.H); decor(c, this);
+    layers(this.cv.width, this.cv.height);
+    var L = LAY.getContext("2d"); L.setTransform(1, 0, 0, 1, 0, 0); L.clearRect(0, 0, LAY.width, LAY.height); L.setTransform(d, 0, 0, d, 0, 0);
+    this.ctx = L; L.save(); try { this.draw(now); } finally { L.restore(); L.globalAlpha = 1; this.ctx = c; }
+    var T = TMP.getContext("2d"); T.setTransform(1, 0, 0, 1, 0, 0); T.globalCompositeOperation = "copy"; T.drawImage(LAY, 0, 0);
+    T.globalCompositeOperation = "source-atop"; T.fillStyle = "rgba(0,0,0,0.4)"; T.fillRect(0, 0, TMP.width, TMP.height); T.globalCompositeOperation = "source-over";
+    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();
+  };
+'''+s[j:]
+s=s.replace("this.cv.width = Math.round(this.W * d); this.cv.height = Math.round(this.H * d);","this.cv.width = Math.round(this.W * d); this.cv.height = Math.round(this.H * d); this.deco = null;",1)
+# el puntaje late un poquito cuando sumás
+rep('''  Game.prototype.hud = function () {
+    this.el.score.textContent = this.score;''','''  Game.prototype.hud = function () {
+    var se = this.el.score;
+    if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)"; clearTimeout(this._bt); this._bt = setTimeout(function () { se.style.transform = ""; }, 110); }
+    this._ls = this.score;
+    this.el.score.textContent = this.score;''')
+rep('.score { font: 600 40px/0.95 var(--display);','.score { transition: transform 0.11s ease-out; font: 600 40px/0.95 var(--display);')
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok7')
