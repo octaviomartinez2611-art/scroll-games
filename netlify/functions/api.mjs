@@ -18,8 +18,17 @@ const rid = () => Date.now().toString().padStart(14, "0") + "-" + randomBytes(3)
 const same = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && timingSafeEqual(x, y); };
 
 async function newSession(st, u) { const t = randomBytes(24).toString("hex"); await st.setJSON("s/" + t, { u, t: Date.now() }); return t; }
+// La sesión también se guarda en una cookie de un año: así el navegador te recuerda aunque borre el almacenamiento de la página.
+const COOKIE = (t) => "sa=" + t + "; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax";
+function tokenOf(req) {
+  const h = req.headers.get("x-token");
+  if (h) return h;
+  const m = (req.headers.get("cookie") || "").match(/(?:^|;\s*)sa=([a-f0-9]{48})/);
+  return m ? m[1] : "";
+}
+const withCookie = (d, t) => new Response(JSON.stringify(d), { status: 200, headers: { "content-type": "application/json", "set-cookie": COOKIE(t) } });
 async function who(req, st) {
-  const t = req.headers.get("x-token") || "";
+  const t = tokenOf(req);
   if (!/^[a-f0-9]{48}$/.test(t)) return null;
   const s = await st.get("s/" + t, { type: "json" });
   return s ? s.u : null;
@@ -38,7 +47,8 @@ export default async (req) => {
       const salt = randomBytes(16).toString("hex");
       const { modified } = await st.setJSON("u/" + name, { name, salt, hash: hashPin(pin, salt), created: Date.now() }, { onlyIfNew: true });
       if (!modified) return J({ error: "Ese usuario ya existe. Probá otro." }, 409);
-      return J({ token: await newSession(st, name), name, state: null, admin: false });
+      const tk = await newSession(st, name);
+      return withCookie({ token: tk, name, state: null, admin: false }, tk);
     }
     if (path === "login" && m === "POST") {
       const name = String(body.name || "").trim().toLowerCase(), pin = String(body.pin || "");
@@ -50,7 +60,8 @@ export default async (req) => {
         return J({ error: "Usuario o PIN incorrectos." }, 401);
       }
       if (fail) await st.delete(fk);
-      return J({ token: await newSession(st, name), name, state: await st.get("st/" + name, { type: "json" }), admin: !!user.admin });
+      const tk = await newSession(st, name);
+      return withCookie({ token: tk, name, state: await st.get("st/" + name, { type: "json" }), admin: !!user.admin }, tk);
     }
 
     const me = await who(req, st);
@@ -58,9 +69,13 @@ export default async (req) => {
 
     if (path === "me" && m === "GET") {
       const user = await st.get("u/" + me, { type: "json" });
-      return J({ name: me, state: await st.get("st/" + me, { type: "json" }), admin: !!(user && user.admin) });
+      const tk = tokenOf(req);
+      return withCookie({ token: tk, name: me, state: await st.get("st/" + me, { type: "json" }), admin: !!(user && user.admin) }, tk);
     }
-    if (path === "logout" && m === "POST") { await st.delete("s/" + req.headers.get("x-token")); return J({ ok: true }); }
+    if (path === "logout" && m === "POST") {
+      await st.delete("s/" + tokenOf(req));
+      return new Response(JSON.stringify({ ok: true }), { headers: { "content-type": "application/json", "set-cookie": "sa=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax" } });
+    }
     if (path === "state" && m === "PUT") {
       const s = JSON.stringify(body.state || {});
       if (s.length > 400000) return J({ error: "Datos demasiado grandes." }, 413);

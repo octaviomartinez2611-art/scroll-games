@@ -3835,7 +3835,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   window.addEventListener("keyup", function (e) { if (e.key === " ") { var g = activeGame(); if (g && g.ctl === "hold") g.pup(0, 0, false); } });
   window.addEventListener("resize", function () { for (var k in cache) { cache[k].resize(); cache[k].reset(); } });
 
-  if (TOK) api("me").then(signedIn).catch(function (x) { if (!TOK) return; }); else showLogin();
+  api("me").then(signedIn).catch(function () { if (!TOK) showLogin(); });
 
   /* ---------- main loop ---------- */
   var last = performance.now(), viewT = 0, saveT = 0;
