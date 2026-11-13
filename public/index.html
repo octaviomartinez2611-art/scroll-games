@@ -3797,7 +3797,8 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     { id: "land", name: "Alunizaje", how: "Mantené apretado para encender el motor y arrastrá hacia donde querés ir. Aterrizá despacio en la zona verde.", accent: "#ff9f1c", ctor: Land },
     { id: "plink", name: "Bolitas", how: "Tocá donde querés soltar la bola. Evitá el 0.", accent: "#ffd23f", ctor: Plink }
   ];
-  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].indexOf(g.id) < 0; }); /* sin juegos de apuestas */
+  var MENOS = ["q_to100", "q_miss", "q_half", "q_side", "q_hmin", "q_hplus", "q_mid3", "q_prim", "q_sum3", "q_prev", "q_pct", "q_to10", "q_m3", "q_dec", "q_mul7", "q_smul", "q_nextn", "q_sml3", "q_big4", "q_third", "q_sub2", "q_big3", "q_div", "q_rnd", "q_cmp", "q_mod", "q_week", "q_sqr", "q_par", "k_dd", "k_g100", "k_imp", "k_x5", "k_m3", "k_m5", "k_pri", "g_zero", "g_par", "g_odd", "c_odd", "c_x4", "c_pri", "c_gt5", "c_lt4", "t_g5", "t_pri", "t_od", "t_l5", "t_t3", "x_nim", "lights"];
+  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].concat(MENOS).indexOf(g.id) < 0; }); /* sin juegos de apuestas; menos matemática (quedan 24 de 73) y menos estrategia */
   (function () { var sd = 20260; function rn() { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; } for (var q = CATALOG.length - 1; q > 0; q--) { var w = Math.floor(rn() * (q + 1)), tt = CATALOG[q]; CATALOG[q] = CATALOG[w]; CATALOG[w] = tt; } })();
   var byId = {}; CATALOG.forEach(function (g) { byId[g.id] = g; });
   var NG = CATALOG.length, N = 0;

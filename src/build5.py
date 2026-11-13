@@ -111,7 +111,7 @@ open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print(
 s=open('swipe-arcade.html',encoding='utf-8').read()
 old="  CATALOG = CATALOG.concat(EXTRA);"
 assert s.count(old)==1
-s=s.replace(old,'  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].indexOf(g.id) < 0; }); /* sin juegos de apuestas */')
+s=s.replace(old,'  var MENOS = ["q_to100", "q_miss", "q_half", "q_side", "q_hmin", "q_hplus", "q_mid3", "q_prim", "q_sum3", "q_prev", "q_pct", "q_to10", "q_m3", "q_dec", "q_mul7", "q_smul", "q_nextn", "q_sml3", "q_big4", "q_third", "q_sub2", "q_big3", "q_div", "q_rnd", "q_cmp", "q_mod", "q_week", "q_sqr", "q_par", "k_dd", "k_g100", "k_imp", "k_x5", "k_m3", "k_m5", "k_pri", "g_zero", "g_par", "g_odd", "c_odd", "c_x4", "c_pri", "c_gt5", "c_lt4", "t_g5", "t_pri", "t_od", "t_l5", "t_t3", "x_nim", "lights"];\n  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].concat(MENOS).indexOf(g.id) < 0; }); /* sin juegos de apuestas; menos matemática (quedan 24 de 73) y menos estrategia */')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok5')
 s=open('swipe-arcade.html',encoding='utf-8').read()
