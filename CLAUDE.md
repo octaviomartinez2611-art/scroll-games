@@ -19,7 +19,8 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
   - Máximo espacio de juego: el nombre del juego va abajo a la izquierda, sin tira detrás y sin bloquear toques (se juega encima y al lado); HUD compacto; barra de navegación fina.
   - Link directo a un juego: `sitio/#id` con guiones en vez de guion bajo (ej. `#snake`, `#c-eggs`, `#f-sub`).
   - Al elegir un juego para mandar hay un buscador (por nombre y por descripción, sin importar tildes).
-  - Botones de la derecha (like, guardar, enviar, ayuda) se esconden mientras jugás y vuelven 1 s después de soltar. El botón 2× (velocidad doble) está arriba del corazón y nunca se esconde.
+  - Botones de la derecha (like, guardar, enviar, ayuda, 2×) siempre visibles: ya NO se esconden al jugar (lo pidió). Los espacios entre botones dejan pasar los toques al juego (`.rail { pointer-events: none }`, botones `auto`). El botón 2× (velocidad doble) está arriba del corazón.
+  - Ayuda del "?": explicación completa de cero en tres partes (Cómo se mueve / Qué tenés que hacer / Perdés una vida), nunca "igual que…", "el mismo…" ni nada que suponga que ya jugó otro juego. Textos en `src/help.py` → `help.js` (`HELP[id]`); al agregar un juego, agregarle su ayuda ahí (help.py avisa si falta alguno).
 
 ## Dónde está todo
 - Sitio: https://swipe-arcade-juegos.netlify.app (proyecto Netlify `swipe-arcade-juegos`, id `85725297-3520-4e3e-bce8-bc5afee3d1d1`). Se publica solo con cada push a `main`.

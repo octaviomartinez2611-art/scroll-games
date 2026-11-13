@@ -457,3 +457,20 @@ rp('else if (e.key === " " || e.key === "Enter") { e.preventDefault(); g = activ
 print('MISSES14', miss)
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok14')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Ayuda completa de cada juego (help.js generado por help.py): cómo se mueve, qué hacer, cuándo perdés
+rp('  var SCENE_BY = {};', open('help.js',encoding='utf-8').read()+'  var SCENE_BY = {};')
+rp('<h2 id="shT"></h2><p id="shP"></p>','<h2 id="shT"></h2><div id="shP" class="howto"></div>')
+rp('.sheet p { font: 500 18px/1.4 var(--body); text-wrap: balance; }','''.sheet p { font: 500 18px/1.4 var(--body); text-wrap: balance; }
+.howto { display: flex; flex-direction: column; gap: 11px; }
+.howto b { display: block; margin-bottom: 4px; font: 700 12px/1.2 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); }
+.howto p { font: 500 15.5px/1.38 var(--body); text-wrap: pretty; }
+#sheet .card { max-height: 90%; gap: 10px; } #sheet h2 { font-size: 23px; }''')
+rp('var sl = slides[activeIdx()]; $("shT").textContent = sl.cfg.name; $("shP").textContent = sl.cfg.how;',
+   'var sl = slides[activeIdx()]; $("shT").textContent = sl.cfg.name; var hp = HELP[sl.cfg.id], box = $("shP"); box.innerHTML = ""; if (hp) [["Cómo se mueve", hp[0]], ["Qué tenés que hacer", hp[1]], ["Perdés una vida", hp[2]]].forEach(function (r) { var d = document.createElement("div"), b = document.createElement("b"), p = document.createElement("p"); b.textContent = r[0]; p.textContent = r[1]; d.appendChild(b); d.appendChild(p); box.appendChild(d); }); else { var p0 = document.createElement("p"); p0.textContent = sl.cfg.how; box.appendChild(p0); }')
+# Botones de la derecha siempre visibles; los espacios entre botones dejan pasar los toques al juego
+rp('.rail.busy button:not(.spd) { opacity: 0; pointer-events: none; }','.rail { pointer-events: none; } .rail button { pointer-events: auto; }')
+print('MISSES15', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok15')
