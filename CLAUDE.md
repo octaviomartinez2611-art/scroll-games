@@ -12,7 +12,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
   - Sin carteles para leer: nada de instrucciones al empezar, nada de cartel de "perdiste", nada de avisos tipo "guardado". La ayuda está solo en el botón "?".
   - Sin monedas. Sin emojis en la interfaz.
   - Sin juegos de apuestas (se sacaron Veintiuna, Dados y Ruleta).
-  - SOLO DOPAMINA, nada de juegos para pensar (lo pidió a los gritos): sin preguntas, sin cuentas, sin números, sin letras, sin memoria, sin estrategia (se sacaron todas las preguntas, posiciones, secuencias, parejas, Ta-Te-Ti, Cuatro seguidas, Minas, Palitos, Apagá las luces, Mayor o menor, Verdad, Colores, Piedra papel o tijera, y las variantes de pares/múltiplos/primos/vocales/categorías). Quedan solo acción y reflejos: 212 juegos. La lista de quitados es `MENOS` en build5.py (ok5). No agregar juegos de pensar.
+  - SOLO DOPAMINA, nada de juegos para pensar (lo pidió a los gritos): sin preguntas, sin cuentas, sin números, sin letras, sin memoria, sin estrategia (se sacaron todas las preguntas, posiciones, secuencias, parejas, Ta-Te-Ti, Cuatro seguidas, Minas, Palitos, Apagá las luces, Mayor o menor, Verdad, Colores, Piedra papel o tijera, y las variantes de pares/múltiplos/primos/vocales/categorías). Quedan solo acción y reflejos. Después pidió 200 más "todo dopamina, sin repetir": total 412. La lista de quitados es `MENOS` en build5.py (ok5). No agregar juegos de pensar.
   - Sin nombres de marcas registradas (Tetris se sacó; Plinko=Bolitas, Simón=Secuencia, Buscaminas=Minas, etc.).
   - No todo tiene que ser tocar: usar arrastrar, mantener apretado o deslizar cuando el juego lo pide.
   - Nada de azar puro en el feed: solo el algoritmo (lo pidió explícitamente).
@@ -38,6 +38,12 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 5. `build5.py`: sonido (desbloqueo en iPhone), botón 2×, sin monedas, más espacio de juego, filtro de juegos de apuestas.
 6. `build6.py`: versión Netlify (documento completo, login, amigos y chat contra `/api`, reportes, admin) → `public/index.html`.
 Para cambiar algo, editar la fuente que corresponde y volver a correr `build.sh`. Probar con Playwright (Chromium ya instalado) antes de hacer push.
+
+## Tanda dopamina (f7.js y f8.js, 200 juegos)
+20 mecánicas nuevas × 10 versiones, cada una con su escenario (`regD` asigna `SCENE_BY[id]`): carriles `ln_`, flechas a la rueda `kn_`, aros giratorios `ri_` (huecos enfrentados, si no es imposible pasar), caída por la torre `tw_`, rompe pisos `sm_`, diagonal `zz_`, pila de saltos `sj_`, ganchos `hk_`, volcadas `dk_`, puente `br_`, teclas `pt_`, hockey de mesa `ah_`, arquero `gk_`, escudo `sh_`, paredes `wj_`, pila de comida `bg_`, bomberos `fh_`, cama elástica `tr_`, torreta `tu_`, soltá `rp_`.
+- OJO al escribir juegos: no usar como propiedad nombres que ya usa el motor (`th` es el tema, `rings`/`parts`/`pops` son efectos, `state`, `score`, `best`, `cfg`, `el`...). Pasó con `th` y `rings` y rompía el juego.
+- Arrastrar solo en horizontal: un arrastre vertical hace scroll del feed.
+- `t28.js` juega los 200 con su control; `t30.js` tiene bots que demuestran que se puede ganar.
 
 ## Funcionamiento
 - Gracia al llegar: en los primeros 3 s de una partida no se pierde vida si todavía no tocaste la pantalla (`this.inp`, en `hurt`). Antes había juegos que te sacaban 1 o 2 vidas antes de entender qué hacer (Peloteo, Seguime, Cajas, Flotador, Cinta).
