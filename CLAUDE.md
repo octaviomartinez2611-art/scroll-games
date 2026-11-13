@@ -12,7 +12,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
   - Sin carteles para leer: nada de instrucciones al empezar, nada de cartel de "perdiste", nada de avisos tipo "guardado". La ayuda está solo en el botón "?".
   - Sin monedas. Sin emojis en la interfaz.
   - Sin juegos de apuestas (se sacaron Veintiuna, Dados y Ruleta).
-  - Menos matemática: estaba harto. De 73 juegos de matemáticas quedan 24 (1 de cada 3) y de estrategia quedan Ta-Te-Ti, Cuatro seguidas y Minas (se sacaron Palitos y Apagá las luces). La lista de quitados es `MENOS` en build5.py (ok5). Total: 297 juegos.
+  - SOLO DOPAMINA, nada de juegos para pensar (lo pidió a los gritos): sin preguntas, sin cuentas, sin números, sin letras, sin memoria, sin estrategia (se sacaron todas las preguntas, posiciones, secuencias, parejas, Ta-Te-Ti, Cuatro seguidas, Minas, Palitos, Apagá las luces, Mayor o menor, Verdad, Colores, Piedra papel o tijera, y las variantes de pares/múltiplos/primos/vocales/categorías). Quedan solo acción y reflejos: 212 juegos. La lista de quitados es `MENOS` en build5.py (ok5). No agregar juegos de pensar.
   - Sin nombres de marcas registradas (Tetris se sacó; Plinko=Bolitas, Simón=Secuencia, Buscaminas=Minas, etc.).
   - No todo tiene que ser tocar: usar arrastrar, mantener apretado o deslizar cuando el juego lo pide.
   - Nada de azar puro en el feed: solo el algoritmo (lo pidió explícitamente).
