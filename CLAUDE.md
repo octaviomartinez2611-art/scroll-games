@@ -30,6 +30,14 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - `netlify/functions/api.mjs`: servidor. Cuentas con usuario + PIN (scrypt), sesiones, estado del jugador, amigos, mensajes, reportes y panel de admin. Guarda en Netlify Blobs (store `arcade`), una clave por mensaje y por amistad para no pisar datos. La sesión se guarda en `localStorage` (`sa-token`) y además en una cookie HttpOnly de un año (`sa`), así el sitio recuerda al usuario sin pedir el PIN otra vez.
 - Código de admin: variable de entorno `ADMIN_CODE` en Netlify. NUNCA ponerlo en el repo (es público). Se usa una sola vez por cuenta desde Perfil → "Soy el administrador".
 
+## Sin internet (pedido: "que se pueda jugar sin internet ni datos")
+- `public/sw.js` (service worker, se registra desde build6): guarda la app en el teléfono. La página: primero la red con 3 s de espera, si no la guardada (así llegan las novedades). `/api/*` nunca se guarda. Al cambiar sw.js, subir `CACHE` (sa-v1 → sa-v2) para tirar lo viejo. `netlify.toml` le pone `no-cache` a `/` y `/sw.js`.
+- `manifest.webmanifest` + `icon-192.png`/`icon-512.png`: se puede agregar a la pantalla de inicio como app.
+- Sin internet se juega igual y el algoritmo aprende (todo en localStorage). `save()` pone `P.ts`; al reconectar, `applyState` se queda con lo del teléfono si es más nuevo que lo del servidor y es el mismo usuario (`P.owner`), y lo sube.
+- Se guardan en el teléfono: nombre (`sa-me`), amigos (`sa-fr`), últimos 60 mensajes por chat (`sa-ms`), datos colectivos del algoritmo (`sa-tr`).
+- Mensajes y juegos enviados sin internet quedan en `sa-out` (burbuja gris + "Se manda cuando haya internet") y se mandan solos al volver (evento `online` y cada 15 s). Errores que no son de conexión no quedan esperando.
+- Sin cuenta y sin internet no aparece el cartel de entrar. Pruebas: `src/t_offline.js` y `src/t_offline2.js` con el servidor de prueba.
+
 ## Cómo se arma la app (src/)
 `sh src/build.sh` corre en orden:
 1. `build.py`: parte de `swipe-arcade.bak.html` (base) y toma de `pat.html` los controles de arrastrar/mantener y algunos juegos.

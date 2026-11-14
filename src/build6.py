@@ -49,6 +49,8 @@ rep('/* ---- sheets ---- */','''.login { position: fixed; inset: 0; z-index: 30;
 .adm input { flex: 1; min-width: 0; background: var(--panel2); border: 0; border-radius: 12px; padding: 11px 12px; color: #fff; font: 500 15px/1 var(--body); user-select: text; -webkit-user-select: text; }
 .admlink { color: var(--dim); font: 600 13px/1 var(--body); padding: 8px 0; align-self: center; }
 .bub.them, .gcard.them { align-self: flex-start; }
+.bub.pend, .gcard.pend { opacity: 0.45; }
+.pendnote { align-self: flex-end; margin: -2px 2px 0; font-size: 12px; color: var(--muted, #8a8a99); }
 .bub.them { background: var(--panel2); border-radius: 18px 18px 18px 4px; }
 .repbtn { align-self: flex-start; font: 700 12px/1 var(--body); color: #ff6b81; padding: 4px 6px; }
 .tab { position: relative; }
@@ -245,8 +247,61 @@ rep("  /* ---------- main loop ---------- */","""  api("me").then(signedIn).catc
 
   /* ---------- main loop ---------- */""")
 
+# ---------- sin internet: se juega igual; cuenta, amigos y mensajes se sincronizan al volver ----------
+rep('''  try { TOK = localStorage.getItem("sa-token"); } catch (e) {}''','''  try { TOK = localStorage.getItem("sa-token"); if (TOK) ME = localStorage.getItem("sa-me"); } catch (e) {}
+  function lsGet(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  var OUT = lsGet("sa-out", []), NET = navigator.onLine !== false;
+  if (TOK) { FR = lsGet("sa-fr", []); MS = lsGet("sa-ms", {}); }
+  (function () { var t = lsGet("sa-tr", null); if (t && t.pop) TR = t; })();''')
+# distinguir "sin conexión" de otros errores
+rep('''function () { throw new Error("Sin conexión. Probá de nuevo."); });''','''function () { var er = new Error("Sin conexión. Probá de nuevo."); er.net = true; NET = false; throw er; });''')
+rep('''.then(function (r) { return r.json()''','''.then(function (r) { NET = true; return r.json()''')
+# guardar con hora, para no pisar lo jugado sin internet
+rep('''  function save() { try { localStorage.setItem("swipe-arcade-v3", JSON.stringify(P)); } catch (e) {} dirty = true; }''','''  function save() { P.ts = Date.now(); try { localStorage.setItem("swipe-arcade-v3", JSON.stringify(P)); } catch (e) {} dirty = true; }''')
+rep('''    if (st) { for (var k in st) P[k] = st[k]; if (!P.read) P.read = {}; if (!P.st) P.st = {}; try { localStorage.setItem("swipe-arcade-v3", JSON.stringify(P)); } catch (e) {} }
+    else { dirty = true; pushState(false); }''','''    if (st && !(P.owner === ME && (P.ts || 0) > (st.ts || 0))) { for (var k in st) P[k] = st[k]; if (!P.read) P.read = {}; if (!P.st) P.st = {}; P.owner = ME; try { localStorage.setItem("swipe-arcade-v3", JSON.stringify(P)); } catch (e) {} }
+    else { P.owner = ME; dirty = true; pushState(false); }''')
+rep('''  function loadTrends() { api("trends").then(function (d) { if (d && d.pop) TR = d; }).catch(function () {}); }''','''  function loadTrends() { api("trends").then(function (d) { if (d && d.pop) { TR = d; lsSet("sa-tr", d); } }).catch(function () {}); }''')
+rep('''  function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; badge();''','''  function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; lsSet("sa-fr", FR); badge();''')
+rep('''var add = (d.msgs || []).filter(function (x) { return !have[x.k]; }); if (add.length) { MS[who] = a.concat(add); if (view === "chat" && chatWith === who) renderChat(); }''','''var add = (d.msgs || []).filter(function (x) { return !have[x.k]; }); if (add.length) { MS[who] = a.concat(add); keepMS(); if (view === "chat" && chatWith === who) renderChat(); }''')
+# mensajes: si no hay internet quedan esperando y se mandan solos cuando vuelve
+rep('''  function sendGame(name, gid) { api("msgs", { method: "POST", body: { to: name, game: gid } }).then(function (d) { (MS[name] = MS[name] || []).push(d.msg); if (view === "chat" && chatWith === name) renderChat(); loadFriends(); }).catch(function () {}); }''','''  function keepMS() { var c = {}; for (var n in MS) c[n] = MS[n].slice(-60); lsSet("sa-ms", c); }
+  function sendMsg(body, fail) {
+    return api("msgs", { method: "POST", body: body }).then(function (d) { (MS[body.to] = MS[body.to] || []).push(d.msg); keepMS(); if (view === "chat" && chatWith === body.to) renderChat(); loadFriends(); })
+      .catch(function (x) { if (x.net) { OUT.push({ to: body.to, text: body.text, game: body.game, t: Date.now() }); lsSet("sa-out", OUT); if (view === "chat" && chatWith === body.to) renderChat(); } else if (fail) fail(x); });
+  }
+  var flushing = false;
+  function flushOut() {
+    if (flushing || !TOK || !OUT.length) return; flushing = true; var o = OUT[0];
+    api("msgs", { method: "POST", body: { to: o.to, text: o.text, game: o.game } }).then(function (d) {
+      OUT.shift(); lsSet("sa-out", OUT); (MS[o.to] = MS[o.to] || []).push(d.msg); keepMS(); if (view === "chat" && chatWith === o.to) renderChat(); flushing = false; flushOut();
+    }).catch(function (x) { if (!x.net) { OUT.shift(); lsSet("sa-out", OUT); if (view === "chat") renderChat(); } flushing = false; });
+  }
+  function sendGame(name, gid) { sendMsg({ to: name, game: gid }); }''')
+rep('''    api("msgs", { method: "POST", body: { to: who, text: t } }).then(function (d) { (MS[who] = MS[who] || []).push(d.msg); if (chatWith === who) renderChat(); }).catch(function (x) { $("chatIn").value = t; });''','''    sendMsg({ to: who, text: t }, function () { $("chatIn").value = t; });''')
+rep('''    if (list.length && P.read[chatWith] !== list[list.length - 1].k) {''','''    OUT.forEach(function (o) { if (o.to !== chatWith) return; var el; if (o.game && byId[o.game]) { el = document.createElement("div"); el.className = "gcard pend"; el.innerHTML = '<b>' + esc(byId[o.game].name) + '</b><span>Se manda cuando haya internet</span>'; } else { el = document.createElement("div"); el.className = "bub pend"; el.textContent = o.text || ""; } m.appendChild(el); });
+    if (OUT.some(function (o) { return o.to === chatWith && !o.game; })) { var nt = document.createElement("p"); nt.className = "pendnote"; nt.textContent = "Se manda cuando haya internet"; m.appendChild(nt); }
+    if (list.length && P.read[chatWith] !== list[list.length - 1].k) {''')
+rep('''if (!list.length) { var e = document.createElement("p"); e.className = "empty";''','''if (!list.length && !OUT.some(function (o) { return o.to === chatWith; })) { var e = document.createElement("p"); e.className = "empty";''')
+# cuenta: guardar el nombre para mostrarlo sin internet
+rep('''    TOK = d.token || TOK; ME = d.name; ADMIN = !!d.admin; try { localStorage.setItem("sa-token", TOK); } catch (e) {}''','''    TOK = d.token || TOK; ME = d.name; ADMIN = !!d.admin; try { localStorage.setItem("sa-token", TOK); localStorage.setItem("sa-me", ME); } catch (e) {}''')
+rep('''    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; FB = {}; try { localStorage.removeItem("sa-token"); } catch (e) {}''','''    TOK = null; ME = null; ADMIN = false; FR = []; MS = {}; FB = {}; OUT = []; try { ["sa-token", "sa-me", "sa-fr", "sa-ms", "sa-out"].forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}''')
+rep('''    applyState(d.state); hideLogin(); loadFriends(); loadBests();''','''    applyState(d.state); hideLogin(); loadFriends(); loadBests(); flushOut();''')
+rep('''    if (tickN % 90 === 0) loadBests();''','''    if (tickN % 90 === 0) loadBests();
+    if (OUT.length && tickN % 15 === 0) flushOut();''')
+# al volver internet: reconectar, subir lo jugado y mandar lo pendiente
+rep('''  api("me").then(signedIn).catch(function () { if (!TOK) showLogin(); });''','''  var meOK = false;
+  function checkMe() { api("me").then(function (d) { meOK = true; signedIn(d); }).catch(function (x) { if (!TOK) { if (!x.net) showLogin(); } }); }
+  checkMe();
+  window.addEventListener("online", function () { NET = true; if (TOK && !meOK) checkMe(); else { pushState(false); flushOut(); loadFriends(); } loadTrends(); });
+  if ("serviceWorker" in navigator) window.addEventListener("load", function () { navigator.serviceWorker.register("/sw.js").catch(function () {}); });''')
+# sin internet y sin cuenta: no molestar con el cartel de entrar
+rep('''  $("lgSkip").addEventListener("click", hideLogin);''','''  $("lgSkip").addEventListener("click", hideLogin);
+  if (!navigator.onLine && !TOK) setTimeout(hideLogin, 0);''')
+
 # full document
 k=s.index("</style>")+len("</style>")
-doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'
+doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Swipe Arcade">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'
 open('netlify-app/public/index.html','w',encoding='utf-8').write(doc)
 open('chk2.js','w').write(doc[doc.index('<script>')+8:doc.rindex('</script>')]); print('ok')
