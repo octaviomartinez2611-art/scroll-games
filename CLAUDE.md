@@ -28,7 +28,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - No va en el feed (ahí todo el espacio es para jugar).
 
 ## Dónde está todo
-- Sitio: https://swipe-arcade-juegos.netlify.app (proyecto Netlify `swipe-arcade-juegos`, id `85725297-3520-4e3e-bce8-bc5afee3d1d1`). Se publica solo con cada push a `main`.
+- Sitio: https://swipe-arcade-juegos.netlify.app (proyecto Netlify `swipe-arcade-juegos`, id `85725297-3520-4e3e-bce8-bc5afee3d1d1`). Se publica solo con cada push a `main`. OJO: el 14/11 dejó de publicarse solo (el último deploy fue el commit f5f80f0, 00:29 hora argentina); los pushes siguientes llegaron a GitHub pero Netlify no los tomó. Desde esta sesión no se puede publicar directo (el proxy bloquea api.netlify.com y netlify-mcp.netlify.app). Para ver qué se publicó: herramienta Netlify `get-project` → `currentDeploy` → `get-deploy-for-site` (mirar `commit_ref`). Si no coincide con `git log -1`, pedirle al dueño "Trigger deploy" en el panel.
 - El cartel "Powered by Netlify" (plan gratis) va abajo a la derecha: por eso la barra deja libres ~200 px a la derecha en pantallas angostas.
 - Versión sin servidor como Artifact de Claude: https://claude.ai/artifact/1Fm8HHioxx9KuSJ8m9dL3U (amigos y chat solo locales ahí).
 - `public/index.html`: la app generada (no editar a mano).
