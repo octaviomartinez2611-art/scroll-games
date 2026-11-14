@@ -483,3 +483,26 @@ rp('.howto p { font: 500 15.5px/1.38 var(--body); text-wrap: pretty; }','.howto 
 print('MISSES16', miss)
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok16')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Algoritmo v2: gusto por vez que aparece, parecidos por familia y control, descubrir, variedad, flow, se recalcula al pasar
+_a=s.index('  /* Algoritmo del feed.'); _b=s.index('  function addSlide(cfg) {')
+s=s[:_a]+open('algo2.js',encoding='utf-8').read()+s[_b:]
+rp('''if (lastAct >= 0 && slides[lastAct]) { var pst = stOf(slides[lastAct].cfg.id), pg = cache[lastAct]; if (viewT < 3 && (!pg || pg.acts === 0)) pst.k++; else if (viewT > 10 && pst.k > 0) pst.k--; }
+      lastAct = act; viewT = 0; fillFeed(act);''','''var fwd = act > lastAct;
+      if (lastAct >= 0 && slides[lastAct]) { var pst = stOf(slides[lastAct].cfg.id), pg = cache[lastAct]; pst.n = (pst.n || 0) + 1; pst.ls = Date.now(); RECENT_FAST.push(viewT); if (RECENT_FAST.length > 8) RECENT_FAST.shift(); if (viewT < 3 && (!pg || pg.acts === 0)) pst.k++; else if (viewT > 10 && pst.k > 0) pst.k--; }
+      lastAct = act; viewT = 0; if (fwd && slides.length > act + 2) trimAfter(act + 1); fillFeed(act);''')
+rp('var id = this.cfg.id, xp = this.score; stOf(id).l++;','var id = this.cfg.id, xp = this.score; stOf(id).l++; var sst = stOf(id), pb0 = P.best[id] || 0; if (this.t < 6) sst.q = (sst.q || 0) + 1; if (this.newBest && this.score > pb0 && pb0 >= 3) sst.rec = (sst.rec || 0) + 1; else if (pb0 >= 5 && this.score >= pb0 * 0.75) sst.nb = (sst.nb || 0) + 1;')
+rp('flip: function () { sfx(420, 0.08, "square", 0.04, 1.5); }','flip: function () { sfx(420, 0.08, "square", 0.04, 1.5); },\n    rec: function () { sfx(660, 0.1, "triangle", 0.08); setTimeout(function () { sfx(880, 0.1, "triangle", 0.08); }, 90); setTimeout(function () { sfx(1320, 0.24, "triangle", 0.09); }, 180); }')
+rp('''  Game.prototype.hud = function () {
+    var se = this.el.score;''','''  Game.prototype.hud = function () {
+    var se = this.el.score;
+    if (this.newBest && !this._recS && this.score >= 3 && (P.best[this.cfg.id] || 0) >= 3 && this.state === "play") { this._recS = true; S.rec(); }''')
+rp('se.classList.toggle("hot", hot); this.el.score.textContent = this.score;','se.classList.toggle("hot", hot); this.el.best.classList.toggle("rec", !rv && this.newBest && this.score >= 3); this.el.score.textContent = this.score;')
+rp('''    P.gp[this.cfg.id] = (P.gp[this.cfg.id] || 0) + 1;
+    this.state = "play"; this.hud();''','''    P.gp[this.cfg.id] = (P.gp[this.cfg.id] || 0) + 1;
+    this._recS = false; this.state = "play"; this.hud();''')
+rp('.score.hot { color: var(--gold); }','.score.hot { color: var(--gold); } .best.rec { color: var(--gold); }')
+print('MISSES17', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok17')

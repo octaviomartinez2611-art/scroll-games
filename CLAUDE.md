@@ -50,11 +50,15 @@ Para cambiar algo, editar la fuente que corresponde y volver a correr `build.sh`
 - Gracia al llegar: en los primeros 3 s de una partida no se pierde vida si todavía no tocaste la pantalla (`this.inp`, en `hurt`). Antes había juegos que te sacaban 1 o 2 vidas antes de entender qué hacer (Peloteo, Seguime, Cajas, Flotador, Cinta).
 - Diagnóstico: `t25.js` (vidas perdidas sin tocar en 3 s y puntaje con toques al azar) y `t11.js` (barrido completo: errores y pantalla vacía).
 
-## El algoritmo del feed
-P(g) = w_g / Σw, sin contar los últimos 10 juegos mostrados.
-w_g = [t<3 ? 1,6 : (0,5 + 0,35·ln(1+t/20) + 0,6·ln(1+r)) · (t/(h+1)>45 ? 0,5 : 1) · 0,7^min(k,6)] · (like ? 3 : 1) · (guardado ? 4 : 1)
-- t = segundos jugados, r = veces que perdió y siguió jugando, h = vidas perdidas, k = veces que lo pasó en menos de 3 s sin tocar (baja 1 si después juega más de 10 s).
-- Se guarda en `P.st` (en la cuenta del jugador en Netlify; en el navegador si juega sin cuenta).
+## El algoritmo del feed (v2, `src/algo2.js`)
+Pidió que deje de ser "cuanto más perdés, más aparece" y que sea mejor. Ahora aprende qué te gusta:
+- E_g = t/40 + 0,8·r + 1,2·cerca + 0,8·récords − 1,5·k + 4·like + 6·guardado (t segundos, r siguió jugando tras perder, cerca = terminó a 75 % o más de su récord, k = lo pasó sin tocar en menos de 3 s).
+- gusto_g = (E_g + 2·previo_g)/(vistas_g + 2) + 0,3·√(ln(vistas totales+2)/(vistas_g+1)); previo = 0,55·familia + 0,3·control + 0,15·global (lo que te gusta se contagia a las otras versiones y a los juegos con el mismo control). −0,4 si morís siempre en menos de 6 s, −0,3 si nunca perdés.
+- P(g) ∝ e^(gusto/T) · 0,3^(misma familia en los últimos 4) · 0,6 si los últimos 3 tienen el mismo control · 1,3 favorito no visto hace 1 día · 1,25 si lo jugaron amigos. Sin los últimos 15. T = 0,35 si venís pasando todo rápido (más favoritos), si no 0,6.
+- Al pasar de juego se recalculan los que vienen (`trimAfter(act+1)`). Cada día lo aprendido se achica 3 % (`P.decayAt`).
+- Datos por juego en `P.st[id]`: t, l, h, r, k, n (vistas), ls (última vez), q (muertes rápidas), nb (cerca del récord), rec (récords).
+- Simulación `t34.js`: con un jugador al que le gustan 3 familias, después de 60 juegos el nuevo le muestra 35–60 % de esas familias; el viejo 0–15 %.
+- Récord nuevo: suena un arpegio una vez y "Récord nuevo" se pone dorado.
 
 ## Enganche (pedido: "mucho más adictivo")
 - Racha: 10 puntos seguidos sin perder vida → los puntos valen ×2 (puntaje en amarillo, "×2" al lado del récord) hasta perder una vida.
