@@ -474,3 +474,12 @@ rp('.rail.busy button:not(.spd) { opacity: 0; pointer-events: none; }','.rail { 
 print('MISSES15', miss)
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok15')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Ayuda corta: tres líneas que se leen en 3 segundos, sin títulos
+rp('if (hp) [["Cómo se mueve", hp[0]], ["Qué tenés que hacer", hp[1]], ["Perdés una vida", hp[2]]].forEach(function (r) { var d = document.createElement("div"), b = document.createElement("b"), p = document.createElement("p"); b.textContent = r[0]; p.textContent = r[1]; d.appendChild(b); d.appendChild(p); box.appendChild(d); });',
+   'if (hp) hp.forEach(function (t, k) { var p = document.createElement("p"); p.className = "h" + k; p.textContent = t; box.appendChild(p); });')
+rp('.howto p { font: 500 15.5px/1.38 var(--body); text-wrap: pretty; }','.howto { gap: 8px; margin: 4px 0 6px; } .howto p { margin: 0; font: 500 19px/1.3 var(--body); text-wrap: balance; } .howto .h0 { font: 800 26px/1.15 var(--display); } .howto .h2 { font-size: 16px; color: #ff8fa3; }')
+print('MISSES16', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok16')
