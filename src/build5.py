@@ -519,3 +519,10 @@ rp('.panel { position: absolute;','.brand { display: flex; justify-content: cent
 print('MISSES18', miss)
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok18')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Memoria entre visitas: historial de lo mostrado (P.hist), para no repetir al volver a entrar
+rp('lastAct = act; viewT = 0; if (fwd && slides.length > act + 2) trimAfter(act + 1); fillFeed(act);','lastAct = act; viewT = 0; if (slides[act]) { var hid = slides[act].cfg.id; stOf(hid).ls = Date.now(); if ((P.hist || []).slice(-1)[0] !== hid) { P.hist = (P.hist || []).concat(hid).slice(-60); save(); } } if (fwd && slides.length > act + 2) trimAfter(act + 1); fillFeed(act);')
+print('MISSES19', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')

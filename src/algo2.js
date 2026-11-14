@@ -14,6 +14,9 @@
      8. Lo viejo pesa menos: cada día lo aprendido se achica un 3 %, así tus gustos pueden cambiar.
      9. Aprende de todos (TR, del servidor): qué juegos enganchan a todo el mundo (pop) y qué juegos les gustan a las
         mismas personas (nb: "a los que les gusta este también les gusta…"). Un jugador nuevo arranca con los mejores.
+    11. Memoria entre visitas (P.hist): se acuerda de los últimos 60 juegos que te mostró aunque cierres la app.
+        No repite ninguno de los últimos 40, cuenta las familias de lo último que viste aunque sea de ayer, y un juego
+        que viste hace poco pesa menos (media hora: casi nada; 3 horas: la mitad). Así cada vez que entrás es distinto.
     10. La mayoría de lo que aparece es lo que predice que te gusta; una parte chica es para descubrir, y esa parte
         se achica a medida que te conoce (de 35 % al principio a 12 %). */
   var TR = { pop: {}, nb: {} };
@@ -50,9 +53,11 @@
     return out;
   }
   function pickNext(upto) {
-    var lim = upto === undefined ? slides.length : upto, recent = {}, lastF = [], k, tot = 0, sc = scoreAll(), now = Date.now();
+    var lim = upto === undefined ? slides.length : upto, recent = {}, lastF = [], k, tot = 0, sc = scoreAll(), now = Date.now(), H = P.hist || [];
     for (k = Math.max(0, lim - 15); k < lim; k++) recent[slides[k].cfg.id] = 1;
-    for (k = Math.max(0, lim - 4); k < lim; k++) lastF.push(famOf(slides[k].cfg.id));
+    for (k = Math.max(0, H.length - 40); k < H.length; k++) recent[H[k]] = 1;
+    var seq = H.slice(-8); for (k = 0; k < lim; k++) seq.push(slides[k].cfg.id);
+    for (k = Math.max(0, seq.length - 6); k < seq.length; k++) lastF.push(famOf(seq[k]));
     var lastC = []; for (k = Math.max(0, lim - 3); k < lim; k++) lastC.push(ctlOf(slides[k].cfg));
     var fast = RECENT_FAST.length >= 4 && RECENT_FAST.slice(-5).filter(function (v) { return v < 4; }).length >= 4, T = fast ? 0.28 : 0.38;
     var eps = Math.max(0.1, 0.35 - sc._views * 0.006), unseen = CATALOG.some(function (g) { return !recent[g.id] && sc[g.id].n === 0; }), explore = unseen && Math.random() < eps, any = false;
@@ -60,7 +65,8 @@
       var q = sc[g.id]; if (recent[g.id]) return 0;
       var w = explore ? (q.n === 0 ? Math.exp(Math.min(q.pri, 6) / 0.6) : 0) : Math.exp(Math.min(q.own, 6) / T), f = famOf(g.id), c = ctlOf(g), s = P.st[g.id], same = 0, j;
       for (j = 0; j < lastF.length; j++) if (lastF[j] === f) same++;
-      w *= Math.pow(0.6, same);
+      w *= Math.pow(0.5, same);
+      if (s && s.ls) { var ago = now - s.ls; w *= ago < 18e5 ? 0.12 : ago < 108e5 ? 0.5 : ago < 432e5 ? 0.8 : 1; }
       if (lastC.length === 3 && lastC[0] === c && lastC[1] === c && lastC[2] === c) w *= 0.6;
       if (s && s.ls && q.own > 1.2 && now - s.ls > 864e5) w *= 1.3;
       if (friendsPlayed(g.id)) w *= 1.25;
