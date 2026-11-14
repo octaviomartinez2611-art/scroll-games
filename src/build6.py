@@ -51,6 +51,7 @@ rep('/* ---- sheets ---- */','''.login { position: fixed; inset: 0; z-index: 30;
 .admlink { color: var(--dim); font: 600 13px/1 var(--body); padding: 8px 0; align-self: center; }
 .bub.them, .gcard.them { align-self: flex-start; }
 .bub.pend, .gcard.pend { opacity: 0.45; }
+.urow { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #17171c; } .urow small { color: #8a8a99; font-size: 13px; }
 .pendnote { align-self: flex-end; margin: -2px 2px 0; font-size: 12px; color: var(--muted, #8a8a99); }
 .bub.them { background: var(--panel2); border-radius: 18px 18px 18px 4px; }
 .repbtn { align-self: flex-start; font: 700 12px/1 var(--body); color: #ff6b81; padding: 4px 6px; }
@@ -321,6 +322,22 @@ rep('''  function stateCopy() { var c = {}; for (var k in P) if (k !== "friends"
   setInterval(function () { pushState(false); }, 90000);''')
 rep('''    if (tickN % 90 === 0) loadBests();''','''    if (tickN % 600 === 0) loadBests();''')
 rep('''  loadTrends(); setInterval(loadTrends, 600000);''','''  loadTrends(); setInterval(function () { if (!document.hidden) loadTrends(); }, 1800000);''')
+
+# ---------- panel de administrador: lista de cuentas ----------
+rep('''    var h = document.createElement("h2"); h.textContent = "Mensajes reportados"; w.appendChild(h);''','''    var hu = document.createElement("h2"); hu.textContent = "Cuentas"; w.appendChild(hu);
+    var ul = document.createElement("div"); ul.className = "adm"; ul.textContent = "Cargando…"; w.appendChild(ul);
+    function cuando(t) { if (!t) return "nunca"; var m = Math.floor((Date.now() - t) / 60000); if (m < 2) return "recién"; if (m < 60) return "hace " + m + " min"; var hh = Math.floor(m / 60); if (hh < 24) return "hace " + hh + " h"; var dd = Math.floor(hh / 24); return dd === 1 ? "ayer" : "hace " + dd + " días"; }
+    api("users").then(function (d) {
+      ul.textContent = ""; hu.textContent = "Cuentas (" + d.users.length + ")";
+      d.users.forEach(function (u) {
+        var c = document.createElement("div"); c.className = "urow";
+        var b = document.createElement("b"); b.textContent = "@" + u.name + (u.admin ? " · admin" : "");
+        var sm = document.createElement("small"); var cr = u.created ? new Date(u.created) : null;
+        sm.textContent = "Jugó " + cuando(u.last) + (cr ? " · creada el " + cr.getDate() + "/" + (cr.getMonth() + 1) : "");
+        c.appendChild(b); c.appendChild(sm); ul.appendChild(c);
+      });
+    }).catch(function (x) { ul.textContent = x.message; });
+    var h = document.createElement("h2"); h.textContent = "Mensajes reportados"; w.appendChild(h);''')
 
 # full document
 k=s.index("</style>")+len("</style>")

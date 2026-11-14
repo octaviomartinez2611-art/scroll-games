@@ -201,6 +201,17 @@ async function handle(req) {
       const reports = (await Promise.all(keys.map(async (r) => { const v = await st.get(r, { type: "json" }); return v ? { r, ...v } : null; }))).filter(Boolean);
       return J({ reports });
     }
+    if (path === "users" && m === "GET") {
+      // lista de cuentas para el administrador: nombre, cuándo se creó y cuándo jugó por última vez (nunca el PIN)
+      if (!admin) return J({ error: "Solo administradores." }, 403);
+      const { blobs } = await st.list({ prefix: "u/" });
+      const users = (await Promise.all(blobs.slice(0, 500).map(async (b) => {
+        const u = await st.get(b.key, { type: "json" }).catch(() => null); if (!u) return null;
+        const s = await st.get("st/" + u.name, { type: "json" }).catch(() => null);
+        return { name: u.name, created: u.created || 0, last: (s && s.ts) || 0, admin: !!u.admin };
+      }))).filter(Boolean).sort((a, b) => (b.last ? 1 : 0) - (a.last ? 1 : 0) || (b.last - a.last) || (b.created - a.created));
+      return J({ users });
+    }
     if (path === "resolve" && m === "POST") {
       if (!admin) return J({ error: "Solo administradores." }, 403);
       const r = String(body.r || ""); if (!r.startsWith("r/")) return J({ error: "Inválido." }, 400);

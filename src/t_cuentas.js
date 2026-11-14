@@ -1,0 +1,12 @@
+const { chromium } = require('playwright');
+(async () => { const br = await chromium.launch(); const p = await br.newPage({ viewport: { width: 390, height: 900 }, deviceScaleFactor: 2 }); const errs = []; p.on('pageerror', e => errs.push(String(e)));
+  await p.goto('http://localhost:8787'); await p.waitForTimeout(800);
+  for (const n of ['beto', 'caro']) await p.evaluate(async (n) => fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: n, pin: '1234' }) }), n);
+  await p.fill('#lgName', 'octavio'); await p.fill('#lgPin', '1234'); await p.click('#lgNew'); await p.waitForTimeout(1000);
+  const tok = await p.evaluate(() => localStorage.getItem('sa-token'));
+  const r = await p.evaluate(async (t) => (await fetch('/api/admin', { method: 'POST', headers: { 'content-type': 'application/json', 'x-token': t }, body: JSON.stringify({ code: 'test123' }) })).json(), tok);
+  const noadm = await p.evaluate(async () => { const l = await (await fetch('/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'beto', pin: '1234' }) })).json(); return (await fetch('/api/users', { headers: { 'x-token': l.token } })).status; });
+  await p.reload(); await p.waitForTimeout(1200); await p.click('.tab[data-v="profile"]'); await p.waitForTimeout(800);
+  await p.evaluate(() => document.getElementById('adminBox').scrollIntoView()); await p.waitForTimeout(300);
+  await p.screenshot({ path: '../users.png' });
+  console.log('admin:', JSON.stringify(r), '· un usuario común pidiendo la lista recibe:', noadm, '· errores', errs); await br.close(); })();
