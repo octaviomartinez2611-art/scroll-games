@@ -38,6 +38,12 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - Mensajes y juegos enviados sin internet quedan en `sa-out` (burbuja gris + "Se manda cuando haya internet") y se mandan solos al volver (evento `online` y cada 15 s). Errores que no son de conexión no quedan esperando.
 - Sin cuenta y sin internet no aparece el cartel de entrar. Pruebas: `src/t_offline.js` y `src/t_offline2.js` con el servidor de prueba.
 
+## Ahorro de datos (preguntó si se le iban a gastar los datos)
+- Primera vez: ~130 KB (la página comprimida). Después, cada vez que abre: ~1 KB para chequear si hay versión nueva (si la hay, otros ~130 KB).
+- Jugando una hora: ~0,5 MB. Antes podía llegar a ~13 MB/h porque subía el estado entero cada 20 s.
+- Cómo: el estado se sube cada 90 s (y al salir), con números redondeados y comprimido con gzip (`CompressionStream`; el servidor lo descomprime si empieza con 1f 8b). Respuestas GET con ETag: si no cambió, el servidor contesta 304 sin cuerpo. Récords de amigos cada 10 min, datos colectivos cada 30 min (top 8 parecidos por juego).
+- Prueba: `src/t_datos.js` con el servidor de prueba.
+
 ## Cómo se arma la app (src/)
 `sh src/build.sh` corre en orden:
 1. `build.py`: parte de `swipe-arcade.bak.html` (base) y toma de `pat.html` los controles de arrastrar/mantener y algunos juegos.

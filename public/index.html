@@ -5003,13 +5003,22 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   (function () { var t = lsGet("sa-tr", null); if (t && t.pop) TR = t; })();
   if (!P.read) P.read = {};
   function api(path, opts) {
-    opts = opts || {}; var h = { "content-type": "application/json" }; if (TOK) h["x-token"] = TOK;
-    return fetch("/api/" + path, { method: opts.method || "GET", headers: h, body: opts.body ? JSON.stringify(opts.body) : undefined, keepalive: !!opts.keep })
+    opts = opts || {}; var h = { "content-type": "application/json" }; if (TOK) h["x-token"] = TOK; if (opts.gz) h["content-encoding"] = "gzip";
+    return fetch("/api/" + path, { method: opts.method || "GET", headers: h, body: opts.raw !== undefined ? opts.raw : (opts.body ? JSON.stringify(opts.body) : undefined), keepalive: !!opts.keep })
       .then(function (r) { NET = true; return r.json().catch(function () { return {}; }).then(function (d) { if (r.status === 401 && TOK && path !== "login" && path !== "register") signOut(true); if (!r.ok) throw new Error(d.error || "No se pudo conectar."); return d; }); }, function () { var er = new Error("Sin conexión. Probá de nuevo."); er.net = true; NET = false; throw er; });
   }
-  function stateCopy() { var c = {}; for (var k in P) if (k !== "friends") c[k] = P[k]; return c; }
-  function pushState(keep) { if (!TOK || !dirty) return; dirty = false; api("state", { method: "PUT", body: { state: stateCopy() }, keep: keep }).catch(function () { dirty = true; }); }
-  setInterval(function () { pushState(false); }, 20000);
+  function stateCopy() {
+    var c = {}, k, id, q; for (k in P) if (k !== "friends") c[k] = P[k];
+    c.st = {}; for (id in P.st) { var s = P.st[id], o = {}; for (q in s) { var v = s[q]; if (typeof v !== "number") o[q] = v; else if (v) o[q] = q === "ls" ? v : Math.round(v * 10) / 10; } c.st[id] = o; }
+    return c;
+  }
+  function gzip(str) { if (typeof CompressionStream === "undefined") return Promise.resolve(null); try { return new Response(new Blob([str]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer().catch(function () { return null; }); } catch (e) { return Promise.resolve(null); } }
+  function pushState(keep) {
+    if (!TOK || !dirty) return; dirty = false; var str = JSON.stringify({ state: stateCopy() });
+    if (keep) { api("state", { method: "PUT", raw: str, keep: true }).catch(function () { dirty = true; }); return; }
+    gzip(str).then(function (buf) { return api("state", buf ? { method: "PUT", raw: buf, gz: true } : { method: "PUT", raw: str }); }).catch(function () { dirty = true; });
+  }
+  setInterval(function () { pushState(false); }, 90000);
   window.addEventListener("pagehide", function () { pushState(true); });
   document.addEventListener("visibilitychange", function () { if (document.hidden) pushState(true); });
   function applyState(st) {
@@ -5022,7 +5031,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   function badge() { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.classList.toggle("dot", FR.some(isNew)); }
   function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; var g = cache[activeIdx()]; if (g) g.hud(); }).catch(function () {}); }
   function loadTrends() { api("trends").then(function (d) { if (d && d.pop) { TR = d; lsSet("sa-tr", d); } }).catch(function () {}); }
-  loadTrends(); setInterval(loadTrends, 600000);
+  loadTrends(); setInterval(function () { if (!document.hidden) loadTrends(); }, 1800000);
   function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; lsSet("sa-fr", FR); badge(); if (view === "friends") renderFriends(); }).catch(function () {}); }
   function renderFriends() {
     var l = $("flist"); l.innerHTML = ""; $("addForm").hidden = !TOK;
@@ -5106,7 +5115,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   setInterval(function () {
     if (!TOK || document.hidden) return; tickN++;
     if (view === "chat") { if (tickN % 3 === 0) loadMsgs(); } else if (view === "friends") { if (tickN % 10 === 0) loadFriends(); } else if (tickN % 60 === 0) loadFriends();
-    if (tickN % 90 === 0) loadBests();
+    if (tickN % 600 === 0) loadBests();
     if (OUT.length && tickN % 15 === 0) flushOut();
   }, 1000);
 

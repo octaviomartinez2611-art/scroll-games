@@ -300,6 +300,27 @@ rep('''  api("me").then(signedIn).catch(function () { if (!TOK) showLogin(); });
 rep('''  $("lgSkip").addEventListener("click", hideLogin);''','''  $("lgSkip").addEventListener("click", hideLogin);
   if (!navigator.onLine && !TOK) setTimeout(hideLogin, 0);''')
 
+# ---------- ahorro de datos ----------
+rep('''    opts = opts || {}; var h = { "content-type": "application/json" }; if (TOK) h["x-token"] = TOK;
+    return fetch("/api/" + path, { method: opts.method || "GET", headers: h, body: opts.body ? JSON.stringify(opts.body) : undefined, keepalive: !!opts.keep })''','''    opts = opts || {}; var h = { "content-type": "application/json" }; if (TOK) h["x-token"] = TOK; if (opts.gz) h["content-encoding"] = "gzip";
+    return fetch("/api/" + path, { method: opts.method || "GET", headers: h, body: opts.raw !== undefined ? opts.raw : (opts.body ? JSON.stringify(opts.body) : undefined), keepalive: !!opts.keep })''')
+rep('''  function stateCopy() { var c = {}; for (var k in P) if (k !== "friends") c[k] = P[k]; return c; }
+  function pushState(keep) { if (!TOK || !dirty) return; dirty = false; api("state", { method: "PUT", body: { state: stateCopy() }, keep: keep }).catch(function () { dirty = true; }); }
+  setInterval(function () { pushState(false); }, 20000);''','''  function stateCopy() {
+    var c = {}, k, id, q; for (k in P) if (k !== "friends") c[k] = P[k];
+    c.st = {}; for (id in P.st) { var s = P.st[id], o = {}; for (q in s) { var v = s[q]; if (typeof v !== "number") o[q] = v; else if (v) o[q] = q === "ls" ? v : Math.round(v * 10) / 10; } c.st[id] = o; }
+    return c;
+  }
+  function gzip(str) { if (typeof CompressionStream === "undefined") return Promise.resolve(null); try { return new Response(new Blob([str]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer().catch(function () { return null; }); } catch (e) { return Promise.resolve(null); } }
+  function pushState(keep) {
+    if (!TOK || !dirty) return; dirty = false; var str = JSON.stringify({ state: stateCopy() });
+    if (keep) { api("state", { method: "PUT", raw: str, keep: true }).catch(function () { dirty = true; }); return; }
+    gzip(str).then(function (buf) { return api("state", buf ? { method: "PUT", raw: buf, gz: true } : { method: "PUT", raw: str }); }).catch(function () { dirty = true; });
+  }
+  setInterval(function () { pushState(false); }, 90000);''')
+rep('''    if (tickN % 90 === 0) loadBests();''','''    if (tickN % 600 === 0) loadBests();''')
+rep('''  loadTrends(); setInterval(loadTrends, 600000);''','''  loadTrends(); setInterval(function () { if (!document.hidden) loadTrends(); }, 1800000);''')
+
 # full document
 k=s.index("</style>")+len("</style>")
 doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Swipe Arcade">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'

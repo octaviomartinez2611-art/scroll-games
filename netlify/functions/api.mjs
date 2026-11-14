@@ -8,7 +8,8 @@
 //   r/<tiempo>-<rand>        reporte de un mensaje
 //   agg/trends               gustos de todos juntos (sin nombres), se recalcula cada 10 minutos
 import { getStore } from "@netlify/blobs";
-import { scryptSync, randomBytes, timingSafeEqual } from "node:crypto";
+import { scryptSync, randomBytes, timingSafeEqual, createHash } from "node:crypto";
+import { gunzipSync } from "node:zlib";
 
 const NAME = /^[a-z0-9_.]{3,16}$/;
 const J = (d, s = 200) => Response.json(d, { status: s });
@@ -50,22 +51,32 @@ export function computeTrends(states) {
     for (const id in P.st) { const e = engOf(P.st[id] || {}, L, S, id); if (e === null) continue; sum[id] = (sum[id] || 0) + e; cnt[id] = (cnt[id] || 0) + 1; if (e > 0.8) mine.push([id, e]); }
     mine.sort((a, b) => b[1] - a[1]); liked.push(mine.slice(0, 40).map((x) => x[0]));
   }
-  const pop = {}; for (const id in sum) pop[id] = +(sum[id] / (cnt[id] + 2)).toFixed(3);
+  const pop = {}; for (const id in sum) pop[id] = +(sum[id] / (cnt[id] + 2)).toFixed(2);
   const lc = {}, co = {};
   for (const L of liked) {
     for (const a of L) lc[a] = (lc[a] || 0) + 1;
     for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const a = L[i], b = L[j]; (co[a] = co[a] || {})[b] = (co[a][b] || 0) + 1; (co[b] = co[b] || {})[a] = (co[b][a] || 0) + 1; }
   }
   const nb = {};
-  for (const a in co) { const arr = []; for (const b in co[a]) { const sm = co[a][b] / Math.sqrt(lc[a] * lc[b]); if (co[a][b] >= 2 && sm > 0.15) arr.push([b, +sm.toFixed(3)]); } arr.sort((x, y) => y[1] - x[1]); if (arr.length) nb[a] = arr.slice(0, 15); }
+  for (const a in co) { const arr = []; for (const b in co[a]) { const sm = co[a][b] / Math.sqrt(lc[a] * lc[b]); if (co[a][b] >= 2 && sm > 0.15) arr.push([b, +sm.toFixed(2)]); } arr.sort((x, y) => y[1] - x[1]); if (arr.length) nb[a] = arr.slice(0, 8); }
   return { pop, nb, users: liked.length };
 }
 async function isFriend(st, a, b) { return (await st.get("f/" + a + "/" + b)) !== null; }
 
+// Ahorro de datos: si lo que pide el teléfono no cambió, responde "igual que antes" (304) sin mandar nada.
 export default async (req) => {
+  const res = await handle(req);
+  if (req.method !== "GET" || res.status !== 200) return res;
+  const txt = await res.text(), tag = '"' + createHash("sha1").update(txt).digest("base64").slice(0, 20) + '"';
+  const h = { "content-type": "application/json", etag: tag, "cache-control": "private, no-cache" }, sc = res.headers.get("set-cookie"); if (sc) h["set-cookie"] = sc;
+  if (req.headers.get("if-none-match") === tag) return new Response(null, { status: 304, headers: h });
+  return new Response(txt, { status: 200, headers: h });
+};
+async function handle(req) {
   const st = store(), url = new URL(req.url), path = url.pathname.replace(/^\/api\//, ""), m = req.method;
   let body = {};
-  if (m !== "GET") { try { body = await req.json(); } catch { body = {}; } }
+  // el estado puede venir comprimido (gzip) para gastar menos datos
+  if (m !== "GET") { try { const b = Buffer.from(await req.arrayBuffer()); body = JSON.parse(b[0] === 0x1f && b[1] === 0x8b ? gunzipSync(b).toString("utf8") : b.toString("utf8")); } catch { body = {}; } }
   try {
     if (path === "register" && m === "POST") {
       const name = String(body.name || "").trim().toLowerCase(), pin = String(body.pin || "");
