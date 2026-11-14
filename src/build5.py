@@ -506,3 +506,16 @@ rp('.score.hot { color: var(--gold); }','.score.hot { color: var(--gold); } .bes
 print('MISSES17', miss)
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok17')
+s=open('swipe-arcade.html',encoding='utf-8').read()
+miss=[]
+# Nombre y logo: Toki
+import logo as _logo
+rp('<title>Swipe Arcade</title>','<title>Toki</title>')
+rp('''    <section class="panel" id="pProfile" hidden aria-label="Perfil">
+      <div class="pf">''','''    <section class="panel" id="pProfile" hidden aria-label="Perfil">
+      <div class="brand">'''+_logo.svg()+'''</div>
+      <div class="pf">''')
+rp('.panel { position: absolute;','.brand { display: flex; justify-content: center; margin: 0 0 14px; } .brand .logo { width: 96px; height: auto; } .lgbox .logo { display: block; width: 170px; height: auto; margin: 0 auto 12px; }\n.panel { position: absolute;')
+print('MISSES18', miss)
+open('swipe-arcade.html','w',encoding='utf-8').write(s)
+open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok18')

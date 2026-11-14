@@ -9,8 +9,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Swipe Arcade">
-<title>Swipe Arcade</title>
+<meta name="apple-mobile-web-app-title" content="Toki">
+<link rel="icon" href="/icon-192.png">
+<title>Toki</title>
 <style>
 /* Layout: black phone-width column. Games feed with a right-side action rail (like, save, send, help) above a 3-tab bar. */
 :root {
@@ -167,6 +168,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 .pick small { margin-left: auto; color: var(--dim); font: 700 12px/1 var(--body); }
 
 /* ---- panels ---- */
+.brand { display: flex; justify-content: center; margin: 0 0 14px; } .brand .logo { width: 96px; height: auto; } .lgbox .logo { display: block; width: 170px; height: auto; margin: 0 auto 12px; }
 .panel { position: absolute; inset: 0; z-index: 6; overflow-y: auto; background: var(--ink); padding: 20px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 14px; }
 .panel > * { flex: none; }
 .panel h1 { font: 700 28px/1.05 var(--display); }
@@ -277,6 +279,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     </section>
 
     <section class="panel" id="pProfile" hidden aria-label="Perfil">
+      <div class="brand"><svg class="logo" viewBox="0 0 186 82" role="img" aria-label="Toki"><g fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><g color="#a3203c" stroke="#a3203c" transform="translate(0 6)"><path d="M24 12V50Q24 64 40 64"/><path d="M10 30H40"/></g><g color="#a37f0e" stroke="#a37f0e" transform="translate(0 6)"><circle cx="76" cy="45" r="18"/></g><g color="#1d8a4e" stroke="#1d8a4e" transform="translate(0 6)"><path d="M114 10V64"/><path d="M140 28L117 47L142 64"/></g><g color="#7a3fb0" stroke="#7a3fb0" transform="translate(0 6)"><path d="M168 34V64"/><circle cx="168" cy="13" r="8.5" stroke="none" fill="currentColor"/></g><g color="#ff4d6d" stroke="#ff4d6d"><path d="M24 12V50Q24 64 40 64"/><path d="M10 30H40"/></g><g color="#ffd23f" stroke="#ffd23f"><circle cx="76" cy="45" r="18"/></g><g color="#3ddc84" stroke="#3ddc84"><path d="M114 10V64"/><path d="M140 28L117 47L142 64"/></g><g color="#c77dff" stroke="#c77dff"><path d="M168 34V64"/><circle cx="168" cy="13" r="8.5" stroke="none" fill="currentColor"/></g></g></svg></div>
       <div class="pf">
         <label class="avwrap"><div class="avatar" id="avatar">J</div><input type="file" id="photoIn" accept="image/*" hidden><span class="avedit">Cambiar foto</span></label>
         <input id="nameIn" maxlength="16" aria-label="Tu nombre" autocomplete="off">
@@ -318,7 +321,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 
   <section class="login" id="login" hidden aria-label="Entrar">
     <div class="lgbox">
-      <h1>Swipe Arcade</h1>
+      <svg class="logo" viewBox="0 0 186 82" role="img" aria-label="Toki"><g fill="none" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><g color="#a3203c" stroke="#a3203c" transform="translate(0 6)"><path d="M24 12V50Q24 64 40 64"/><path d="M10 30H40"/></g><g color="#a37f0e" stroke="#a37f0e" transform="translate(0 6)"><circle cx="76" cy="45" r="18"/></g><g color="#1d8a4e" stroke="#1d8a4e" transform="translate(0 6)"><path d="M114 10V64"/><path d="M140 28L117 47L142 64"/></g><g color="#7a3fb0" stroke="#7a3fb0" transform="translate(0 6)"><path d="M168 34V64"/><circle cx="168" cy="13" r="8.5" stroke="none" fill="currentColor"/></g><g color="#ff4d6d" stroke="#ff4d6d"><path d="M24 12V50Q24 64 40 64"/><path d="M10 30H40"/></g><g color="#ffd23f" stroke="#ffd23f"><circle cx="76" cy="45" r="18"/></g><g color="#3ddc84" stroke="#3ddc84"><path d="M114 10V64"/><path d="M140 28L117 47L142 64"/></g><g color="#c77dff" stroke="#c77dff"><path d="M168 34V64"/><circle cx="168" cy="13" r="8.5" stroke="none" fill="currentColor"/></g></g></svg>
       <p class="note">Entrá con tu usuario para guardar tus juegos y chatear con tus amigos.</p>
       <form id="lgForm" autocomplete="off">
         <input id="lgName" maxlength="16" placeholder="Usuario" autocapitalize="none" spellcheck="false" aria-label="Usuario">

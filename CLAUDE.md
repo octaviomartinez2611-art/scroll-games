@@ -1,4 +1,4 @@
-# Swipe Arcade: memoria del proyecto
+# Toki (antes Swipe Arcade): memoria del proyecto
 
 Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay juegos que arrancan solos. Lo usan los compañeros del dueño del repo.
 
@@ -21,6 +21,11 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
   - Al elegir un juego para mandar hay un buscador (por nombre y por descripción, sin importar tildes).
   - Botones de la derecha (like, guardar, enviar, ayuda, 2×) siempre visibles: ya NO se esconden al jugar (lo pidió). Los espacios entre botones dejan pasar los toques al juego (`.rail { pointer-events: none }`, botones `auto`). El botón 2× (velocidad doble) está arriba del corazón.
   - Ayuda del "?": CORTA, se lee en 3 segundos (lo pidió: "tiene que ser dopamina rápido"). Tres líneas sin títulos: cómo se mueve (grande), qué hacer, "Perdés si…" (rosa). Pocas palabras, sin "igual que…". Textos en `src/help_short.py` → `help.js` (`HELP[id]`); al agregar un juego, agregarle su ayuda ahí (avisa si falta alguno). `src/help.py` es la versión larga anterior, ya no se usa.
+
+## Nombre y logo
+- La app se llama **Toki** (lo eligió entre opciones). Logo en `src/logo.py` (`svg()`): letras "toki" hechas con trazos gruesos redondos, cada una de un color de los juegos (rojo, amarillo, verde, violeta) con su base más oscura corrida hacia abajo. Sin depender de fuentes.
+- Aparece en la pantalla de entrar, arriba del Perfil, en el título de la pestaña, en el manifest y en los íconos (`src/logo_png.js` genera `public/icon-192.png` y `icon-512.png`).
+- No va en el feed (ahí todo el espacio es para jugar).
 
 ## Dónde está todo
 - Sitio: https://swipe-arcade-juegos.netlify.app (proyecto Netlify `swipe-arcade-juegos`, id `85725297-3520-4e3e-bce8-bc5afee3d1d1`). Se publica solo con cada push a `main`.

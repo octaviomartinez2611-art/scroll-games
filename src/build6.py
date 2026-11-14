@@ -1,3 +1,4 @@
+import logo as _logo
 s=open('swipe-arcade.html',encoding='utf-8').read()
 def rep(old,new):
     global s
@@ -12,7 +13,7 @@ rep('<button class="toggle" id="sndBtn" aria-pressed="true">Sonido <em id="sndSt
       <div id="adminBox"></div>''')
 rep('<nav class="bar" aria-label="Navegación">','''<section class="login" id="login" hidden aria-label="Entrar">
     <div class="lgbox">
-      <h1>Swipe Arcade</h1>
+      '''+_logo.svg()+'''
       <p class="note">Entrá con tu usuario para guardar tus juegos y chatear con tus amigos.</p>
       <form id="lgForm" autocomplete="off">
         <input id="lgName" maxlength="16" placeholder="Usuario" autocapitalize="none" spellcheck="false" aria-label="Usuario">
@@ -323,6 +324,6 @@ rep('''  loadTrends(); setInterval(loadTrends, 600000);''','''  loadTrends(); se
 
 # full document
 k=s.index("</style>")+len("</style>")
-doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Swipe Arcade">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'
+doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Toki">\n<link rel="icon" href="/icon-192.png">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'
 open('netlify-app/public/index.html','w',encoding='utf-8').write(doc)
 open('chk2.js','w').write(doc[doc.index('<script>')+8:doc.rindex('</script>')]); print('ok')

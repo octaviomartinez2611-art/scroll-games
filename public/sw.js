@@ -1,7 +1,7 @@
-// Swipe Arcade sin internet: guarda la app en el teléfono.
+// Toki sin internet: guarda la app en el teléfono.
 // La página: primero la red (así llegan las novedades); si no hay internet o tarda más de 3 s, la guardada.
 // /api/* nunca se guarda: cuenta, amigos y mensajes siempre van al servidor.
-const CACHE = "sa-v1";
+const CACHE = "sa-v2";
 const FILES = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
