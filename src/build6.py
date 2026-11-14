@@ -107,6 +107,8 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
   function isNew(f) { return !!f.last && f.last.from !== ME && f.lastKey > (P.read[f.name] || ""); }
   function badge() { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.classList.toggle("dot", FR.some(isNew)); }
   function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; var g = cache[activeIdx()]; if (g) g.hud(); }).catch(function () {}); }
+  function loadTrends() { api("trends").then(function (d) { if (d && d.pop) TR = d; }).catch(function () {}); }
+  loadTrends(); setInterval(loadTrends, 600000);
   function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; badge(); if (view === "friends") renderFriends(); }).catch(function () {}); }
   function renderFriends() {
     var l = $("flist"); l.innerHTML = ""; $("addForm").hidden = !TOK;

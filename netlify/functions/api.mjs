@@ -6,6 +6,7 @@
 //   f/<usuario>/<amigo>      amistad (una clave por lado)
 //   m/<a~b>/<tiempo>-<rand>  un mensaje por clave (solo se agregan, nunca se reescriben)
 //   r/<tiempo>-<rand>        reporte de un mensaje
+//   agg/trends               gustos de todos juntos (sin nombres), se recalcula cada 10 minutos
 import { getStore } from "@netlify/blobs";
 import { scryptSync, randomBytes, timingSafeEqual } from "node:crypto";
 
@@ -32,6 +33,32 @@ async function who(req, st) {
   if (!/^[a-f0-9]{48}$/.test(t)) return null;
   const s = await st.get("s/" + t, { type: "json" });
   return s ? s.u : null;
+}
+// Aprendizaje colectivo (como "a los que les gusta esto también les gusta…"):
+// por cada jugador mira cuánto lo enganchó cada juego por vez que le apareció; con eso arma
+// pop = qué tan bueno es cada juego para todos, y nb = juegos que les gustan a las mismas personas.
+function engOf(s, likes, saved, id) {
+  const n = Math.max(s.n || 0, (s.t > 2 || s.k > 0) ? 1 : 0); if (!n) return null;
+  const e = Math.min(s.t || 0, 3000) / 40 + 0.8 * (s.r || 0) + 1.2 * (s.nb || 0) + 0.8 * (s.rec || 0) - 1.5 * (s.k || 0) + (likes[id] ? 4 : 0) + (saved[id] ? 6 : 0);
+  return e / n;
+}
+export function computeTrends(states) {
+  const sum = {}, cnt = {}, liked = [];
+  for (const P of states) {
+    if (!P || !P.st) continue;
+    const L = P.likes || {}, S = P.saved || {}, mine = [];
+    for (const id in P.st) { const e = engOf(P.st[id] || {}, L, S, id); if (e === null) continue; sum[id] = (sum[id] || 0) + e; cnt[id] = (cnt[id] || 0) + 1; if (e > 0.8) mine.push([id, e]); }
+    mine.sort((a, b) => b[1] - a[1]); liked.push(mine.slice(0, 40).map((x) => x[0]));
+  }
+  const pop = {}; for (const id in sum) pop[id] = +(sum[id] / (cnt[id] + 2)).toFixed(3);
+  const lc = {}, co = {};
+  for (const L of liked) {
+    for (const a of L) lc[a] = (lc[a] || 0) + 1;
+    for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) { const a = L[i], b = L[j]; (co[a] = co[a] || {})[b] = (co[a][b] || 0) + 1; (co[b] = co[b] || {})[a] = (co[b][a] || 0) + 1; }
+  }
+  const nb = {};
+  for (const a in co) { const arr = []; for (const b in co[a]) { const sm = co[a][b] / Math.sqrt(lc[a] * lc[b]); if (co[a][b] >= 2 && sm > 0.15) arr.push([b, +sm.toFixed(3)]); } arr.sort((x, y) => y[1] - x[1]); if (arr.length) nb[a] = arr.slice(0, 15); }
+  return { pop, nb, users: liked.length };
 }
 async function isFriend(st, a, b) { return (await st.get("f/" + a + "/" + b)) !== null; }
 
@@ -64,6 +91,15 @@ export default async (req) => {
       return withCookie({ token: tk, name, state: await st.get("st/" + name, { type: "json" }), admin: !!user.admin }, tk);
     }
 
+    if (path === "trends" && m === "GET") {
+      const c = await st.get("agg/trends", { type: "json" });
+      if (c && Date.now() - c.at < 10 * 60 * 1000) return J(c.data);
+      const { blobs } = await st.list({ prefix: "st/" });
+      const states = await Promise.all(blobs.map((b) => st.get(b.key, { type: "json" }).catch(() => null)));
+      const data = computeTrends(states);
+      await st.setJSON("agg/trends", { at: Date.now(), data });
+      return J(data);
+    }
     const me = await who(req, st);
     if (!me) return J({ error: "Tenés que entrar de nuevo." }, 401);
 

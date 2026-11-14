@@ -50,14 +50,15 @@ Para cambiar algo, editar la fuente que corresponde y volver a correr `build.sh`
 - Gracia al llegar: en los primeros 3 s de una partida no se pierde vida si todavía no tocaste la pantalla (`this.inp`, en `hurt`). Antes había juegos que te sacaban 1 o 2 vidas antes de entender qué hacer (Peloteo, Seguime, Cajas, Flotador, Cinta).
 - Diagnóstico: `t25.js` (vidas perdidas sin tocar en 3 s y puntaje con toques al azar) y `t11.js` (barrido completo: errores y pantalla vacía).
 
-## El algoritmo del feed (v2, `src/algo2.js`)
-Pidió que deje de ser "cuanto más perdés, más aparece" y que sea mejor. Ahora aprende qué te gusta:
+## El algoritmo del feed (v3, `src/algo2.js` + `/api/trends`)
+Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus millones de datos):
 - E_g = t/40 + 0,8·r + 1,2·cerca + 0,8·récords − 1,5·k + 4·like + 6·guardado (t segundos, r siguió jugando tras perder, cerca = terminó a 75 % o más de su récord, k = lo pasó sin tocar en menos de 3 s).
-- gusto_g = (E_g + 2·previo_g)/(vistas_g + 2) + 0,3·√(ln(vistas totales+2)/(vistas_g+1)); previo = 0,55·familia + 0,3·control + 0,15·global (lo que te gusta se contagia a las otras versiones y a los juegos con el mismo control). −0,4 si morís siempre en menos de 6 s, −0,3 si nunca perdés.
-- P(g) ∝ e^(gusto/T) · 0,3^(misma familia en los últimos 4) · 0,6 si los últimos 3 tienen el mismo control · 1,3 favorito no visto hace 1 día · 1,25 si lo jugaron amigos. Sin los últimos 15. T = 0,35 si venís pasando todo rápido (más favoritos), si no 0,6.
+- gusto_g = (E_g + 2·previo_g)/(vistas_g + 2); previo = 0,4·familia + 0,2·control + 0,25·colectivo + 0,15·popularidad. −0,4 si morís siempre en menos de 6 s, −0,3 si nunca perdés.
+- Colectivo (`/api/trends` en api.mjs, `computeTrends`, se recalcula cada 10 min y se guarda en `agg/trends`, sin nombres): `pop` = cuánto engancha cada juego a todos; `nb` = juegos que les gustan a las mismas personas (coocurrencia normalizada, mínimo 2 personas). El cliente lo baja en `TR` (`loadTrends` en build6, cada 10 min). Un jugador nuevo arranca con los juegos que más enganchan.
+- Elección: con probabilidad ε (35 % al principio, baja 0,6 puntos por juego visto, mínimo 10 %) descubre un juego no visto según el previo; si no, P(g) ∝ e^(gusto/T). T = 0,28 si venís pasando todo rápido, si no 0,38. Penalidades: 0,6^(misma familia en últimos 4), 0,6 si los últimos 3 tienen el mismo control; 1,3 favorito no visto hace un día; 1,25 si lo jugaron amigos. Sin los últimos 15.
 - Al pasar de juego se recalculan los que vienen (`trimAfter(act+1)`). Cada día lo aprendido se achica 3 % (`P.decayAt`).
 - Datos por juego en `P.st[id]`: t, l, h, r, k, n (vistas), ls (última vez), q (muertes rápidas), nb (cerca del récord), rec (récords).
-- Simulación `t34.js`: con un jugador al que le gustan 3 familias, después de 60 juegos el nuevo le muestra 35–60 % de esas familias; el viejo 0–15 %.
+- Simulación `t37.js` (30 jugadores falsos en 3 grupos de gusto + uno nuevo): aciertos 20 % / 38 % / 64 % / 67 % / 75 % en los juegos 1-10 / 11-20 / 21-40 / 41-60 / 61-80 (azar = 10 %). La v2 llegaba a 36–56 %.
 - Récord nuevo: suena un arpegio una vez y "Récord nuevo" se pone dorado.
 
 ## Enganche (pedido: "mucho más adictivo")
