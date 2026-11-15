@@ -2,12 +2,21 @@
 // La página: se abre al toque con la versión guardada y, mientras jugás, se baja la nueva en segundo plano
 // (la novedad aparece la próxima vez que abrís). Si todavía no hay nada guardado, va a la red.
 // /api/* nunca se guarda: cuenta, amigos y mensajes siempre van al servidor.
-const CACHE = "sa-v4";
+const CACHE = "sa-v5";
 const FILES = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 function fromNet(req, key) {
-  return fetch(key ? new Request(key, { cache: "no-cache", credentials: "same-origin" }) : req).then((r) => { if (r && r.ok) { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(key || req, cp)); } return r; });
+  return fetch(key ? new Request(key, { cache: "no-cache", credentials: "same-origin" }) : req).then((r) => {
+    if (r && r.ok) {
+      const cp = r.clone();
+      caches.open(CACHE).then((c) => c.match(key || req).then((old) => Promise.all([old ? old.text() : null, cp.clone().text()]).then(([a, b]) => c.put(key || req, cp).then(() => {
+        // Si es la página y cambió, le avisa a la app abierta para que se actualice sola.
+        if (key === "/" && a !== null && a !== b) self.clients.matchAll({ type: "window" }).then((cs) => cs.forEach((cl) => cl.postMessage({ update: true })));
+      }))));
+    }
+    return r;
+  });
 }
 self.addEventListener("fetch", (e) => {
   const req = e.request, u = new URL(req.url);

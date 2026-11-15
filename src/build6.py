@@ -370,6 +370,14 @@ rep('  function signedIn(d) {', '''  function pushOK() { return "serviceWorker" 
   function signedIn(d) {''')
 rep('applyState(d.state); hideLogin(); loadFriends(); loadBests();', 'applyState(d.state); hideLogin(); loadFriends(); loadBests(); if (P.ntf !== false && pushOK() && Notification.permission === "granted") pushSub(false); chatFromUrl();')
 
+# ---------- se actualiza sola: si el service worker bajó una versión nueva ----------
+# Si todavía no tocaste nada, recarga al toque; si ya estabas jugando, recarga cuando salís de la app (al volver ya está la nueva).
+rep('  function signedIn(d) {', '''  var NEWV = false, TOUCHED = false;
+  window.addEventListener("pointerdown", function () { TOUCHED = true; }, true);
+  if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", function (e) { if (e.data && e.data.update) { if (!TOUCHED) location.reload(); else NEWV = true; } });
+  document.addEventListener("visibilitychange", function () { if (document.hidden && NEWV) { try { save(); } catch (e) {} pushState(true); setTimeout(function () { location.reload(); }, 200); } });
+  function signedIn(d) {''')
+
 # full document
 k=s.index("</style>")+len("</style>")
 doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Toki">\n<link rel="icon" href="/icon-192.png">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'
