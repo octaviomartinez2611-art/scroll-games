@@ -37,7 +37,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - Código de admin: variable de entorno `ADMIN_CODE` en Netlify. NUNCA ponerlo en el repo (es público). Se usa una sola vez por cuenta desde Perfil → "Soy el administrador".
 
 ## Sin internet (pedido: "que se pueda jugar sin internet ni datos")
-- `public/sw.js` (service worker, se registra desde build6): guarda la app en el teléfono. La página: primero la red con 3 s de espera, si no la guardada (así llegan las novedades). `/api/*` nunca se guarda. Al cambiar sw.js, subir `CACHE` (sa-v1 → sa-v2) para tirar lo viejo. `netlify.toml` le pone `no-cache` a `/` y `/sw.js`.
+- `public/sw.js` (service worker, se registra desde build6): guarda la app en el teléfono. La página se abre al toque con la versión guardada (aunque haya mala señal) y la nueva se baja en segundo plano: las novedades aparecen la vez siguiente que abrís (antes esperaba la red hasta 3 s cada vez). `/api/*` nunca se guarda. Al cambiar sw.js, subir `CACHE` (va por sa-v3) para tirar lo viejo. Prueba: `ntest/swup.js` en el scratchpad (abre en ~85 ms con lo guardado, la segunda vez ve lo nuevo). `netlify.toml` le pone `no-cache` a `/` y `/sw.js`.
 - `manifest.webmanifest` + `icon-192.png`/`icon-512.png`: se puede agregar a la pantalla de inicio como app.
 - Sin internet se juega igual y el algoritmo aprende (todo en localStorage). `save()` pone `P.ts`; al reconectar, `applyState` se queda con lo del teléfono si es más nuevo que lo del servidor y es el mismo usuario (`P.owner`), y lo sube.
 - Se guardan en el teléfono: nombre (`sa-me`), amigos (`sa-fr`), últimos 60 mensajes por chat (`sa-ms`), datos colectivos del algoritmo (`sa-tr`).
@@ -58,6 +58,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 4. `build4.py`: algoritmo del feed, estadísticas por juego, nombre sobre fondo negro, rail que se esconde, sin parpadeo.
 5. `build5.py`: sonido (desbloqueo en iPhone), botón 2×, sin monedas, más espacio de juego, filtro de juegos de apuestas.
 6. `build6.py`: versión Netlify (documento completo, login, amigos y chat contra `/api`, reportes, admin) → `public/index.html`.
+7. `minify.py`: achica el JavaScript de la versión Netlify con terser (`npx terser@5.31.6`; 513 KB → 382 KB, comprimido 130 → 114 KB). Si no hay internet, deja la página sin achicar. La versión de Claude no se achica (para poder leerla).
 Para cambiar algo, editar la fuente que corresponde y volver a correr `build.sh`. Probar con Playwright (Chromium ya instalado) antes de hacer push.
 
 ## Tanda dopamina (f7.js y f8.js, 200 juegos)
@@ -84,6 +85,11 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 - Datos por juego en `P.st[id]`: t, l, h, r, k, n (vistas), ls (última vez), q (muertes rápidas), nb (cerca del récord), rec (récords).
 - Simulación `t37.js` (30 jugadores falsos en 3 grupos de gusto + uno nuevo): aciertos 20 % / 38 % / 64 % / 67 % / 75 % en los juegos 1-10 / 11-20 / 21-40 / 41-60 / 61-80 (azar = 10 %). La v2 llegaba a 36–56 %.
 - Récord nuevo: suena un arpegio una vez y "Récord nuevo" se pone dorado.
+
+## Vibración y sonido (15/11)
+- `vib()` en build5 ok20: Android con `navigator.vibrate`; iPhone (iOS 18+) con el truco del `<input type=checkbox switch>` escondido, que solo vibra si viene de un toque. Vibra cortito al sumar, un poco más en perfecto, al perder vida, al terminar y patrón en récord nuevo. Botón "Vibración" en el Perfil (`P.vib`, por defecto sí).
+- Cada familia de juegos tiene su "voz" (`voiceFor`: nota base y tipo de onda), y los puntos seguidos suben por una escala pentatónica.
+- No probado en teléfono real (Chromium de compu no vibra).
 
 ## Enganche (pedido: "mucho más adictivo")
 - Racha: 10 puntos seguidos sin perder vida → los puntos valen ×2 (puntaje en amarillo, "×2" al lado del récord) hasta perder una vida.

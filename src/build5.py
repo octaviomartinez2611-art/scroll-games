@@ -524,5 +524,33 @@ miss=[]
 # Memoria entre visitas: historial de lo mostrado (P.hist), para no repetir al volver a entrar
 rp('lastAct = act; viewT = 0; if (fwd && slides.length > act + 2) trimAfter(act + 1); fillFeed(act);','lastAct = act; viewT = 0; if (slides[act]) { var hid = slides[act].cfg.id; stOf(hid).ls = Date.now(); if ((P.hist || []).slice(-1)[0] !== hid) { P.hist = (P.hist || []).concat(hid).slice(-60); save(); } } if (fwd && slides.length > act + 2) trimAfter(act + 1); fillFeed(act);')
 print('MISSES19', miss)
+
+# ===== ok20: vibración (Android + iPhone) y sonido propio de cada juego =====
+def R20(a, b):
+    global s
+    assert s.count(a) == 1, ('ok20', a[:70])
+    s = s.replace(a, b, 1)
+R20('  function vib(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }',
+ """  var IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), HAP = null, hapT = 0;
+  function vib(ms) {
+    if (P.vib === false) return; var now = performance.now(); if (now - hapT < 45) return; hapT = now;
+    try {
+      if (navigator.vibrate) { navigator.vibrate(ms); return; }
+      if (IOS) { if (!HAP) { HAP = document.createElement("label"); HAP.setAttribute("aria-hidden", "true"); HAP.style.cssText = "position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none"; var hi = document.createElement("input"); hi.type = "checkbox"; hi.setAttribute("switch", ""); hi.tabIndex = -1; HAP.appendChild(hi); document.body.appendChild(HAP); } HAP.click(); }
+    } catch (e) {}
+  }
+  var PENTA = [1, 1.125, 1.25, 1.5, 1.667, 2, 2.25, 2.5, 3, 3.333, 4], VOICE = { b: 523, ty: "triangle" };
+  function voiceFor(id) { var u = id.indexOf("_"), f = u > 0 ? id.slice(0, u) : id, h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) >>> 0; return { b: [392, 440, 494, 523, 587, 659][h % 6], ty: ["triangle", "triangle", "sine", "square", "triangle", "sine"][(h >> 3) % 6] }; }""")
+R20('    hit: function (c) { sfx(520 + Math.min(c || 0, 12) * 36, 0.12, "triangle", 0.09); },\n    perfect: function () { sfx(880, 0.16, "triangle", 0.1); sfx(1320, 0.2, "sine", 0.05); },\n    hurt: function () { sfx(200, 0.28, "sawtooth", 0.06, 0.5); vib(40); },\n    end: function () { sfx(300, 0.5, "triangle", 0.08, 0.45); },',
+ '    hit: function (c) { var k = Math.min(c || 0, 10); sfx(VOICE.b * PENTA[k], 0.12, VOICE.ty, VOICE.ty === "square" ? 0.045 : 0.09); vib(8); },\n    perfect: function () { sfx(VOICE.b * 2, 0.16, VOICE.ty, VOICE.ty === "square" ? 0.05 : 0.1); sfx(VOICE.b * 3, 0.2, "sine", 0.05); vib(16); },\n    hurt: function () { sfx(200, 0.28, "sawtooth", 0.06, 0.5); vib(45); },\n    end: function () { sfx(300, 0.5, "triangle", 0.08, 0.45); vib(70); },')
+R20('    rec: function () { sfx(660, 0.1, "triangle", 0.08);', '    rec: function () { vib([20, 50, 30]); sfx(660, 0.1, "triangle", 0.08);')
+R20('  Game.prototype.begin = function () {', '  Game.prototype.begin = function () {\n    VOICE = voiceFor(this.cfg.id);')
+R20('      <button class="toggle" id="sndBtn" aria-pressed="true">Sonido <em id="sndState">Sí</em></button>',
+ '      <button class="toggle" id="sndBtn" aria-pressed="true">Sonido <em id="sndState">Sí</em></button>\n      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>')
+R20('    $("sndBtn").setAttribute("aria-pressed", String(P.sound)); $("sndState").textContent = P.sound ? "Sí" : "No";',
+ '    $("sndBtn").setAttribute("aria-pressed", String(P.sound)); $("sndState").textContent = P.sound ? "Sí" : "No";\n    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No";')
+R20('  $("sndBtn").addEventListener("click", toggleSound);',
+ '  $("sndBtn").addEventListener("click", toggleSound);\n  $("vibBtn").addEventListener("click", function () { P.vib = P.vib === false; save(); $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No"; if (P.vib !== false) { hapT = 0; vib(30); } });')
+print('ok20')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')
