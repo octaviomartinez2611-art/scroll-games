@@ -1,4 +1,4 @@
-// Avisos del algoritmo varias veces por día (10, 13, 16, 19 y 21 h de Argentina): rota entre
+// Avisos del algoritmo 10 veces por día (9, 10, 12, 13, 15, 16, 18, 19, 21 y 22 h de Argentina): rota entre
 // un juego nuevo para vos, volver a tu favorito y romper tu récord. Nunca de noche.
 import { getStore } from "@netlify/blobs";
 import { pushTo, pickFor, recoText, favFor, recFor, favText, recText } from "../lib/push.mjs";
@@ -13,7 +13,7 @@ export default async () => {
     const user = b.key.slice(2);
     try {
       const last = (await st.get("pr/" + user, { type: "json" })) || { t: 0, ids: [] };
-      if (now - last.t < 2 * 3600e3) continue;
+      if (now - last.t < 50 * 60 * 1000) continue;
       const P = (await st.get("st/" + user, { type: "json" })) || {};
       if (P.ts && now - P.ts < 20 * 60 * 1000) continue; // está jugando ahora
       const skip = new Set(last.ids || []), k = slot + user.length, kinds = ["reco", "fav", "reco", "rec"];
@@ -26,10 +26,10 @@ export default async () => {
       }
       if (!msg) continue;
       if (await pushTo(st, user, { title: "Toki", body: msg.body, game: msg.id, tag: "reco" })) n++;
-      await st.setJSON("pr/" + user, { t: now, ids: (last.ids || []).concat(msg.id).slice(-12) });
+      await st.setJSON("pr/" + user, { t: now, ids: (last.ids || []).concat(msg.id).slice(-20) });
     } catch (e) { console.error(user, e); }
   }
   console.log("avisos:", n);
   return new Response("ok");
 };
-export const config = { schedule: "0 0,13,16,19,22 * * *" };
+export const config = { schedule: "0 0,1,12,13,15,16,18,19,21,22 * * *" };
