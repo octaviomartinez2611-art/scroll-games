@@ -87,7 +87,8 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 - Rival: debajo del puntaje dice "Superá a <amigo> · N" con el récord del amigo más cercano por encima; al pasarlo suena y pasa al siguiente; si no queda nadie, "1º entre amigos". Datos de `/api/bests` (`FB` en el cliente).
 - Ranking del juego entre amigos dentro de la hoja del botón "?".
 - Desafío de hoy: mismo juego para todos según la fecha; es el primer juego del día y hay un botón en Perfil.
-- Decidido NO hacer: notificaciones, premios al azar, ni castigos por no entrar (los usuarios son menores).
+- Decidido NO hacer: notificaciones, premios al azar, ni castigos por no entrar.
+- No suponer la edad de los usuarios ni preguntarla: el dueño dijo que no es asunto nuestro.
 
 ## Pendientes ofrecidos (no pedidos todavía)
 - Aviso de descanso tras un rato largo, tiempo de juego del día en el Perfil, texto de privacidad y botón para borrar la cuenta.
