@@ -188,6 +188,42 @@ H['tr_ball'] = ["Arrastrá la cama", "Que reboten hasta la otra punta", "Perdés
 fam('tu_', "Tocá para disparar", {k: "Disparales cuando apuntás" for k in ['base', 'fast', 'rev', 'tri', 'tank', 'swarm', 'slow', 'bug', 'ufo', 'rock']}, "Perdés si llegan al centro")
 fam('rp_', "Tocá para soltar", {k: "Que caiga en el vaso" for k in ['base', 'fast', 'small', 'long', 'short', 'two', 'wind', 'moon', 'candy', 'mix']}, "Perdés si cae afuera")
 
+
+# Tanda de 30 mecánicas nuevas
+N30 = {
+ 'pinb': ("Tocá izquierda o derecha", "Pegale a los hongos", "Perdés si la bola se cae"),
+ 'sled': ("Mantené en las bajadas", "Soltá en las subidas para volar", "Perdés si se acaba el tiempo"),
+ 'chute': ("Arrastrá a los costados", "Caé arriba del bote", "Perdés si caés al agua o te toca un pájaro"),
+ 'rope': ("Tocá para saltar", "Justo cuando pasa la soga", "Perdés si te engancha"),
+ 'claw': ("Arrastrá y soltá", "Agarrá un peluche", "Perdés si no agarrás nada"),
+ 'lumber': ("Tocá izquierda o derecha", "Hachá el tronco rápido", "Perdés si te cae una rama"),
+ 'spikeb': ("Tocá para aletear", "Rebotá entre las paredes", "Perdés si tocás un pincho"),
+ 'duo': ("Mantené izquierda o derecha", "Girá las dos bolitas", "Perdés si un bloque las toca"),
+ 'planet': ("Tocá para saltar", "De planeta en planeta", "Perdés si te vas al espacio"),
+ 'skijump': ("Mantené y soltá al final", "Pasá la línea roja", "Perdés si caés antes"),
+ 'tiles': ("Arrastrá a los costados", "Que pique en las baldosas", "Perdés si cae afuera"),
+ 'penal': ("Tocá para patear", "Lejos del arquero", "Perdés si te la ataja"),
+ 'volley': ("Arrastrá a los costados", "Pasala por arriba de la red", "Perdés si cae de tu lado"),
+ 'samurai': ("Tocá del lado del ninja", "Justo cuando está cerca", "Perdés si te alcanza"),
+ 'coaster': ("Mantené para acelerar", "Despacio en lo rojo", "Perdés si te pasás o te quedás"),
+ 'heist': ("Mantené para caminar", "Cruzá con el láser apagado", "Perdés si te toca un láser"),
+ 'rmaze': ("Arrastrá para girar", "Llevá la bolita al agujero", "Perdés si se acaba el tiempo"),
+ 'pancake': ("Tocá la sartén", "Cuando está dorado", "Perdés si se quema o está crudo"),
+ 'traffic': ("Tocá para cambiar el semáforo", "Que pasen todos", "Perdés si chocan o se amontonan"),
+ 'drop': ("Tocá para soltar", "Que caiga en la chimenea", "Perdés si te queda una casa sin paquete"),
+ 'twocars': ("Tocá izquierda o derecha", "Juntá círculos, esquivá cuadrados", "Perdés si chocás o se escapa un círculo"),
+ 'bat': ("Tocá para batear", "Justo cuando llega", "Perdés si la dejás pasar"),
+ 'cpong': ("Arrastrá para girar", "Que no se escape la pelota", "Perdés si sale del círculo"),
+ 'bungee': ("Mantené y soltá", "Bajá lo más que puedas", "Perdés si tocás el agua"),
+ 'boomer': ("Tocá izquierda o derecha", "Bajá los pájaros", "Perdés si llegan abajo"),
+ 'halfpipe': ("Tocá en el aire", "Hacé trucos con tiempo", "Perdés si caés en pleno truco"),
+ 'broom': ("Arrastrá a los costados", "Que el palo no se caiga", "Perdés si se cae"),
+ 'snowball': ("Arrastrá a los costados", "Juntá nieve, esquivá árboles", "Perdés si te achicás mucho"),
+ 'plates': ("Tocá cada palo", "Que los platos sigan girando", "Perdés si se cae uno"),
+ 'dive': ("Mantené para girar", "Entrá derecho al agua", "Perdés si caés de panza"),
+}
+for k, v in N30.items(): H[k] = list(v)
+
 missing = [i for i in ids if i not in H]
 extra = [i for i in H if i not in ids]
 longest = sorted(((sum(len(x.split()) for x in v), k) for k, v in H.items() if k in ids), reverse=True)[:5]

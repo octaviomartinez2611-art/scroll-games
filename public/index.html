@@ -687,7 +687,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
   function spMole(c, x, y, r, col) { dot(c, x, y, r, col); dot(c, x, y + r * 0.35, r * 0.42, "#f2d2b6"); dot(c, x, y + r * 0.12, r * 0.13, "#ff8fa3"); dot(c, x - r * 0.35, y - r * 0.2, r * 0.11, "#17121f"); dot(c, x + r * 0.35, y - r * 0.2, r * 0.11, "#17121f"); c.fillStyle = "#fff"; c.fillRect(x - r * 0.1, y + r * 0.4, r * 0.2, r * 0.18); }
   function spBulb(c, x, y, r, on) { dot(c, x, y, r, on ? "#ffd23f" : "#3a3a44"); if (on) dot(c, x - r * 0.3, y - r * 0.3, r * 0.2, "rgba(255,255,255,0.6)"); c.fillStyle = "#9aa1ab"; c.fillRect(x - r * 0.45, y + r * 0.8, r * 0.9, r * 0.45); }
 
-  var HELP = {"c_onlygrn": ["Arrastrá la canasta", "Atrapá solo lo verde", "Perdés si atrapás otra cosa"], "c_onlyred": ["Arrastrá la canasta", "Atrapá solo lo rojo", "Perdés si atrapás otra cosa"], "c_notred": ["Arrastrá la canasta", "Atrapá todo menos lo rojo", "Perdés si atrapás algo rojo"], "c_fruit": ["Arrastrá la canasta", "Atrapá las frutas", "Perdés si atrapás una bomba"], "c_drop": ["Arrastrá la canasta", "Atrapá todas las gotas", "Perdés si cae una"], "c_stars": ["Arrastrá la canasta", "Atrapá las estrellas", "Perdés si atrapás un pincho"], "c_eggs": ["Arrastrá la canasta", "Atrapá todos los huevos", "Perdés si cae uno"], "c_rmb": ["Arrastrá la canasta", "Atrapá solo los rombos", "Perdés si atrapás otra cosa"], "c_onlystar": ["Arrastrá la canasta", "Atrapá solo las estrellas", "Perdés si atrapás otra cosa"], "c_pizza": ["Arrastrá la canasta", "Atrapá todas las pizzas", "Perdés si cae una pizza"], "c_coins": ["Arrastrá la canasta", "Atrapá las monedas", "Perdés si atrapás una piedra"], "c_notsq": ["Arrastrá la canasta", "Atrapá todo menos cuadrados", "Perdés si atrapás un cuadrado"], "c_tri": ["Arrastrá la canasta", "Atrapá solo los triángulos", "Perdés si atrapás otra cosa"], "c_sq": ["Arrastrá la canasta", "Atrapá solo los cuadrados", "Perdés si atrapás otra cosa"], "c_circ": ["Arrastrá la canasta", "Atrapá solo los círculos", "Perdés si atrapás otra cosa"], "c_fast": ["Arrastrá la canasta", "Atrapá las estrellas", "Perdés si atrapás una roca"], "d_brk": ["Arrastrá para moverte", "Esquivá los ladrillos", "Perdés si algo te toca"], "d_saw": ["Arrastrá para moverte", "Esquivá las sierras", "Perdés si algo te toca"], "d_wind": ["Arrastrá para moverte", "Esquivá las piedras", "Perdés si algo te toca"], "d_acid": ["Arrastrá para moverte", "Esquivá las gotas", "Perdés si algo te toca"], "d_ufo": ["Arrastrá para moverte", "Esquivá los platillos", "Perdés si algo te toca"], "d_hail": ["Arrastrá para moverte", "Esquivá el granizo", "Perdés si algo te toca"], "d_leaf": ["Arrastrá para moverte", "Esquivá las hojas", "Perdés si algo te toca"], "d_snow": ["Arrastrá para moverte", "Esquivá los copos", "Perdés si algo te toca"], "d_big": ["Arrastrá para moverte", "Esquivá las piedras gigantes", "Perdés si algo te toca"], "d_met": ["Arrastrá para moverte", "Esquivá las rocas", "Perdés si algo te toca"], "d_arr": ["Arrastrá para moverte", "Esquivá las flechas", "Perdés si algo te toca"], "d_mis": ["Arrastrá para moverte", "Esquivá los misiles", "Perdés si algo te toca"], "d_cnn": ["Arrastrá para moverte", "Esquivá las balas", "Perdés si algo te toca"], "d_cube": ["Arrastrá para moverte", "Esquivá los cubos", "Perdés si algo te toca"], "d_bub": ["Arrastrá para moverte", "Esquivá las burbujas", "Perdés si algo te toca"], "d_ninja": ["Arrastrá para moverte", "Esquivá las estrellas ninja", "Perdés si algo te toca"], "d_fire": ["Arrastrá para moverte", "Esquivá el fuego", "Perdés si algo te toca"], "d_need": ["Arrastrá para moverte", "Esquivá las agujas", "Perdés si algo te toca"], "d_bar": ["Arrastrá para moverte", "Esquivá las vigas", "Perdés si algo te toca"], "d_spk": ["Arrastrá para moverte", "Esquivá los pinchos", "Perdés si algo te toca"], "d_rkt2": ["Arrastrá para moverte", "Esquivá los cohetes", "Perdés si algo te toca"], "d_laser": ["Arrastrá para moverte", "Salí de la línea roja", "Perdés si algo te toca"], "d_ray": ["Arrastrá para moverte", "Salí de la línea roja", "Perdés si algo te toca"], "d_col": ["Arrastrá para moverte", "Metete entre las columnas", "Perdés si algo te toca"], "d_aval": ["Arrastrá para moverte", "Buscá el hueco", "Perdés si algo te toca"], "d_mix": ["Arrastrá para moverte", "Esquivá todo", "Perdés si algo te toca"], "f_glide": ["Mantené para subir", "Pasá por los aros", "Perdés si chocás"], "f_drone": ["Mantené para subir", "Pasá por los aros", "Perdés si chocás"], "f_ringm": ["Mantené para subir", "Pasá por los aros", "Perdés si chocás"], "f_comet": ["Mantené para subir", "Esquivá las minas", "Perdés si chocás"], "f_sub": ["Mantené para subir", "Esquivá las minas", "Perdés si chocás"], "f_bal": ["Mantené para subir", "Pasá por los huecos", "Perdés si chocás"], "f_night": ["Mantené para subir", "Pasá por los huecos", "Perdés si chocás"], "f_tight": ["Mantené para subir", "Pasá por los huecos chicos", "Perdés si chocás"], "f_heli": ["Mantené para subir", "Pasá por los huecos", "Perdés si chocás"], "f_jet": ["Mantené para subir", "Juntá monedas, esquivá minas", "Perdés si chocás"], "f_coins": ["Mantené para subir", "Juntá las monedas", "Perdés si chocás"], "f_cave": ["Mantené para subir", "No toques la cueva", "Perdés si chocás"], "g_grn": ["Tocá la pantalla", "Tocá cuando sale el verde", "Perdés si te equivocás"], "g_big": ["Tocá la pantalla", "Tocá cuando sale el grande", "Perdés si te equivocás"], "g_sml": ["Tocá la pantalla", "Tocá cuando sale el chico", "Perdés si te equivocás"], "g_tri": ["Tocá la pantalla", "Tocá cuando sale un triángulo", "Perdés si te equivocás"], "g_star": ["Tocá la pantalla", "Tocá cuando sale una estrella", "Perdés si te equivocás"], "g_yel": ["Tocá la pantalla", "Tocá cuando sale amarillo", "Perdés si te equivocás"], "g_x": ["Tocá la pantalla", "Tocá cuando sale la X", "Perdés si te equivocás"], "g_nost": ["Tocá la pantalla", "Tocá siempre, menos la estrella", "Perdés si te equivocás"], "g_red": ["Tocá la pantalla", "Tocá siempre, menos el rojo", "Perdés si te equivocás"], "h_mount": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_belt": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_zig": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_riv": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_ice": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_lab": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_nar": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_wide": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_ser": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_tur": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "k_arr": ["Deslizá a un costado", "Hacia donde apunta la flecha", "Perdés si te equivocás o tardás"], "k_arv": ["Deslizá a un costado", "Al revés de la flecha", "Perdés si te equivocás o tardás"], "k_tc": ["Deslizá a un costado", "Triángulo →  ·  círculo ←", "Perdés si te equivocás o tardás"], "k_cc": ["Deslizá a un costado", "Círculo →  ·  cuadrado ←", "Perdés si te equivocás o tardás"], "k_gc": ["Deslizá a un costado", "Grande →  ·  chico ←", "Perdés si te equivocás o tardás"], "k_yp": ["Deslizá a un costado", "Amarillo →  ·  violeta ←", "Perdés si te equivocás o tardás"], "k_rnd": ["Deslizá a un costado", "Redondo →  ·  con puntas ←", "Perdés si te equivocás o tardás"], "k_rv": ["Deslizá a un costado", "Rojo →  ·  verde ←", "Perdés si te equivocás o tardás"], "l_can": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "l_bow": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "l_hi": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "l_moon": ["Mantené y soltá", "Poca fuerza: que caiga en el blanco", "Perdés si no acertás"], "l_golf": ["Mantené y soltá", "Que frene en el hoyo", "Perdés si no acertás"], "l_golf2": ["Mantené y soltá", "Que frene en el hoyo", "Perdés si no acertás"], "l_mini": ["Mantené y soltá", "Poca fuerza: que frene en el hoyo", "Perdés si no acertás"], "p_bar": ["Tocá la pantalla", "Tocá con la raya en lo verde", "Perdés si fallás"], "p_barf": ["Tocá la pantalla", "Tocá con la raya en lo verde", "Perdés si fallás"], "p_barw": ["Tocá la pantalla", "Tocá con la raya en lo verde", "Perdés si fallás"], "p_ease": ["Tocá la pantalla", "Tocá con la raya en lo verde", "Perdés si fallás"], "p_cup": ["Tocá la pantalla", "Tocá con el agua en la zona", "Perdés si fallás"], "p_cupf": ["Tocá la pantalla", "Tocá con el agua en la zona", "Perdés si fallás"], "p_needle": ["Tocá la pantalla", "Tocá con la aguja en lo verde", "Perdés si fallás"], "p_secs": ["Tocá la pantalla", "Tocá con la aguja en lo verde", "Perdés si fallás"], "p_prec": ["Tocá la pantalla", "Tocá con la aguja en lo verde", "Perdés si fallás"], "p_pend": ["Tocá la pantalla", "Tocá con la bola en lo verde", "Perdés si fallás"], "p_pendf": ["Tocá la pantalla", "Tocá con la bola en lo verde", "Perdés si fallás"], "p_shr": ["Tocá la pantalla", "Tocá cuando el círculo toca el aro", "Perdés si fallás"], "p_shrf": ["Tocá la pantalla", "Tocá cuando el círculo toca el aro", "Perdés si fallás"], "p_shrs": ["Tocá la pantalla", "Tocá cuando el círculo toca el aro", "Perdés si fallás"], "p_lift": ["Tocá la pantalla", "Tocá con el ascensor en lo verde", "Perdés si fallás"], "p_swing": ["Tocá la pantalla", "Tocá con la hamaca en lo verde", "Perdés si fallás"], "p_snip": ["Tocá la pantalla", "Tocá con la mira en la zona", "Perdés si fallás"], "p_therm": ["Tocá la pantalla", "Tocá con la línea en lo verde", "Perdés si fallás"], "r_moon": ["Tocá para saltar", "Saltá los obstáculos", "Perdés si chocás"], "r_turbo": ["Tocá para saltar", "Saltá los obstáculos", "Perdés si chocás"], "r_mix": ["Tocá para saltar", "Saltá los obstáculos", "Perdés si chocás"], "r_float": ["Tocá para saltar", "Saltá los obstáculos", "Perdés si chocás"], "r_pit": ["Tocá para saltar", "Saltá los pozos", "Perdés si chocás"], "r_spk": ["Tocá para saltar", "Saltá los pinchos", "Perdés si chocás"], "r_box": ["Tocá para saltar", "Saltá las cajas", "Perdés si chocás"], "r_sprint": ["Tocá para saltar", "Saltá las cajas", "Perdés si chocás"], "r_hurd": ["Tocá para saltar", "Saltá las vallas", "Perdés si chocás"], "r_dbl": ["Tocá para saltar", "Tocá otra vez en el aire", "Perdés si chocás"], "r_dturbo": ["Tocá para saltar", "Tocá otra vez en el aire", "Perdés si chocás"], "r_wall": ["Tocá para saltar", "Mantené para saltar alto", "Perdés si chocás"], "r_giant": ["Tocá para saltar", "Mantené para saltar alto", "Perdés si chocás"], "r_low": ["Tocá para saltar", "Saltá cajas, no las barras", "Perdés si chocás"], "r_pitfly": ["Tocá para saltar", "Saltá pozos, no las barras", "Perdés si chocás"], "r_mara": ["Tocá para saltar", "Saltá todo menos las barras", "Perdés si chocás"], "s_fast": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_swm": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_ufo": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_zz": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_bom": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_fort": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_bug": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_rkt": ["Arrastrá la nave", "Rompé a los enemigos", "Perdés si te pegan o llegan abajo"], "s_bal": ["Arrastrá la nave", "Reventá los globos", "Perdés si te pegan o llegan abajo"], "s_met": ["Arrastrá la nave", "Rompé las rocas", "Perdés si te pegan o llegan abajo"], "s_rain": ["Arrastrá la nave", "Rompé las rocas", "Perdés si te pegan o llegan abajo"], "s_hard": ["Arrastrá la nave", "Rompé los bloques", "Perdés si te pegan o llegan abajo"], "s_tank": ["Arrastrá la nave", "Rompé los tanques", "Perdés si te pegan o llegan abajo"], "s_boss": ["Arrastrá la nave", "Rompé a los gigantes", "Perdés si te pegan o llegan abajo"], "s_frd": ["Arrastrá la nave", "Rompé solo los rojos", "Perdés si le pegás a un verde"], "s_frd2": ["Arrastrá la nave", "Rompé solo los rojos", "Perdés si le pegás a un verde"], "t_big": ["Tocá con el dedo", "Tocá solo los grandes", "Perdés si tocás otro"], "t_sml": ["Tocá con el dedo", "Tocá solo los chicos", "Perdés si tocás otro"], "t_cir": ["Tocá con el dedo", "Tocá solo los círculos", "Perdés si tocás otro"], "t_sq": ["Tocá con el dedo", "Tocá solo los cuadrados", "Perdés si tocás otro"], "t_tri": ["Tocá con el dedo", "Tocá solo los triángulos", "Perdés si tocás otro"], "t_st": ["Tocá con el dedo", "Tocá solo las estrellas", "Perdés si tocás otro"], "t_pur": ["Tocá con el dedo", "Tocá solo los violetas", "Perdés si tocás otro"], "t_yel": ["Tocá con el dedo", "Tocá solo los amarillos", "Perdés si tocás otro"], "t_rdrop": ["Tocá con el dedo", "Tocá solo las gotas rojas", "Perdés si tocás otro"], "t_gr": ["Tocá con el dedo", "Tocá solo los verdes", "Perdés si tocás un rojo"], "t_gfast": ["Tocá con el dedo", "Tocá los verdes, rápido", "Perdés si tocás un rojo"], "t_gry": ["Tocá con el dedo", "Tocá los de color", "Perdés si tocás un gris"], "t_face": ["Tocá con el dedo", "Tocá las caras contentas", "Perdés si tocás una triste"], "t_bomb": ["Tocá con el dedo", "Tocá todo menos las bombas", "Perdés si tocás una bomba"], "t_dots": ["Tocá con el dedo", "Tocá cada punto", "Perdés si se te escapa uno"], "t_fast": ["Tocá con el dedo", "Tocalos rápido", "Perdés si se te escapa uno"], "t_fly": ["Tocá con el dedo", "Tocá las moscas", "Perdés si se te escapa una"], "t_bub": ["Tocá con el dedo", "Reventá las burbujas", "Perdés si se te escapa una"], "w_shr": ["Arrastrá la paleta", "Que la pelota no caiga", "Perdés si se te cae"], "w_wild": ["Arrastrá la paleta", "Que la pelota no caiga", "Perdés si se te cae"], "w_acc": ["Arrastrá la paleta", "Que la pelota no caiga", "Perdés si se te cae"], "w_mini": ["Arrastrá la paleta", "Que la pelota no caiga", "Perdés si se te cae"], "w_gr": ["Arrastrá la paleta", "Devolvé la pelota", "Perdés si se te cae"], "w_two": ["Arrastrá la paleta", "Que no caiga ninguna", "Perdés si se te cae"], "z_a": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "z_b": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "z_g": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "a_d1": ["Tocá para tirar", "Tocá con la mira en el centro", "Perdés si tocás afuera"], "a_d2": ["Tocá para tirar", "Tocá con la mira en el centro", "Perdés si tocás afuera"], "a_d3": ["Tocá para tirar", "Tocá con la mira en el centro", "Perdés si tocás afuera"], "a_bowl": ["Arrastrá y soltá", "Tirá a los pinos", "Perdés si no les pegás"], "b_a": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_i": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_s": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_w": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_f": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_t": ["Mantené y arrastrá", "Que no se caiga ninguna", "Perdés si se cae una"], "keep": ["Tocá la pelota", "No la dejes caer", "Perdés si se cae"], "jump": ["Arrastrá a los costados", "Subí por las plataformas", "Perdés si caés"], "brick": ["Arrastrá la paleta", "Rompé los ladrillos", "Perdés si se te cae la pelota"], "hoop": ["Arrastrá y soltá", "Embocá en el aro", "Perdés si no entra"], "rocket": ["Mantené para subir", "Pasá por los huecos", "Perdés si chocás"], "follow": ["Arrastrá la bolita", "Quedate en lo amarillo", "Perdés si te salís"], "boat": ["Arrastrá y mantené", "Pescá los peces", "Perdés si enganchás un erizo"], "cups": ["Seguí la bolita", "Tocá su cubilete", "Perdés si fallás"], "grav": ["Tocá para dar vuelta", "Esquivá los pinchos", "Perdés si chocás"], "land": ["Mantené y arrastrá", "Aterrizá suave en lo verde", "Perdés si caés fuerte o afuera"], "fish": ["Tocá para tirar el anzuelo", "Pescá los peces", "Perdés si enganchás un erizo"], "cross": ["Tocá para avanzar", "Cruzá sin que te pisen", "Perdés si te pisa un auto"], "ship": ["Tocá donde querés ir", "Rompé a los enemigos", "Perdés si te chocan"], "timing": ["Tocá en el momento justo", "Con la barra en lo amarillo", "Perdés si tocás afuera"], "clock": ["Tocá la pantalla", "Cuando llega al tiempo pedido", "Perdés si errás por mucho"], "plink": ["Tocá arriba para soltar", "Que no caiga en el 0", "Perdés si cae en el 0"], "pong": ["Tocá donde querés ir", "Devolvé la pelota", "Perdés si se te cae"], "slice": ["Pasá el dedo", "Cortá las frutas", "Perdés si cortás una bomba"], "aster": ["Mantené un lado para girar", "Rompé las rocas", "Perdés si una te toca"], "light": ["Tocá la pantalla", "Apenas se pone verde", "Perdés si tocás en rojo"], "bub": ["Arrastrá y soltá", "Juntá tres del mismo color", "Perdés si llegan abajo"], "catch": ["Tocá donde querés ir", "Atrapá lo bueno", "Perdés si atrapás lo rojo"], "pop": ["Tocá los círculos", "Antes de que el aro llegue", "Perdés si el aro llega"], "snake": ["Mantené un lado para girar", "Comé sin chocar", "Perdés si chocás"], "cata": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "rhythm": ["Tocá la columna", "Cuando la nota llega al marco", "Perdés si se te pasa una"], "hop": ["Tocá para saltar", "Pasá entre los tubos", "Perdés si chocás"], "ceil": ["Mantené para ir al techo", "Esquivá los pinchos", "Perdés si chocás"], "aim": ["Tocá la pantalla", "Con la mira en el centro", "Perdés si tocás lejos"], "run": ["Tocá para saltar", "Saltá los obstáculos", "Perdés si chocás"], "inv": ["Arrastrá la nave", "Rompé a los invasores", "Perdés si te pegan"], "hold": ["Tocá para inflar", "Quedate entre los aros", "Perdés si te pasás"], "dodge": ["Arrastrá para moverte", "Pasá por el hueco", "Perdés si chocás"], "stack": ["Tocá para soltar", "Justo arriba del anterior", "Perdés si cae afuera"], "orbit": ["Tocá para girar al revés", "Esquivá los cuadrados", "Perdés si chocás"], "balloon": ["Mantené para inflar", "Quedate entre los aros", "Perdés si te pasás"], "moles": ["Tocá los topos", "Antes de que se escondan", "Perdés si tocás una bomba"], "ln_car": ["Deslizá para cambiar de carril", "Esquivá autos, juntá estrellas", "Perdés si chocás"], "ln_night": ["Deslizá para cambiar de carril", "Esquivá los autos", "Perdés si chocás"], "ln_ski": ["Deslizá para cambiar de carril", "Esquivá árboles y piedras", "Perdés si chocás"], "ln_surf": ["Deslizá para cambiar de carril", "Esquivá las rocas", "Perdés si chocás"], "ln_city": ["Deslizá para cambiar de carril", "Esquivá las vallas", "Perdés si chocás"], "ln_space": ["Deslizá para cambiar de carril", "Esquivá rocas, juntá gemas", "Perdés si chocás"], "ln_lava": ["Deslizá para cambiar de carril", "Esquivá el fuego", "Perdés si chocás"], "ln_gate": ["Deslizá para cambiar de carril", "Pasá por cada bandera", "Perdés si te salteás una"], "ln_farm": ["Deslizá para cambiar de carril", "Esquivá cajas, juntá frutas", "Perdés si chocás"], "ln_turbo": ["Deslizá para cambiar de carril", "Esquivá los autos", "Perdés si chocás"], "kn_log": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_wob": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_flip": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_pre": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_fast": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_small": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_target": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_app": ["Tocá para tirar", "Clavá y pegale a las manzanas", "Perdés si chocás otra flecha"], "kn_pizza": ["Tocá para tirar", "Clavá en la pizza", "Perdés si chocás otra flecha"], "kn_gold": ["Tocá para tirar", "Clavá y pegale a las manzanas", "Perdés si chocás otra flecha"], "ri_one": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_fast": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_two": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_dbl": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_wob": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_alt": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_tiny": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_moon": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_mix": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_star": ["Tocá para subir", "Pasá los aros, juntá estrellas", "Perdés si tocás el aro"], "tw_base": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_red": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_move": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_thin": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_fast": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_wide": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_two": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_ice": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_fire": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_storm": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "sm_base": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_fast": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_dark": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_rev": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_fire": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_slow": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_stripe": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_wave": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_big": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_mix": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "zz_base": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_fast": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_thin": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_short": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_gem": ["Tocá para doblar", "Doblá y juntá gemas", "Perdés si te caés"], "zz_turbo": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_snow": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_long": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_lava": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_mix": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "sj_base": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_fast": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_both": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_rush": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_var": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_tall": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_cake": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_box": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_cloud": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_crazy": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "hk_base": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_far": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_star": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_saw": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás piso o sierra"], "hk_move": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_moon": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_fast": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_short": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_vine": ["Mantené y soltá", "De liana en liana", "Perdés si tocás el piso"], "hk_mix": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás piso o sierra"], "dk_base": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_small": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_move": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_slide": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_fast": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_heavy": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_moon": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_wind": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_beach": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_mix": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "br_base": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_fast": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_thin": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_far": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_move": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_osc": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_slow": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_night": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_forest": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_pro": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "pt_base": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_fast": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_three": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_five": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_dbl": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_acc": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_short": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_neon": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_wave": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_pro": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "ah_base": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_fast": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_wide": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_hard": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_two": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_small": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_ice": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_easy": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_spin": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_mix": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "gk_base": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_fast": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_curve": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_rush": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_small": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_wide": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_defl": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_rain": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_lob": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_mix": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "sh_base": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_two": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_fast": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_spin": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_small": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_swarm": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_wave": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_big": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_mix": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_sun": ["Arrastrá para girar", "Frená el fuego con el escudo", "Perdés si toca el planeta"], "wj_base": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_fast": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_gem": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_long": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_dense": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_ice": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_slow": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_mid": ["Tocá para saltar", "Esquivá pinchos y bichos", "Perdés si chocás"], "wj_mix": ["Tocá para saltar", "Esquivá pinchos y bichos", "Perdés si chocás"], "wj_lava": ["Tocá para saltar", "Esquivá el fuego", "Perdés si te quemás"], "bg_burger": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_pan": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_cake": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_ice": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_book": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_box": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_fast": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_wind": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_tall": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_bad": ["Arrastrá el plato", "Apilá y esquivá las bombas", "Perdés si atrapás una bomba"], "fh_base": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_big": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_fast": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_wind": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_deb": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si te pega un ladrillo"], "fh_tree": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_weak": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_many": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_night": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_mix": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si te pega un ladrillo"], "tr_base": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_many": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_fast": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_small": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_wind": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_heavy": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_moon": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_mix": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_circus": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_ball": ["Arrastrá la cama", "Que reboten hasta la otra punta", "Perdés si cae una"], "tu_base": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_fast": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_rev": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_tri": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_tank": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_swarm": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_slow": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_bug": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_ufo": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_rock": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "rp_base": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_fast": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_small": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_long": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_short": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_two": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_wind": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_moon": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_candy": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_mix": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"]};
+  var HELP = {"c_onlyred": ["Arrastrá la canasta", "Atrapá solo lo rojo", "Perdés si atrapás otra cosa"], "c_fruit": ["Arrastrá la canasta", "Atrapá las frutas", "Perdés si atrapás una bomba"], "c_eggs": ["Arrastrá la canasta", "Atrapá todos los huevos", "Perdés si cae uno"], "d_met": ["Arrastrá para moverte", "Esquivá las rocas", "Perdés si algo te toca"], "d_laser": ["Arrastrá para moverte", "Salí de la línea roja", "Perdés si algo te toca"], "d_col": ["Arrastrá para moverte", "Metete entre las columnas", "Perdés si algo te toca"], "f_glide": ["Mantené para subir", "Pasá por los aros", "Perdés si chocás"], "f_jet": ["Mantené para subir", "Juntá monedas, esquivá minas", "Perdés si chocás"], "f_cave": ["Mantené para subir", "No toques la cueva", "Perdés si chocás"], "g_grn": ["Tocá la pantalla", "Tocá cuando sale el verde", "Perdés si te equivocás"], "g_big": ["Tocá la pantalla", "Tocá cuando sale el grande", "Perdés si te equivocás"], "g_nost": ["Tocá la pantalla", "Tocá siempre, menos la estrella", "Perdés si te equivocás"], "h_zig": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_riv": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "h_lab": ["Arrastrá la bolita", "Quedate en el camino", "Perdés si te salís"], "k_arr": ["Deslizá a un costado", "Hacia donde apunta la flecha", "Perdés si te equivocás o tardás"], "k_arv": ["Deslizá a un costado", "Al revés de la flecha", "Perdés si te equivocás o tardás"], "k_tc": ["Deslizá a un costado", "Triángulo →  ·  círculo ←", "Perdés si te equivocás o tardás"], "l_can": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "l_hi": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "l_golf": ["Mantené y soltá", "Que frene en el hoyo", "Perdés si no acertás"], "p_bar": ["Tocá la pantalla", "Tocá con la raya en lo verde", "Perdés si fallás"], "p_cup": ["Tocá la pantalla", "Tocá con el agua en la zona", "Perdés si fallás"], "p_shr": ["Tocá la pantalla", "Tocá cuando el círculo toca el aro", "Perdés si fallás"], "r_spk": ["Tocá para saltar", "Saltá los pinchos", "Perdés si chocás"], "r_dbl": ["Tocá para saltar", "Tocá otra vez en el aire", "Perdés si chocás"], "r_low": ["Tocá para saltar", "Saltá cajas, no las barras", "Perdés si chocás"], "s_bal": ["Arrastrá la nave", "Reventá los globos", "Perdés si te pegan o llegan abajo"], "s_met": ["Arrastrá la nave", "Rompé las rocas", "Perdés si te pegan o llegan abajo"], "s_frd": ["Arrastrá la nave", "Rompé solo los rojos", "Perdés si le pegás a un verde"], "t_face": ["Tocá con el dedo", "Tocá las caras contentas", "Perdés si tocás una triste"], "t_bomb": ["Tocá con el dedo", "Tocá todo menos las bombas", "Perdés si tocás una bomba"], "t_bub": ["Tocá con el dedo", "Reventá las burbujas", "Perdés si se te escapa una"], "w_shr": ["Arrastrá la paleta", "Que la pelota no caiga", "Perdés si se te cae"], "w_gr": ["Arrastrá la paleta", "Devolvé la pelota", "Perdés si se te cae"], "w_two": ["Arrastrá la paleta", "Que no caiga ninguna", "Perdés si se te cae"], "z_a": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "z_b": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "z_g": ["Tocá para disparar", "Tocá con el plato en la línea", "Perdés si tocás sin plato"], "a_d1": ["Tocá para tirar", "Tocá con la mira en el centro", "Perdés si tocás afuera"], "a_d2": ["Tocá para tirar", "Tocá con la mira en el centro", "Perdés si tocás afuera"], "a_bowl": ["Arrastrá y soltá", "Tirá a los pinos", "Perdés si no les pegás"], "b_a": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_w": ["Mantené y arrastrá", "Que la bola no se caiga", "Perdés si se cae"], "b_t": ["Mantené y arrastrá", "Que no se caiga ninguna", "Perdés si se cae una"], "keep": ["Tocá la pelota", "No la dejes caer", "Perdés si se cae"], "jump": ["Arrastrá a los costados", "Subí por las plataformas", "Perdés si caés"], "brick": ["Arrastrá la paleta", "Rompé los ladrillos", "Perdés si se te cae la pelota"], "hoop": ["Arrastrá y soltá", "Embocá en el aro", "Perdés si no entra"], "follow": ["Arrastrá la bolita", "Quedate en lo amarillo", "Perdés si te salís"], "boat": ["Arrastrá y mantené", "Pescá los peces", "Perdés si enganchás un erizo"], "cups": ["Seguí la bolita", "Tocá su cubilete", "Perdés si fallás"], "grav": ["Tocá para dar vuelta", "Esquivá los pinchos", "Perdés si chocás"], "land": ["Mantené y arrastrá", "Aterrizá suave en lo verde", "Perdés si caés fuerte o afuera"], "fish": ["Tocá para tirar el anzuelo", "Pescá los peces", "Perdés si enganchás un erizo"], "cross": ["Tocá para avanzar", "Cruzá sin que te pisen", "Perdés si te pisa un auto"], "ship": ["Tocá donde querés ir", "Rompé a los enemigos", "Perdés si te chocan"], "timing": ["Tocá en el momento justo", "Con la barra en lo amarillo", "Perdés si tocás afuera"], "clock": ["Tocá la pantalla", "Cuando llega al tiempo pedido", "Perdés si errás por mucho"], "plink": ["Tocá arriba para soltar", "Que no caiga en el 0", "Perdés si cae en el 0"], "pong": ["Tocá donde querés ir", "Devolvé la pelota", "Perdés si se te cae"], "slice": ["Pasá el dedo", "Cortá las frutas", "Perdés si cortás una bomba"], "aster": ["Mantené un lado para girar", "Rompé las rocas", "Perdés si una te toca"], "light": ["Tocá la pantalla", "Apenas se pone verde", "Perdés si tocás en rojo"], "bub": ["Arrastrá y soltá", "Juntá tres del mismo color", "Perdés si llegan abajo"], "pop": ["Tocá los círculos", "Antes de que el aro llegue", "Perdés si el aro llega"], "snake": ["Mantené un lado para girar", "Comé sin chocar", "Perdés si chocás"], "cata": ["Mantené y soltá", "Que caiga en el blanco", "Perdés si no acertás"], "rhythm": ["Tocá la columna", "Cuando la nota llega al marco", "Perdés si se te pasa una"], "hop": ["Tocá para saltar", "Pasá entre los tubos", "Perdés si chocás"], "ceil": ["Mantené para ir al techo", "Esquivá los pinchos", "Perdés si chocás"], "aim": ["Tocá la pantalla", "Con la mira en el centro", "Perdés si tocás lejos"], "inv": ["Arrastrá la nave", "Rompé a los invasores", "Perdés si te pegan"], "stack": ["Tocá para soltar", "Justo arriba del anterior", "Perdés si cae afuera"], "orbit": ["Tocá para girar al revés", "Esquivá los cuadrados", "Perdés si chocás"], "balloon": ["Mantené para inflar", "Quedate entre los aros", "Perdés si te pasás"], "moles": ["Tocá los topos", "Antes de que se escondan", "Perdés si tocás una bomba"], "ln_car": ["Deslizá para cambiar de carril", "Esquivá autos, juntá estrellas", "Perdés si chocás"], "ln_ski": ["Deslizá para cambiar de carril", "Esquivá árboles y piedras", "Perdés si chocás"], "ln_gate": ["Deslizá para cambiar de carril", "Pasá por cada bandera", "Perdés si te salteás una"], "kn_log": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_flip": ["Tocá para tirar", "Clavá en la rueda", "Perdés si chocás otra flecha"], "kn_pizza": ["Tocá para tirar", "Clavá en la pizza", "Perdés si chocás otra flecha"], "ri_one": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_dbl": ["Tocá para subir", "Pasá por los huecos", "Perdés si tocás el aro"], "ri_star": ["Tocá para subir", "Pasá los aros, juntá estrellas", "Perdés si tocás el aro"], "tw_base": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_move": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "tw_two": ["Arrastrá los pisos", "Caé por los huecos", "Perdés si caés en lo rojo"], "sm_base": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_stripe": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "sm_wave": ["Mantené para romper", "Soltá antes de lo negro", "Perdés si rompés negro"], "zz_base": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_short": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "zz_snow": ["Tocá para doblar", "No te salgas del camino", "Perdés si te caés"], "sj_base": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_both": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "sj_cake": ["Tocá para saltar", "Caé arriba del bloque", "Perdés si el bloque te choca"], "hk_base": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás el piso"], "hk_saw": ["Mantené y soltá", "De gancho en gancho", "Perdés si tocás piso o sierra"], "hk_vine": ["Mantené y soltá", "De liana en liana", "Perdés si tocás el piso"], "dk_base": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_move": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "dk_beach": ["Tocá para picar", "Metela en el aro", "Perdés si toca el piso"], "br_base": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_move": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "br_osc": ["Mantené y soltá", "Que el palo llegue justo", "Perdés si queda corto o largo"], "pt_base": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_dbl": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "pt_neon": ["Tocá las teclas", "Tocalas antes de que bajen", "Perdés si se escapa una"], "ah_base": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_two": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "ah_ice": ["Arrastrá tu paleta", "Hacé goles arriba", "Perdés si te hacen gol"], "gk_base": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_curve": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "gk_rain": ["Arrastrá al arquero", "Atajá todo", "Perdés si te hacen gol"], "sh_base": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_two": ["Arrastrá para girar", "Frená las rocas con el escudo", "Perdés si tocan el planeta"], "sh_sun": ["Arrastrá para girar", "Frená el fuego con el escudo", "Perdés si toca el planeta"], "wj_base": ["Tocá para saltar", "Esquivá los pinchos", "Perdés si chocás"], "wj_mid": ["Tocá para saltar", "Esquivá pinchos y bichos", "Perdés si chocás"], "wj_lava": ["Tocá para saltar", "Esquivá el fuego", "Perdés si te quemás"], "bg_burger": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_ice": ["Arrastrá el plato", "Apilá lo que cae", "Perdés si se cae algo"], "bg_bad": ["Arrastrá el plato", "Apilá y esquivá las bombas", "Perdés si atrapás una bomba"], "fh_base": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "fh_deb": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si te pega un ladrillo"], "fh_tree": ["Arrastrá y mantené", "Apagá el fuego", "Perdés si un fuego crece mucho"], "tr_base": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_circus": ["Arrastrá la cama", "Que reboten hasta la ambulancia", "Perdés si cae uno"], "tr_ball": ["Arrastrá la cama", "Que reboten hasta la otra punta", "Perdés si cae una"], "tu_base": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_tri": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "tu_ufo": ["Tocá para disparar", "Disparales cuando apuntás", "Perdés si llegan al centro"], "rp_base": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_two": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "rp_candy": ["Tocá para soltar", "Que caiga en el vaso", "Perdés si cae afuera"], "pinb": ["Tocá izquierda o derecha", "Pegale a los hongos", "Perdés si la bola se cae"], "sled": ["Mantené en las bajadas", "Soltá en las subidas para volar", "Perdés si se acaba el tiempo"], "chute": ["Arrastrá a los costados", "Caé arriba del bote", "Perdés si caés al agua o te toca un pájaro"], "rope": ["Tocá para saltar", "Justo cuando pasa la soga", "Perdés si te engancha"], "claw": ["Arrastrá y soltá", "Agarrá un peluche", "Perdés si no agarrás nada"], "lumber": ["Tocá izquierda o derecha", "Hachá el tronco rápido", "Perdés si te cae una rama"], "spikeb": ["Tocá para aletear", "Rebotá entre las paredes", "Perdés si tocás un pincho"], "duo": ["Mantené izquierda o derecha", "Girá las dos bolitas", "Perdés si un bloque las toca"], "planet": ["Tocá para saltar", "De planeta en planeta", "Perdés si te vas al espacio"], "skijump": ["Mantené y soltá al final", "Pasá la línea roja", "Perdés si caés antes"], "tiles": ["Arrastrá a los costados", "Que pique en las baldosas", "Perdés si cae afuera"], "penal": ["Tocá para patear", "Lejos del arquero", "Perdés si te la ataja"], "volley": ["Arrastrá a los costados", "Pasala por arriba de la red", "Perdés si cae de tu lado"], "samurai": ["Tocá del lado del ninja", "Justo cuando está cerca", "Perdés si te alcanza"], "coaster": ["Mantené para acelerar", "Despacio en lo rojo", "Perdés si te pasás o te quedás"], "heist": ["Mantené para caminar", "Cruzá con el láser apagado", "Perdés si te toca un láser"], "rmaze": ["Arrastrá para girar", "Llevá la bolita al agujero", "Perdés si se acaba el tiempo"], "pancake": ["Tocá la sartén", "Cuando está dorado", "Perdés si se quema o está crudo"], "traffic": ["Tocá para cambiar el semáforo", "Que pasen todos", "Perdés si chocan o se amontonan"], "drop": ["Tocá para soltar", "Que caiga en la chimenea", "Perdés si te queda una casa sin paquete"], "twocars": ["Tocá izquierda o derecha", "Juntá círculos, esquivá cuadrados", "Perdés si chocás o se escapa un círculo"], "bat": ["Tocá para batear", "Justo cuando llega", "Perdés si la dejás pasar"], "cpong": ["Arrastrá para girar", "Que no se escape la pelota", "Perdés si sale del círculo"], "bungee": ["Mantené y soltá", "Bajá lo más que puedas", "Perdés si tocás el agua"], "boomer": ["Tocá izquierda o derecha", "Bajá los pájaros", "Perdés si llegan abajo"], "halfpipe": ["Tocá en el aire", "Hacé trucos con tiempo", "Perdés si caés en pleno truco"], "broom": ["Arrastrá a los costados", "Que el palo no se caiga", "Perdés si se cae"], "snowball": ["Arrastrá a los costados", "Juntá nieve, esquivá árboles", "Perdés si te achicás mucho"], "plates": ["Tocá cada palo", "Que los platos sigan girando", "Perdés si se cae uno"], "dive": ["Mantené para girar", "Entrá derecho al agua", "Perdés si caés de panza"]};
   var SCENE_BY = {}; (function () { for (var k in SCENE_OF) SCENE_OF[k].split(" ").forEach(function (id) { if (id) SCENE_BY[id] = k; }); })();
   var SCENE_PREFIX = { c_: "farm", d_: "storm", t_: "arcade", q_: "school", p_: "workshop", r_: "desert", s_: "space", w_: "court", f_: "sky", m_: "table", e_: "table", k_: "school", g_: "arcade", l_: "forest", a_: "pub", z_: "sky", b_: "circus", h_: "garden", x_: "table", y_: "table" };
   function sceneOf(cfg) { var id = cfg.id || ""; if (SCENE_BY[id]) return SCENE_BY[id]; if (/^(hilo|more|truth|stroop)$/.test(id)) return "school"; if (id === "keep") return "beach"; return SCENE_PREFIX[id.slice(0, 2)] || "arcade"; }
@@ -4788,6 +4788,712 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
     { id: "candy", name: "Caramelos", how: "Soltá los caramelos adentro del frasco.", skin: "candy", cc: "#3ddc84", acc: "#ff5fd2", scene: "kitchen" },
     { id: "mix", name: "Soltá loco", how: "El gancho se mueve, el vaso también.", amove: 1, cv: 120, skin: "fruit", acc: "#ff9f1c", scene: "farm" }
   ].forEach(mkSwing);
+
+  /* ===== Tanda 30 mecánicas nuevas (1/2): cada juego es una mecánica distinta, sin versiones ===== */
+  function segHit(b, r, x1, y1, x2, y2, e, ix, iy) {
+    var dx = x2 - x1, dy = y2 - y1, L2 = dx * dx + dy * dy || 1, t = clamp(((b.x - x1) * dx + (b.y - y1) * dy) / L2, 0, 1), px = x1 + dx * t, py = y1 + dy * t, ddx = b.x - px, ddy = b.y - py, d = Math.hypot(ddx, ddy);
+    if (d >= r || d === 0) return false; var nx = ddx / d, ny = ddy / d; b.x = px + nx * r; b.y = py + ny * r; var vn = b.vx * nx + b.vy * ny;
+    if (vn < 0) { b.vx -= (1 + e) * vn * nx; b.vy -= (1 + e) * vn * ny; } if (ix || iy) { b.vx += ix || 0; b.vy += iy || 0; } return true;
+  }
+  function capS(b, m) { var s = Math.hypot(b.vx, b.vy); if (s > m) { b.vx *= m / s; b.vy *= m / s; } }
+
+  /* 1. Pinball: tocá a la izquierda o a la derecha para mover cada paleta */
+  regD("pinb", "Pinball", "Tocá a la izquierda o a la derecha para mover cada paleta. Pegale a los hongos.", "#ff5fd2", G("Pinb", {
+    init: function () { this.fy = this.H - this.pb - 70; this.L = Math.min(84, this.W * 0.22); this.fl = [0, 0]; this.bm = [{ x: this.W * 0.3, y: this.pt + 150, c: 0 }, { x: this.W * 0.7, y: this.pt + 150, c: 0 }, { x: this.W * 0.5, y: this.pt + 240, c: 0 }]; this.serve(); },
+    serve: function () { this.b = { x: this.W * 0.5 + rnd(-40, 40), y: this.pt + 60, vx: rnd(-90, 90), vy: 0 }; },
+    act: function (x) { this.fl[x < this.W / 2 ? 0 : 1] = 0.16; this.acts++; sfx(300, 0.05, "square", 0.04, 1.4); },
+    piv: function (k) { return { x: k ? this.W * 0.73 : this.W * 0.27, y: this.fy }; },
+    ang: function (k) { var up = this.fl[k] > 0, a = up ? -0.42 : 0.45; return k ? PI - a : a; },
+    step: function (dt) {
+      var b = this.b, k, i, sub = 3; this.fl[0] = Math.max(0, this.fl[0] - dt); this.fl[1] = Math.max(0, this.fl[1] - dt);
+      for (var s = 0; s < sub; s++) {
+        var h = dt / sub; b.vy += 900 * h; b.x += b.vx * h; b.y += b.vy * h; var r = 11;
+        if (b.x < r) { b.x = r; b.vx = Math.abs(b.vx) * 0.8; } if (b.x > this.W - r) { b.x = this.W - r; b.vx = -Math.abs(b.vx) * 0.8; } if (b.y < this.pt + r) { b.y = this.pt + r; b.vy = Math.abs(b.vy) * 0.8; }
+        segHit(b, r, 0, this.fy - 110, this.piv(0).x - 4, this.fy, 0.3); segHit(b, r, this.W, this.fy - 110, this.piv(1).x + 4, this.fy, 0.3);
+        for (k = 0; k < 2; k++) { var p = this.piv(k), a = this.ang(k), ex = p.x + Math.cos(a) * this.L, ey = p.y + Math.sin(a) * this.L, up = this.fl[k] > 0.08; if (segHit(b, r + 6, p.x, p.y, ex, ey, 0.25) && up) { b.vy -= 620; b.vx += (k ? -1 : 1) * -120 + (b.x - p.x) * (k ? -1 : 1) * 1.2; } }
+        for (i = 0; i < this.bm.length; i++) { var m = this.bm[i], dx = b.x - m.x, dy = b.y - m.y, d = Math.hypot(dx, dy); if (d < 30 + r && d > 0) { var nx = dx / d, ny = dy / d; b.x = m.x + nx * (30 + r); b.y = m.y + ny * (30 + r); var vn = b.vx * nx + b.vy * ny; b.vx -= 2 * vn * nx; b.vy -= 2 * vn * ny; b.vx += nx * 220; b.vy += ny * 220; if (m.c <= 0) { this.add(1); m.c = 0.25; sfx(700, 0.06, "triangle", 0.05); } } }
+        capS(b, 1100);
+      }
+      for (i = 0; i < this.bm.length; i++) this.bm[i].c -= dt;
+      if (b.y > this.H - this.pb + 10) { this.hurt(); this.serve(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, k, i;
+      c.strokeStyle = "#55555f"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(0, this.fy - 110); c.lineTo(this.piv(0).x - 4, this.fy); c.moveTo(this.W, this.fy - 110); c.lineTo(this.piv(1).x + 4, this.fy); c.stroke();
+      for (i = 0; i < this.bm.length; i++) { var m = this.bm[i]; dot(c, m.x, m.y, 30, m.c > 0 ? "#ffd23f" : "#ff5fd2"); dot(c, m.x, m.y, 18, m.c > 0 ? "#fff3b0" : "#c13a9f"); dot(c, m.x, m.y, 7, "#fff"); }
+      for (k = 0; k < 2; k++) { var p = this.piv(k), a = this.ang(k); c.strokeStyle = "#ff4d6d"; c.lineWidth = 14; c.beginPath(); c.moveTo(p.x, p.y); c.lineTo(p.x + Math.cos(a) * this.L, p.y + Math.sin(a) * this.L); c.stroke(); dot(c, p.x, p.y, 6, "#fff"); }
+      c.lineCap = "butt"; dot(c, this.b.x, this.b.y, 11, "#d9dde3"); dot(c, this.b.x - 3, this.b.y - 3, 3, "#fff");
+      this.ghost(this.W * 0.25, this.fy + 30, now);
+    }
+  }), "arcade");
+
+  /* 2. Tobogán: mantené para bajar las lomas con fuerza, soltá para volar */
+  regD("sled", "Tobogán", "Mantené apretado para tirarte en las bajadas y soltá en las subidas para volar. Caé justo en una bajada.", "#3ddc84", G("Sled", {
+    ctl: "hold",
+    init: function () { this.wx = 0; this.vx = 260; this.y = 0; this.vy = 0; this.air = false; this.px = this.W * 0.3; this.tm = 14; this.dist = 0; this.base = this.H - this.pb - 160; },
+    gy: function (x) { return this.base + Math.sin(x * 0.006) * 70 + Math.sin(x * 0.0023 + 1) * 45; },
+    sl: function (x) { return (this.gy(x + 2) - this.gy(x - 2)) / 4; },
+    step: function (dt) {
+      var x = this.wx + this.px, g = this.gy(x), s = this.sl(x);
+      if (!this.air) {
+        this.y = g; this.vx += (s * (this.holding ? 1100 : 420) - 30) * dt; this.vx = clamp(this.vx, 140, 820); this.vy = this.vx * s;
+        if (!this.holding && s < -0.12 && this.vx > 330) { this.air = true; this.vy = this.vx * s * 1.1; }
+      } else {
+        this.vy += (this.holding ? 2200 : 900) * dt; this.y += this.vy * dt;
+        if (this.y >= g) { this.y = g; this.air = false; var want = this.vx * s; if (s > 0.05 && Math.abs(this.vy - want) < 260) { this.vx *= 1.12; this.tm = Math.min(16, this.tm + 2); this.good(2, this.px, g, true); } else { this.vx *= 0.65; } }
+      }
+      this.wx += this.vx * dt; this.dist += this.vx * dt; if (this.dist > 400) { this.dist -= 400; this.add(1); this.tm = Math.min(16, this.tm + 0.4); }
+      this.tm -= dt; if (this.tm <= 0) { this.tm = 10; this.hurt(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, x, W = this.W;
+      c.fillStyle = "#2f8f4e"; c.beginPath(); c.moveTo(0, this.H); for (x = 0; x <= W; x += 8) c.lineTo(x, this.gy(this.wx + x)); c.lineTo(W, this.H); c.closePath(); c.fill();
+      c.strokeStyle = "#f2f2f2"; c.lineWidth = 6; c.beginPath(); for (x = 0; x <= W; x += 8) c.lineTo(x, this.gy(this.wx + x) - 3); c.stroke();
+      var a = Math.atan2(this.air ? this.vy : this.vx * this.sl(this.wx + this.px), this.vx);
+      c.save(); c.translate(this.px, this.y - 14); c.rotate(a); fillR(c, -18, 8, 36, 7, 3, "#ff4d6d"); c.restore();
+      c.globalAlpha = this.fadeA(); buddy(c, this.px, this.y - 20, 13, "#ffd23f", 1); c.globalAlpha = 1;
+      fillR(c, 16, this.pt + 8, W - 92, 8, 4, "rgba(255,255,255,0.15)"); fillR(c, 16, this.pt + 8, (W - 92) * clamp(this.tm / 16, 0, 1), 8, 4, this.tm < 4 ? "#ff4d6d" : "#ffd23f");
+      this.ghostHold(W * 0.65, this.cy - 60, now);
+    }
+  }), "snow");
+
+  /* 3. Paracaidista: arrastrá para guiarlo y caer arriba del bote */
+  regD("chute", "Paracaidista", "Arrastrá a los costados para guiarlo. Esquivá los pájaros y caé arriba del bote.", "#ff9f1c", G("Chute", {
+    ctl: "drag",
+    init: function () { this.tx = this.W / 2; this.jump(); this.birds = []; this.nb = 1; this.boat = { x: this.W / 2, v: 50 }; },
+    jump: function () { this.x = rnd(60, this.W - 60); this.y = this.pt + 20; this.wind = rnd(-40, 40); this.st = []; for (var k = 0; k < 3; k++) this.st.push({ x: rnd(40, this.W - 40), y: this.pt + 120 + k * 120 }); },
+    drag: function (x) { this.tx = x; },
+    step: function (dt) {
+      var i, sp = 85 + Math.min(this.t, 60) * 0.8; this.wind += rnd(-30, 30) * dt;
+      this.x += (this.tx - this.x) * Math.min(1, dt * 3) + this.wind * dt; this.x = clamp(this.x, 20, this.W - 20); this.y += sp * dt;
+      this.boat.x += this.boat.v * dt; if (this.boat.x < 60 || this.boat.x > this.W - 60) this.boat.v = -this.boat.v;
+      this.nb -= dt; if (this.nb <= 0) { var L = Math.random() < 0.5; this.birds.push({ x: L ? -20 : this.W + 20, y: rnd(this.pt + 100, this.H - this.pb - 140), v: (L ? 1 : -1) * rnd(70, 140) }); this.nb = rnd(1.2, 2.2) * Math.max(0.5, 1 - this.t * 0.01); }
+      for (i = 0; i < this.birds.length; i++) { var b = this.birds[i]; b.x += b.v * dt; if (!b.hit && Math.hypot(b.x - this.x, b.y - this.y) < 26) { b.hit = true; this.hurt(); } }
+      var W = this.W; this.birds = this.birds.filter(function (q) { return q.x > -40 && q.x < W + 40; });
+      for (i = 0; i < this.st.length; i++) { var s = this.st[i]; if (!s.got && Math.hypot(s.x - this.x, s.y - this.y) < 24) { s.got = true; this.add(1); } }
+      var by = this.H - this.pb - 40;
+      if (this.y >= by - 10) { var d = Math.abs(this.x - this.boat.x); if (d < 46) this.good(d < 14 ? 3 : 2, this.x, by, d < 14); else this.hurt(); this.jump(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, i, by = this.H - this.pb - 40;
+      c.fillStyle = "#1f7fa8"; c.fillRect(0, by + 8, this.W, this.H); fillR(c, this.boat.x - 46, by - 4, 92, 18, 8, "#f2f2f2"); c.fillStyle = "#ff4d6d"; c.fillRect(this.boat.x - 46, by + 6, 92, 6); dot(c, this.boat.x, by - 4, 8, "#ffd23f");
+      for (i = 0; i < this.st.length; i++) if (!this.st[i].got) starG(c, this.st[i].x, this.st[i].y);
+      for (i = 0; i < this.birds.length; i++) { var b = this.birds[i]; dot(c, b.x, b.y, 10, "#2b2b33"); poly(c, [b.x - 4, b.y - 2, b.x - 16, b.y - 12 + Math.sin(now / 80) * 6, b.x + 2, b.y - 4], "#2b2b33"); dot(c, b.x + (b.v > 0 ? 7 : -7), b.y - 2, 2, "#fff"); }
+      c.globalAlpha = this.fadeA(); c.fillStyle = "#ff9f1c"; c.beginPath(); c.arc(this.x, this.y - 40, 30, PI, 0); c.closePath(); c.fill(); c.strokeStyle = "#f2efe6"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(this.x - 28, this.y - 40); c.lineTo(this.x - 6, this.y - 8); c.moveTo(this.x + 28, this.y - 40); c.lineTo(this.x + 6, this.y - 8); c.stroke(); buddy(c, this.x, this.y, 11, "#f2b48a"); c.globalAlpha = 1;
+      this.ghostDrag(this.H - this.pb - 120, now);
+    }
+  }), "sky");
+
+  /* 4. Saltar la soga: tocá para saltar cuando pasa la soga */
+  regD("rope", "Saltar la soga", "Tocá para saltar justo cuando la soga pasa por abajo. Cada vez gira más rápido.", "#ff4d6d", G("Rope", {
+    init: function () { this.gy = this.H - this.pb - 90; this.h = 0; this.vy = 0; this.ph = PI; this.w = 3.6; },
+    act: function () { if (this.h <= 0) { this.vy = 470; this.acts++; sfx(520, 0.06, "triangle", 0.05, 1.4); } },
+    step: function (dt) {
+      if (this.h > 0 || this.vy > 0) { this.h += this.vy * dt; this.vy -= 1500 * dt; if (this.h < 0) { this.h = 0; this.vy = 0; } }
+      var w = this.w * (1 + Math.min(this.t, 60) * 0.012), p0 = this.ph; this.ph += w * dt;
+      if (Math.floor(p0 / TAU) !== Math.floor(this.ph / TAU)) { if (this.h > 10) this.add(1); else this.hurt(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, cx = this.W / 2, ay = this.gy - 70, low = ay + 70 * Math.cos(this.ph) + 0;
+      fillR(c, 0, this.gy, this.W, 10, 0, "#8a6a3a");
+      var cy2 = ay + 140 * Math.cos(this.ph); c.strokeStyle = Math.sin(this.ph) > 0 ? "rgba(255,255,255,0.45)" : "#ffd23f"; c.lineWidth = 5;
+      buddy(c, 40, this.gy - 40, 14, "#c77dff"); buddy(c, this.W - 40, this.gy - 40, 14, "#3ddc84");
+      if (Math.sin(this.ph) > 0) { c.beginPath(); c.moveTo(52, ay); c.quadraticCurveTo(cx, cy2, this.W - 52, ay); c.stroke(); }
+      c.globalAlpha = this.fadeA(); c.fillStyle = "#2b2b33"; c.fillRect(cx - 8, this.gy - this.h - 26, 5, 24); c.fillRect(cx + 3, this.gy - this.h - 26, 5, 24); buddy(c, cx, this.gy - this.h - 40, 15, "#ff9f1c"); c.globalAlpha = 1;
+      if (Math.sin(this.ph) <= 0) { c.strokeStyle = "#ffd23f"; c.beginPath(); c.moveTo(52, ay); c.quadraticCurveTo(cx, cy2, this.W - 52, ay); c.stroke(); }
+      this.ghost(cx + 60, this.gy - 120, now);
+    }
+  }), "school");
+
+  /* 5. Grúa: arrastrá la garra, soltá para bajar y agarrar un premio */
+  regD("claw", "Grúa de peluches", "Arrastrá para mover la garra y soltá para bajarla. Agarrá un peluche.", "#c77dff", G("Claw", {
+    ctl: "drag",
+    init: function () { this.cx2 = this.W / 2; this.cy0 = this.pt + 40; this.cy2 = this.cy0; this.ph = "aim"; this.got = null; this.floor = this.H - this.pb - 60; this.toys = []; for (var k = 0; k < 6; k++) this.addToy(); },
+    addToy: function () { this.toys.push({ x: rnd(110, this.W - 30), r: rnd(16, 24), col: pickOf(["#ff4d6d", "#ffd23f", "#3ddc84", "#ff9f1c", "#ff5fd2", "#f2f2f2"]), v: 0 }); },
+    drag: function (x) { if (this.ph === "aim") this.cx2 = clamp(x, 100, this.W - 24); },
+    release: function () { if (this.ph === "aim" && this.holding !== undefined) { this.ph = "down"; this.acts++; sfx(240, 0.12, "sine", 0.05, 0.7); } },
+    step: function (dt) {
+      var i, sp = Math.min(30, this.t * 0.6); for (i = 0; i < this.toys.length; i++) { var t = this.toys[i]; if (t === this.got) continue; t.x -= sp * dt; if (t.x < 110) t.x = this.W - 30; }
+      if (this.ph === "down") { this.cy2 += 320 * dt; var best = null; for (i = 0; i < this.toys.length; i++) { var q = this.toys[i]; if (Math.abs(q.x - this.cx2) < q.r * 0.8 && this.cy2 + 16 >= this.floor - q.r * 2) best = q; } if (best) { this.got = best; this.ph = "up"; } else if (this.cy2 >= this.floor - 20) { this.ph = "up"; this.got = null; } }
+      else if (this.ph === "up") { this.cy2 -= 300 * dt; if (this.got) { this.got.x = this.cx2; } if (this.cy2 <= this.cy0) { this.cy2 = this.cy0; if (this.got) this.ph = "carry"; else { this.hurt(); this.ph = "aim"; } } }
+      else if (this.ph === "carry") { this.cx2 -= 260 * dt; this.got.x = this.cx2; if (this.cx2 <= 50) { this.toys.splice(this.toys.indexOf(this.got), 1); this.good(this.got.r < 19 ? 2 : 1, 50, this.floor, this.got.r < 19); this.got = null; this.addToy(); this.ph = "aim"; this.cx2 = this.W / 2; } }
+    },
+    draw: function (now) {
+      var c = this.ctx, i, x = this.cx2, y = this.cy2;
+      fillR(c, 8, this.pt + 20, this.W - 16, 8, 3, "#55555f"); fillR(c, 14, this.floor - 10, 72, this.H, 6, "#3a3a44"); c.fillStyle = "#17121f"; c.fillRect(24, this.floor - 4, 52, 20);
+      for (i = 0; i < this.toys.length; i++) { var t = this.toys[i], ty = t === this.got ? y + 26 + t.r : this.floor - t.r; dot(c, t.x - t.r * 0.6, ty - t.r * 0.8, t.r * 0.35, t.col); dot(c, t.x + t.r * 0.6, ty - t.r * 0.8, t.r * 0.35, t.col); buddy(c, t.x, ty, t.r, t.col); }
+      c.fillStyle = "#9aa1ab"; c.fillRect(x - 2, this.pt + 28, 4, y - this.pt - 28); fillR(c, x - 16, y - 8, 32, 14, 5, "#d9dde3");
+      var op = this.ph === "down" ? 1 : 0.4; c.strokeStyle = "#d9dde3"; c.lineWidth = 5; c.lineCap = "round"; c.beginPath(); c.moveTo(x - 10, y + 6); c.lineTo(x - 10 - 10 * op, y + 26); c.moveTo(x + 10, y + 6); c.lineTo(x + 10 + 10 * op, y + 26); c.stroke(); c.lineCap = "butt";
+      this.ghostDrag(this.cy, now);
+    }
+  }), "arcade");
+
+  /* 6. Leñador: tocá a un lado del tronco para hachar sin que te pegue una rama */
+  regD("lumber", "Leñador", "Tocá a la izquierda o a la derecha para hachar. Que no te caiga una rama encima. Hachá rápido.", "#c98a4a", G("Lumber", {
+    init: function () { this.side = -1; this.seg = []; for (var k = 0; k < 9; k++) this.push(k < 2); this.tm = 6; this.hit = 0; },
+    push: function (safe) { var last = this.seg.length ? this.seg[this.seg.length - 1].br : 0, br = 0; if (!safe && last === 0 && Math.random() < 0.6) br = Math.random() < 0.5 ? -1 : 1; this.seg.push({ br: br }); },
+    act: function (x) {
+      var s = x < this.W / 2 ? -1 : 1; this.side = s; this.acts++; this.hit = 0.1;
+      if (this.seg[0].br === s) { this.hurt(); this.seg[0].br = 0; return; }
+      this.seg.shift(); this.push(false); this.add(1); this.tm = Math.min(6, this.tm + 0.35); sfx(180, 0.06, "square", 0.05, 0.6);
+      if (this.seg[0].br === s) { this.hurt(); this.seg[0].br = 0; }
+    },
+    step: function (dt) { this.hit = Math.max(0, this.hit - dt); this.tm -= dt * (1 + Math.min(this.t, 90) * 0.02); if (this.tm <= 0) { this.tm = 6; this.hurt(); } },
+    draw: function (now) {
+      var c = this.ctx, cx = this.W / 2, base = this.H - this.pb - 70, sh = 64, k;
+      fillR(c, 0, base, this.W, 12, 0, "#6b4423");
+      for (k = 0; k < this.seg.length; k++) { var y = base - (k + 1) * sh; fillR(c, cx - 28, y, 56, sh - 2, 4, k % 2 ? "#a86a35" : "#b5793f"); var b = this.seg[k].br; if (b) { fillR(c, b < 0 ? cx - 110 : cx + 28, y + 20, 82, 16, 6, "#8a5a2b"); dot(c, b < 0 ? cx - 112 : cx + 112, y + 26, 14, "#3ddc84"); } }
+      var px = cx + this.side * 70; c.globalAlpha = this.fadeA(); buddy(c, px, base - 26, 18, "#ff4d6d", -this.side); c.save(); c.translate(px - this.side * 18, base - 30); c.rotate(this.side * (this.hit > 0 ? -1.2 : -0.3)); c.fillStyle = "#6b4423"; c.fillRect(-3, -34, 6, 34); fillR(c, -this.side * 4 - 10, -40, 20, 12, 3, "#d9dde3"); c.restore(); c.globalAlpha = 1;
+      fillR(c, cx - 80, this.pt + 10, 160, 10, 5, "rgba(255,255,255,0.15)"); fillR(c, cx - 80, this.pt + 10, 160 * clamp(this.tm / 6, 0, 1), 10, 5, this.tm < 2 ? "#ff4d6d" : "#3ddc84");
+      this.ghost(cx + 90, base - 40, now);
+    }
+  }), "forest");
+
+  /* 7. Pájaro entre pinchos: tocá para aletear y rebotar entre las paredes */
+  regD("spikeb", "Pájaro entre pinchos", "Tocá para aletear. El pájaro rebota de pared en pared: no toques los pinchos.", "#ffd23f", G("Spikeb", {
+    init: function () { this.x = this.W / 2; this.y = this.cy; this.vx = 150; this.vy = 0; this.wait = true; this.sp = []; this.mk(1); this.cand = null; },
+    mk: function (side) { var n = Math.min(6, 2 + Math.floor(this.score / 4)), top = this.pt + 50, bot = this.H - this.pb - 50, sl = Math.floor((bot - top) / 46), used = {}; this.sp = []; this.spSide = side; for (var k = 0; k < n; k++) { var i = ri(0, sl); if (used[i]) continue; used[i] = 1; this.sp.push(top + i * 46); } if (!this.cand && Math.random() < 0.5) this.cand = { x: rnd(80, this.W - 80), y: rnd(top + 30, bot - 30) }; },
+    act: function () { this.wait = false; this.vy = -360; this.acts++; sfx(640, 0.05, "triangle", 0.04, 1.3); },
+    step: function (dt) {
+      if (this.wait) return; var r = 15, top = this.pt + 26, bot = this.H - this.pb - 26;
+      this.vy += 1000 * dt; this.x += this.vx * dt; this.y += this.vy * dt;
+      var wall = this.vx > 0 ? this.W - 22 - r : 22 + r;
+      if ((this.vx > 0 && this.x >= wall) || (this.vx < 0 && this.x <= wall)) { this.x = wall; var hit = false; for (var k = 0; k < this.sp.length; k++) if (this.y > this.sp[k] - 6 && this.y < this.sp[k] + 46) hit = true; this.vx = -this.vx * (1 + 0.004); if (hit) this.hurt(); else this.add(1); this.mk(this.vx > 0 ? 1 : -1); }
+      if (this.y < top || this.y > bot) { this.hurt(); this.y = this.cy; this.vy = 0; this.wait = true; }
+      if (this.cand && Math.hypot(this.cand.x - this.x, this.cand.y - this.y) < 26) { this.good(2, this.x, this.y); this.cand = null; }
+    },
+    draw: function (now) {
+      var c = this.ctx, k, W = this.W, top = this.pt + 20, bot = this.H - this.pb - 20, x;
+      c.fillStyle = "#3a3a44"; c.fillRect(0, 0, 22, this.H); c.fillRect(W - 22, 0, 22, this.H);
+      for (x = 0; x < W; x += 24) { poly(c, [x, top, x + 12, top + 18, x + 24, top], "#d9dde3"); poly(c, [x, bot, x + 12, bot - 18, x + 24, bot], "#d9dde3"); }
+      for (k = 0; k < this.sp.length; k++) { var y = this.sp[k]; if (this.spSide > 0) poly(c, [W - 22, y, W - 50, y + 20, W - 22, y + 40], "#ff4d6d"); else poly(c, [22, y, 50, y + 20, 22, y + 40], "#ff4d6d"); }
+      if (this.cand) { dot(c, this.cand.x, this.cand.y, 11, "#ff5fd2"); dot(c, this.cand.x, this.cand.y, 4, "#fff"); }
+      c.globalAlpha = this.fadeA(); buddy(c, this.x, this.y, 15, "#ffd23f", this.vx > 0 ? 1 : -1); poly(c, [this.x + (this.vx > 0 ? 14 : -14), this.y, this.x + (this.vx > 0 ? 24 : -24), this.y + 4, this.x + (this.vx > 0 ? 14 : -14), this.y + 7], "#ff9f1c"); c.globalAlpha = 1;
+      this.ghost(W / 2, this.cy + 60, now);
+    }
+  }), "cave");
+
+  /* 8. Dúo: mantené a la izquierda o a la derecha para girar las dos bolitas */
+  regD("duo", "Dúo", "Mantené apretado a la izquierda o a la derecha para girar las dos bolitas. Esquivá los bloques.", "#ff5fd2", G("Duo", {
+    ctl: "drag",
+    init: function () { this.a = 0; this.lx = this.W / 2; this.R = 64; this.ox = this.W / 2; this.oy = this.H - this.pb - 150; this.bl = []; this.next = 0.8; },
+    drag: function (x) { this.lx = x; },
+    step: function (dt) {
+      if (this.holding) this.a += (this.lx < this.W / 2 ? -1 : 1) * 4.2 * dt;
+      var v = 210 * (1 + Math.min(this.t, 60) * 0.012), i, k; this.next -= dt;
+      if (this.next <= 0) { var w = rnd(60, 150), side = ri(0, 3); var x = side === 0 ? this.ox - this.R - 10 : side === 1 ? this.ox + 10 : this.ox - w / 2; if (side === 0) x = this.ox - w + 6; this.bl.push({ x: x, y: this.pt - 30, w: w, h: 24 }); this.next = rnd(0.7, 1.1) * Math.max(0.55, 1 - this.t * 0.006); }
+      var p = [[this.ox + Math.cos(this.a) * this.R, this.oy + Math.sin(this.a) * this.R], [this.ox - Math.cos(this.a) * this.R, this.oy - Math.sin(this.a) * this.R]];
+      for (i = 0; i < this.bl.length; i++) { var b = this.bl[i]; b.y += v * dt; if (b.dead) continue; for (k = 0; k < 2; k++) if (p[k][0] > b.x - 12 && p[k][0] < b.x + b.w + 12 && p[k][1] > b.y - 12 && p[k][1] < b.y + b.h + 12) { b.dead = true; this.hurt(); break; } if (!b.dead && !b.cnt && b.y > this.oy + this.R + 20) { b.cnt = true; this.add(1); } }
+      var H = this.H; this.bl = this.bl.filter(function (q) { return q.y < H + 40 && !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i; c.strokeStyle = "rgba(255,255,255,0.18)"; c.lineWidth = 3; c.beginPath(); c.arc(this.ox, this.oy, this.R, 0, TAU); c.stroke();
+      for (i = 0; i < this.bl.length; i++) fillR(c, this.bl[i].x, this.bl[i].y, this.bl[i].w, this.bl[i].h, 6, "#f2f2f2");
+      c.globalAlpha = this.fadeA(); dot(c, this.ox + Math.cos(this.a) * this.R, this.oy + Math.sin(this.a) * this.R, 13, "#ff4d6d"); dot(c, this.ox - Math.cos(this.a) * this.R, this.oy - Math.sin(this.a) * this.R, 13, "#3ddc84"); c.globalAlpha = 1;
+      this.ghostHold(this.W * 0.25, this.oy + 90, now);
+    }
+  }), "space");
+
+  /* 9. Salto entre planetas: tocá para salir disparado hacia el planeta de arriba */
+  regD("planet", "Salto entre planetas", "Girás alrededor de un planeta. Tocá para salir disparado y caer en el siguiente.", "#c77dff", G("Planet", {
+    init: function () { this.pl = []; this.cam = 0; var y = this.H - this.pb - 120; for (var k = 0; k < 6; k++) { this.addP(y); y -= rnd(170, 220); } this.on = this.pl[0]; this.th0 = 0; this.dir = 1; this.fly = null; this.last = 0; },
+    addP: function (y) { var r = rnd(22, 34); this.pl.push({ x: this.pl.length ? clamp(this.pl[this.pl.length - 1].x + rnd(-150, 150), 60, this.W - 60) : this.W / 2, y: y, r: r, i: this.pl.length, col: pickOf(["#ff4d6d", "#ffd23f", "#3ddc84", "#ff9f1c", "#ff5fd2", "#c77dff"]) }); },
+    act: function () { if (this.fly || !this.on) return; var p = this.on, R = p.r + 22, x = p.x + Math.cos(this.th0) * R, y = p.y + Math.sin(this.th0) * R, s = 330; this.fly = { x: x, y: y, vx: -Math.sin(this.th0) * s * this.dir, vy: Math.cos(this.th0) * s * this.dir }; this.on = null; this.acts++; sfx(520, 0.08, "triangle", 0.05, 1.6); },
+    step: function (dt) {
+      var i, w = 2.6 * (1 + Math.min(this.t, 60) * 0.01);
+      if (this.on) { this.th0 += w * this.dir * dt; var p = this.on, R = p.r + 22; this.px = p.x + Math.cos(this.th0) * R; this.py = p.y + Math.sin(this.th0) * R; }
+      else { var f = this.fly; f.x += f.vx * dt; f.y += f.vy * dt; this.px = f.x; this.py = f.y;
+        for (i = 0; i < this.pl.length; i++) { var q = this.pl[i]; if (q === this.prev) continue; if (Math.hypot(q.x - f.x, q.y - f.y) < q.r + 30) { this.on = q; this.fly = null; this.th0 = Math.atan2(f.y - q.y, f.x - q.x); this.dir = -this.dir; if (q.i > this.last) { this.add(q.i - this.last > 1 ? 2 : 1); this.last = q.i; } break; } }
+        if (this.fly && (f.x < -30 || f.x > this.W + 30 || f.y - this.cam > this.H + 30 || f.y - this.cam < -60)) { this.hurt(); var back = null; for (i = 0; i < this.pl.length; i++) if (this.pl[i].i === this.last) back = this.pl[i]; this.on = back || this.pl[0]; this.fly = null; this.th0 = 0; }
+      }
+      if (this.on) this.prev = this.on;
+      var tg = (this.on ? this.on.y : this.py) - (this.H - this.pb - 140); if (tg < this.cam) this.cam += (tg - this.cam) * Math.min(1, dt * 4);
+      while (this.pl[this.pl.length - 1].y > this.cam - 260) this.addP(this.pl[this.pl.length - 1].y - rnd(170, 220));
+      var cam = this.cam, H = this.H, keep = this.on; this.pl = this.pl.filter(function (q) { return q === keep || q.y - cam < H + 80; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i, cam = this.cam;
+      for (i = 0; i < this.pl.length; i++) { var q = this.pl[i]; c.strokeStyle = "rgba(255,255,255,0.12)"; c.lineWidth = 2; c.beginPath(); c.arc(q.x, q.y - cam, q.r + 22, 0, TAU); c.stroke(); dot(c, q.x, q.y - cam, q.r, q.col); dot(c, q.x - q.r * 0.3, q.y - cam - q.r * 0.25, q.r * 0.22, "rgba(0,0,0,0.18)"); }
+      c.globalAlpha = this.fadeA(); buddy(c, this.px, this.py - cam, 10, "#f2f2f2"); c.globalAlpha = 1;
+      this.ghost(this.W / 2 + 60, this.H - this.pb - 60, now);
+    }
+  }), "space");
+
+  /* 10. Salto de esquí: mantené en la rampa y soltá justo al final */
+  regD("skijump", "Salto de esquí", "Mantené apretado en la rampa para agarrar velocidad y soltá justo al final. Pasá la línea roja.", "#f2f2f2", G("Skijump", {
+    ctl: "hold",
+    init: function () { this.K = 140; this.round(); },
+    round: function () { this.ph = "wait"; this.s = 0; this.v = 0; this.rel = -1; this.fx = 0; this.fy = 0; this.vx = 0; this.vy = 0; this.land = 0; this.wt = 0.6; },
+    lip: function () { return { x: this.W * 0.42, y: this.cy + 10 }; },
+    press: function () { if (this.ph === "wait") { this.ph = "ramp"; this.acts++; } },
+    release: function () { if (this.ph === "ramp") this.rel = this.s; },
+    hill: function (x) { var L = this.lip(); return L.y + 40 + (x - L.x) * 0.5; },
+    step: function (dt) {
+      var L = this.lip();
+      if (this.ph === "wait") { this.wt -= dt; return; }
+      if (this.ph === "ramp") { this.v += (this.holding ? 520 : 300) * dt; this.s += this.v * dt / 420; if (this.s >= 1) { var q = this.rel < 0 ? 0.5 : this.rel > 0.86 ? 1 : 0.6; this.ph = "air"; this.fx = L.x; this.fy = L.y; this.vx = this.v * 0.75 * (0.7 + 0.3 * q); this.vy = -this.v * 0.32 * q; } return; }
+      if (this.ph === "air") { this.vy += 420 * dt; this.fx += this.vx * dt; this.fy += this.vy * dt; if (this.fy >= this.hill(this.fx) || this.fx > this.W - 10) { if (this.fx > this.W - 10) this.fx = this.W - 10; this.ph = "done"; this.land = this.fx - L.x; this.wt = 0.9; var m = Math.round(this.land / 2); if (this.land >= this.K) { this.add(Math.min(5, 1 + Math.floor((this.land - this.K) / 40))); this.K = Math.min(this.W * 0.5, this.K + 8); } else this.hurt(); } return; }
+      if (this.ph === "done") { this.wt -= dt; if (this.wt <= 0) this.round(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, L = this.lip(), sx = 10, sy = this.pt + 30, kx = L.x + this.K;
+      c.strokeStyle = "#f2f2f2"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(sx, sy); c.quadraticCurveTo(L.x - 60, L.y + 20, L.x, L.y); c.stroke(); c.lineCap = "butt";
+      c.fillStyle = "#eef3fa"; c.beginPath(); c.moveTo(L.x - 10, L.y + 40); c.lineTo(this.W, this.hill(this.W)); c.lineTo(this.W, this.H); c.lineTo(L.x - 10, this.H); c.closePath(); c.fill();
+      c.fillStyle = "#ff4d6d"; c.fillRect(kx - 2, this.hill(kx) - 30, 4, 36);
+      var px, py; if (this.ph === "ramp" || this.ph === "wait") { var t = this.s, a = 1 - t; px = a * a * sx + 2 * a * t * (L.x - 60) + t * t * L.x; py = a * a * sy + 2 * a * t * (L.y + 20) + t * t * L.y - 14; } else { px = this.fx; py = this.fy - 14; }
+      c.globalAlpha = this.fadeA(); c.fillStyle = "#ff4d6d"; c.fillRect(px - 16, py + 10, 32, 4); buddy(c, px, py - (this.holding && this.ph === "ramp" ? -4 : 0), 12, "#ff9f1c", 1); c.globalAlpha = 1;
+      this.ghostHold(this.W * 0.7, this.pt + 120, now);
+    }
+  }), "snow");
+
+  /* 11. Baldosas: arrastrá la pelota para que pique arriba de cada baldosa */
+  regD("tiles", "Baldosas", "La pelota pica sola. Arrastrá a los costados para que caiga siempre arriba de una baldosa.", "#3ddc84", G("Tiles", {
+    ctl: "drag",
+    init: function () { this.x = this.W / 2; this.T = 0.62; this.k = 1; this.landY = this.H - this.pb - 150; this.rows = []; this.tw = 84; for (var i = 1; i <= 8; i++) this.rows.push({ k: i, x: i < 3 ? this.W / 2 : rnd(50, this.W - 50), col: pickOf(["#ff4d6d", "#ffd23f", "#3ddc84", "#c77dff", "#ff9f1c"]) }); this.clock = 0; },
+    drag: function (x) { this.x = clamp(x, 20, this.W - 20); },
+    step: function (dt) {
+      this.clock += dt; var T = this.T;
+      if (this.clock >= this.k * T) { var r = this.rows.shift(), d = Math.abs(this.x - r.x); if (d < this.tw / 2 + 6) this.good(d < 12 ? 2 : 1, r.x, this.landY, d < 12); else this.hurt(); this.k++; var last = this.rows[this.rows.length - 1]; this.rows.push({ k: last.k + 1, x: clamp(last.x + rnd(-170, 170), 50, this.W - 50), col: pickOf(["#ff4d6d", "#ffd23f", "#3ddc84", "#c77dff", "#ff9f1c"]) }); this.tw = Math.max(52, this.tw - 0.6); }
+    },
+    draw: function (now) {
+      var c = this.ctx, i, sp = 150, T = this.T;
+      for (i = this.rows.length - 1; i >= 0; i--) { var r = this.rows[i], y = this.landY - (r.k * T - this.clock) / T * sp; if (y < -20) continue; fillR(c, r.x - this.tw / 2, y - 7, this.tw, 14, 6, r.col); }
+      var ph = (this.clock % T) / T, by = this.landY - Math.sin(ph * PI) * 120 - 14;
+      c.globalAlpha = this.fadeA(); dot(c, this.x, by, 13, "#f2f2f2"); c.globalAlpha = 1;
+      this.ghostDrag(this.landY + 60, now);
+    }
+  }), "arcade");
+
+  /* 12. Penales: tocá para patear cuando la mira esté lejos del arquero */
+  regD("penal", "Penales", "La mira va y viene. Tocá para patear adonde no llegue el arquero.", "#ffd23f", G("Penal", {
+    init: function () { this.gl = this.W * 0.12; this.gr = this.W * 0.88; this.gy = this.pt + 110; this.aim = 0.5; this.ad = 1; this.kx = this.W / 2; this.ball = null; this.wait = 0; },
+    act: function () { if (this.ball || this.wait > 0) return; var tx = this.gl + (this.gr - this.gl) * this.aim; this.ball = { t: 0, tx: tx }; this.dive = Math.random() < 0.35 ? clamp(tx + rnd(-30, 30), this.gl, this.gr) : rnd(this.gl + 20, this.gr - 20); this.acts++; sfx(160, 0.12, "sine", 0.08, 0.6); },
+    step: function (dt) {
+      var sp = 0.9 * (1 + Math.min(this.t, 60) * 0.015); this.aim += this.ad * sp * dt; if (this.aim > 1) { this.aim = 1; this.ad = -1; } if (this.aim < 0) { this.aim = 0; this.ad = 1; }
+      if (this.wait > 0) { this.wait -= dt; if (this.wait <= 0) this.kx = this.W / 2; return; }
+      if (this.ball) { this.ball.t += dt / 0.45; this.kx += (this.dive - this.kx) * Math.min(1, dt * 7);
+        if (this.ball.t >= 1) { var d = Math.abs(this.ball.tx - this.kx); if (d < 40) this.hurt(); else { var corner = Math.min(this.ball.tx - this.gl, this.gr - this.ball.tx) < 30; this.good(corner ? 2 : 1, this.ball.tx, this.gy, corner); } this.ball = null; this.wait = 0.5; } }
+      else this.kx += (this.W / 2 + Math.sin(this.t * 2) * 30 - this.kx) * Math.min(1, dt * 3);
+    },
+    draw: function (now) {
+      var c = this.ctx, gl = this.gl, gr = this.gr, gy = this.gy;
+      c.fillStyle = "rgba(255,255,255,0.15)"; c.fillRect(gl, gy - 80, gr - gl, 100); c.fillStyle = "#f2f2f2"; c.fillRect(gl - 6, gy - 86, 6, 110); c.fillRect(gr, gy - 86, 6, 110); c.fillRect(gl - 6, gy - 86, gr - gl + 12, 6);
+      fillR(c, this.kx - 36, gy - 30, 72, 22, 9, "#c77dff"); dot(c, this.kx - 38, gy - 22, 8, "#f2f2f2"); dot(c, this.kx + 38, gy - 22, 8, "#f2f2f2"); buddy(c, this.kx, gy - 44, 12, "#f2b48a");
+      var ax = gl + (gr - gl) * this.aim; c.strokeStyle = "#ff4d6d"; c.lineWidth = 3; c.beginPath(); c.arc(ax, gy - 20, 12, 0, TAU); c.moveTo(ax - 18, gy - 20); c.lineTo(ax + 18, gy - 20); c.moveTo(ax, gy - 38); c.lineTo(ax, gy - 2); c.stroke();
+      var sx = this.W / 2, sy = this.H - this.pb - 90; if (this.ball) { var k = this.ball.t; soccer(c, sx + (this.ball.tx - sx) * k, sy + (gy - 20 - sy) * k - Math.sin(k * PI) * 30, 13 - 5 * k); } else if (this.wait <= 0) soccer(c, sx, sy, 13);
+      buddy(c, sx, sy + 46, 15, "#ff4d6d");
+      this.ghost(sx + 60, sy, now);
+    }
+  }), "court");
+
+  /* 13. Vóley: arrastrá para devolver la pelota por arriba de la red */
+  regD("volley", "Vóley", "Arrastrá a los costados para cabecear la pelota y pasarla por arriba de la red.", "#ff9f1c", G("Volley", {
+    ctl: "drag",
+    init: function () { this.fl = this.H - this.pb - 30; this.px = this.W * 0.25; this.ax = this.W * 0.75; this.serve(-1); },
+    serve: function (side) { this.b = { x: side < 0 ? this.W * 0.25 : this.W * 0.75, y: this.cy - 80, vx: 0, vy: -100 }; this.wait = 0.6; },
+    drag: function (x) { this.px = clamp(x, 26, this.W / 2 - 34); },
+    head: function (hx, me) { var b = this.b, hy = this.fl - 30, dx = b.x - hx, dy = b.y - hy, d = Math.hypot(dx, dy); if (d < 40 && d > 0 && b.vy > -50) { var nx = dx / d, ny = dy / d; b.x = hx + nx * 40; b.y = hy + ny * 40; b.vy = -560 - Math.random() * 80; b.vx = (me ? 1 : -1) * (150 + Math.abs(dx) * 4) * (me ? 1 : 1); if (me) { b.vx = 120 + (b.x - hx + 20) * 6; this.add(1); sfx(420, 0.06, "triangle", 0.05); } else b.vx = -(120 + (hx - b.x + 20) * 6); } },
+    step: function (dt) {
+      var b = this.b; if (this.wait > 0) { this.wait -= dt; return; }
+      b.vy += 700 * dt; b.x += b.vx * dt; b.y += b.vy * dt; var r = 14, nx = this.W / 2;
+      if (b.x < r) { b.x = r; b.vx = Math.abs(b.vx); } if (b.x > this.W - r) { b.x = this.W - r; b.vx = -Math.abs(b.vx); }
+      if (b.y > this.fl - 100 && Math.abs(b.x - nx) < r + 4) { b.vx = (b.x < nx ? -1 : 1) * Math.abs(b.vx) * 0.6; b.x = nx + (b.x < nx ? -r - 4 : r + 4); }
+      this.head(this.px, true);
+      var target = b.x > nx ? b.x + 10 : this.W * 0.75, ai = (200 + Math.min(this.t, 60) * 2) * dt; this.ax += clamp(target - this.ax, -ai, ai); this.ax = clamp(this.ax, nx + 34, this.W - 26); this.head(this.ax, false);
+      if (b.y > this.fl - r) { if (b.x < nx) { this.hurt(); this.serve(-1); } else { this.good(3, b.x, b.y, true); this.serve(-1); } }
+    },
+    draw: function (now) {
+      var c = this.ctx; fillR(c, 0, this.fl, this.W, 30, 0, "#e9d6a0"); c.fillStyle = "#f2f2f2"; c.fillRect(this.W / 2 - 3, this.fl - 100, 6, 100); c.fillStyle = "rgba(255,255,255,0.5)"; c.fillRect(this.W / 2 - 3, this.fl - 100, 6, 40);
+      c.globalAlpha = this.fadeA(); buddy(c, this.px, this.fl - 30, 24, "#ff4d6d", 1); c.globalAlpha = 1; buddy(c, this.ax, this.fl - 30, 24, "#c77dff", -1);
+      spBeach(c, this.b.x, this.b.y, 14);
+      this.ghostDrag(this.fl - 30, now);
+    }
+  }), "beach");
+
+  /* 14. Samurái: tocá del lado donde llega el ninja, justo cuando está cerca */
+  regD("samurai", "Samurái", "Los ninjas vienen de los dos lados. Tocá de ese lado justo cuando están cerca.", "#ff4d6d", G("Samurai", {
+    init: function () { this.en = []; this.next = 1; this.stun = 0; this.cut = 0; this.cs = 1; this.gy = this.H - this.pb - 80; },
+    act: function (x) { if (this.stun > 0) return; var s = x < this.W / 2 ? -1 : 1, cx = this.W / 2, best = null, i; this.cs = s; this.cut = 0.12; this.acts++;
+      for (i = 0; i < this.en.length; i++) { var e = this.en[i]; if (e.s === s && Math.abs(e.x - cx) < 96 && (!best || Math.abs(e.x - cx) < Math.abs(best.x - cx))) best = e; }
+      if (best) { best.dead = true; this.add(1); sfx(900, 0.05, "sawtooth", 0.04, 0.4); } else { this.stun = 0.45; sfx(120, 0.1, "square", 0.04); } },
+    step: function (dt) {
+      var i, cx = this.W / 2; this.stun = Math.max(0, this.stun - dt); this.cut = Math.max(0, this.cut - dt); this.next -= dt;
+      if (this.next <= 0) { var s = Math.random() < 0.5 ? -1 : 1; this.en.push({ s: s, x: s < 0 ? -20 : this.W + 20, v: rnd(90, 150) * (1 + Math.min(this.t, 60) * 0.015) }); this.next = rnd(0.6, 1.3) * Math.max(0.45, 1 - this.t * 0.008); }
+      for (i = 0; i < this.en.length; i++) { var e = this.en[i]; e.x -= e.s * e.v * dt; if (!e.dead && Math.abs(e.x - cx) < 26) { e.dead = true; this.hurt(); } }
+      this.en = this.en.filter(function (q) { return !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i, cx = this.W / 2, gy = this.gy; fillR(c, 0, gy + 18, this.W, 8, 0, "#55555f");
+      c.strokeStyle = "rgba(255,77,109,0.25)"; c.lineWidth = 2; c.beginPath(); c.moveTo(cx - 96, gy - 40); c.lineTo(cx - 96, gy + 18); c.moveTo(cx + 96, gy - 40); c.lineTo(cx + 96, gy + 18); c.stroke();
+      for (i = 0; i < this.en.length; i++) { var e = this.en[i]; dot(c, e.x, gy, 16, "#2b2b33"); fillR(c, e.x - 14, gy - 6, 28, 7, 3, "#ff4d6d"); dot(c, e.x + (e.s < 0 ? 6 : -6), gy - 3, 2.5, "#fff"); }
+      c.globalAlpha = this.stun > 0 ? 0.5 : this.fadeA(); buddy(c, cx, gy - 4, 20, "#f2f2f2", this.cs); fillR(c, cx - 18, gy - 26, 36, 8, 3, "#c0304e");
+      c.save(); c.translate(cx + this.cs * 16, gy); c.rotate(this.cs * (this.cut > 0 ? 1.3 : -0.6)); fillR(c, -2, -46, 4, 46, 2, "#d9dde3"); c.fillStyle = "#6b4423"; c.fillRect(-3, -6, 6, 12); c.restore(); c.globalAlpha = 1;
+      this.ghost(cx + 110, gy - 60, now);
+    }
+  }), "city");
+
+  /* 15. Montaña rusa: mantené para acelerar; en las curvas rojas, despacio */
+  regD("coaster", "Montaña rusa", "Mantené apretado para acelerar y soltá para frenar. Subí las lomas y pasá las curvas rojas despacio.", "#ff4d6d", G("Coaster", {
+    ctl: "hold",
+    init: function () { this.wx = 0; this.v = 160; this.px = this.W * 0.3; this.base = this.H - this.pb - 150; this.dist = 0; this.zones = []; this.nz = 600; },
+    gy: function (x) { return this.base + Math.sin(x * 0.005) * 80 + Math.sin(x * 0.013 + 2) * 20; },
+    sl: function (x) { return (this.gy(x + 2) - this.gy(x - 2)) / 4; },
+    step: function (dt) {
+      var x = this.wx + this.px, s = this.sl(x), i;
+      this.v += (s * 900 + (this.holding ? 260 : -160)) * dt; this.v = Math.min(this.v, 620);
+      if (this.v < 20 && s < -0.05) { this.hurt(); this.v = 200; }
+      this.v = Math.max(this.v, 0); this.wx += this.v * dt; this.dist += this.v * dt; if (this.dist > 350) { this.dist -= 350; this.add(1); }
+      while (this.nz < this.wx + this.W + 200) { this.zones.push({ x: this.nz, w: 140, max: 230, done: false }); this.nz += rnd(500, 800); }
+      for (i = 0; i < this.zones.length; i++) { var z = this.zones[i]; if (!z.done && x > z.x && x < z.x + z.w && this.v > z.max) { z.done = true; this.hurt(); this.v = 120; } if (!z.done && x > z.x + z.w) { z.done = true; this.good(2, this.px, this.gy(x), true); } }
+      var wx = this.wx; this.zones = this.zones.filter(function (q) { return q.x + q.w > wx - 50; });
+    },
+    draw: function (now) {
+      var c = this.ctx, x, i, W = this.W;
+      c.strokeStyle = "#8a5a2b"; c.lineWidth = 3; for (x = -(this.wx % 40); x < W; x += 40) { c.beginPath(); c.moveTo(x, this.gy(this.wx + x)); c.lineTo(x, this.H); c.stroke(); }
+      c.strokeStyle = "#d9dde3"; c.lineWidth = 7; c.beginPath(); for (x = 0; x <= W; x += 6) c.lineTo(x, this.gy(this.wx + x)); c.stroke();
+      for (i = 0; i < this.zones.length; i++) { var z = this.zones[i]; c.strokeStyle = z.done ? "rgba(255,77,109,0.3)" : "#ff4d6d"; c.lineWidth = 9; c.beginPath(); for (x = z.x - this.wx; x <= z.x + z.w - this.wx; x += 6) c.lineTo(x, this.gy(this.wx + x)); c.stroke(); }
+      var X = this.wx + this.px, a = Math.atan(this.sl(X)); c.save(); c.translate(this.px, this.gy(X) - 14); c.rotate(a); fillR(c, -22, -8, 44, 18, 6, "#ffd23f"); dot(c, -12, 12, 5, "#2b2b33"); dot(c, 12, 12, 5, "#2b2b33"); c.restore();
+      c.globalAlpha = this.fadeA(); buddy(c, this.px, this.gy(X) - 34, 11, "#f2b48a", 1); c.globalAlpha = 1;
+      fillR(c, 16, this.pt + 10, 120, 8, 4, "rgba(255,255,255,0.15)"); fillR(c, 16, this.pt + 10, 120 * this.v / 620, 8, 4, this.v > 230 ? "#ff4d6d" : "#3ddc84");
+      this.ghostHold(W * 0.65, this.pt + 90, now);
+    }
+  }), "circus");
+
+  /* ===== Tanda 30 mecánicas nuevas (2/2) ===== */
+
+  /* 16. Ladrón: mantené para caminar; frená cuando los láseres están prendidos */
+  regD("heist", "Ladrón", "Mantené apretado para caminar y soltá para frenar. Cruzá cuando los láseres están apagados.", "#ff4d6d", G("Heist", {
+    ctl: "hold",
+    init: function () { this.lvl = 0; this.room(); },
+    room: function () { this.x = 24; this.ls = []; var n = 3 + Math.min(this.lvl, 4), gap = (this.W - 90) / n; for (var k = 0; k < n; k++) this.ls.push({ x: 60 + gap * (k + 0.5), per: rnd(1.4, 2.4) * Math.max(0.6, 1 - this.lvl * 0.05), off: rnd(0, 2), duty: 0.5, mv: this.lvl > 3 && Math.random() < 0.4 ? rnd(20, 40) : 0, ph: rnd(0, TAU) }); this.rt = 0; },
+    on: function (l) { return ((this.t + l.off) % l.per) / l.per < l.duty; },
+    lx: function (l) { return l.x + (l.mv ? Math.sin(this.t * 1.5 + l.ph) * l.mv : 0); },
+    step: function (dt) {
+      this.rt += dt; if (this.holding) { this.x += 110 * dt; }
+      for (var k = 0; k < this.ls.length; k++) { var l = this.ls[k]; if (this.on(l) && Math.abs(this.lx(l) - this.x) < 12) { this.hurt(); this.x = 24; this.rt = 0; break; } }
+      if (this.x >= this.W - 30) { this.lvl++; this.add(this.rt < 6 ? 3 : 2); this.room(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, gy = this.cy + 80, k; fillR(c, 0, gy + 22, this.W, 10, 0, "#3a3a44"); fillR(c, this.W - 26, gy - 50, 22, 72, 4, "#3ddc84");
+      for (k = 0; k < this.ls.length; k++) { var l = this.ls[k], x = this.lx(l), on = this.on(l); c.fillStyle = "#55555f"; c.fillRect(x - 6, this.pt + 60, 12, 10); c.fillRect(x - 6, gy + 12, 12, 10); if (on) { c.fillStyle = "#ff2d4a"; c.fillRect(x - 2, this.pt + 70, 4, gy + 12 - this.pt - 70); } else { c.fillStyle = "rgba(255,45,74,0.18)"; c.fillRect(x - 1, this.pt + 70, 2, gy + 12 - this.pt - 70); } }
+      c.globalAlpha = this.fadeA(); c.fillStyle = "#17121f"; c.fillRect(this.x - 8, gy, 6, 20); c.fillRect(this.x + 2, gy, 6, 20); buddy(c, this.x, gy - 12, 14, "#2b2b33", 1); fillR(c, this.x - 12, gy - 16, 24, 6, 3, "#f2f2f2"); c.globalAlpha = 1;
+      this.ghostHold(this.W * 0.5, gy + 70, now);
+    }
+  }), "build");
+
+  /* 17. Laberinto giratorio: arrastrá para girar el laberinto y llevar la bolita a la salida */
+  regD("rmaze", "Laberinto giratorio", "Arrastrá a los costados para girar el laberinto. La bolita cae sola: llevala al agujero.", "#ffd23f", G("Rmaze", {
+    ctl: "drag",
+    init: function () { this.n = 5; this.lvl = 0; this.make(); },
+    make: function () {
+      var n = this.n, cs = Math.min(46, (this.W - 60) / n), seen = [], wl = [], k, i, j; this.cs = cs; this.a = 0; this.lx = null; this.tm = 30;
+      var H = [], V = []; for (i = 0; i <= n; i++) { H.push([]); V.push([]); for (j = 0; j <= n; j++) { H[i].push(true); V[i].push(true); } }
+      for (i = 0; i < n; i++) { seen.push([]); for (j = 0; j < n; j++) seen[i].push(false); }
+      var st = [[0, 0]]; seen[0][0] = true;
+      while (st.length) { var cur = st[st.length - 1], cx = cur[0], cy = cur[1], nb = []; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { var x = cx + d[0], y = cy + d[1]; if (x >= 0 && y >= 0 && x < n && y < n && !seen[x][y]) nb.push([x, y, d]); }); if (!nb.length) { st.pop(); continue; } var p = pickOf(nb); seen[p[0]][p[1]] = true; if (p[2][0]) V[Math.max(cx, p[0])][cy] = false; else H[cx][Math.max(cy, p[1])] = false; st.push([p[0], p[1]]); }
+      this.seg = []; var o = -n * cs / 2;
+      for (i = 0; i < n; i++) for (j = 0; j <= n; j++) if (H[i][j]) this.seg.push([o + i * cs, o + j * cs, o + (i + 1) * cs, o + j * cs]);
+      for (i = 0; i <= n; i++) for (j = 0; j < n; j++) if (V[i][j]) this.seg.push([o + i * cs, o + j * cs, o + i * cs, o + (j + 1) * cs]);
+      this.b = { x: o + cs / 2, y: o + cs / 2, vx: 0, vy: 0 }; this.ex = { x: o + (n - 0.5) * cs, y: o + (n - 0.5) * cs };
+    },
+    drag: function (x) { if (this.lx !== null) this.a += (x - this.lx) * 0.012; this.lx = x; },
+    release: function () { this.lx = null; },
+    step: function (dt) {
+      var b = this.b, r = this.cs * 0.22, k, s, sub = 4; this.tm -= dt;
+      for (s = 0; s < sub; s++) { var h = dt / sub; b.vx += Math.sin(this.a) * 700 * h; b.vy += Math.cos(this.a) * 700 * h; b.vx *= 0.995; b.vy *= 0.995; capS(b, 500); b.x += b.vx * h; b.y += b.vy * h; for (k = 0; k < this.seg.length; k++) { var q = this.seg[k]; segHit(b, r + 2, q[0], q[1], q[2], q[3], 0.2); } }
+      if (Math.hypot(b.x - this.ex.x, b.y - this.ex.y) < this.cs * 0.3) { this.good(3 + Math.max(0, Math.floor(this.tm / 10)), this.W / 2, this.cy, true); this.lvl++; this.n = Math.min(8, 5 + Math.floor(this.lvl / 2)); this.make(); }
+      else if (this.tm <= 0) { this.hurt(); this.make(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, k, cs = this.cs, n = this.n; c.save(); c.translate(this.W / 2, this.cy); c.rotate(-this.a);
+      fillR(c, -n * cs / 2 - 8, -n * cs / 2 - 8, n * cs + 16, n * cs + 16, 12, "rgba(255,255,255,0.08)");
+      dot(c, this.ex.x, this.ex.y, cs * 0.32, "#17121f"); c.strokeStyle = "#ffd23f"; c.lineWidth = 3; c.beginPath(); c.arc(this.ex.x, this.ex.y, cs * 0.32, 0, TAU); c.stroke();
+      c.strokeStyle = "#c77dff"; c.lineWidth = 7; c.lineCap = "round"; c.beginPath(); for (k = 0; k < this.seg.length; k++) { var q = this.seg[k]; c.moveTo(q[0], q[1]); c.lineTo(q[2], q[3]); } c.stroke(); c.lineCap = "butt";
+      dot(c, this.b.x, this.b.y, cs * 0.22, "#f2f2f2"); c.restore();
+      fillR(c, this.W / 2 - 80, this.pt + 10, 160, 8, 4, "rgba(255,255,255,0.15)"); fillR(c, this.W / 2 - 80, this.pt + 10, 160 * clamp(this.tm / 30, 0, 1), 8, 4, this.tm < 8 ? "#ff4d6d" : "#ffd23f");
+      this.ghostDrag(this.H - this.pb - 50, now);
+    }
+  }), "table");
+
+  /* 18. Panqueques: tocá cada sartén cuando el panqueque está dorado */
+  regD("pancake", "Panqueques", "Tocá cada sartén cuando el panqueque está dorado. Si se quema o lo das vuelta crudo, perdés una vida.", "#ffd23f", G("Pancake", {
+    init: function () { this.pans = []; var cols = 2, rows = 2, w = (this.W - 40) / cols, h = Math.min(170, (this.H - this.pt - this.pb - 60) / rows); for (var r = 0; r < rows; r++) for (var k = 0; k < cols; k++) this.pans.push({ x: 20 + w * (k + 0.5), y: this.pt + 90 + h * (r + 0.5), c: -rnd(0.2, 1.5), sp: rnd(0.22, 0.32) }); },
+    act: function (x, y) {
+      var best = null, bd = 1e9, i; for (i = 0; i < this.pans.length; i++) { var p = this.pans[i], d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; best = p; } } if (!best || bd > 110) return; this.acts++;
+      if (best.c < 0) return; if (best.c < 0.68) { this.hurt(); } else if (best.c <= 1.02) { var pf = best.c > 0.82 && best.c < 0.96; this.good(pf ? 2 : 1, best.x, best.y, pf); sfx(500, 0.08, "triangle", 0.05, 1.5); } else { this.hurt(); }
+      best.c = -rnd(0.3, 1.0); best.sp = rnd(0.22, 0.34) * (1 + Math.min(this.t, 90) * 0.01);
+    },
+    step: function (dt) { for (var i = 0; i < this.pans.length; i++) { var p = this.pans[i]; p.c += p.sp * dt; if (p.c > 1.25) { this.hurt(); p.c = -0.6; } } },
+    draw: function (now) {
+      var c = this.ctx, i; for (i = 0; i < this.pans.length; i++) { var p = this.pans[i]; c.fillStyle = "#3a3a44"; c.save(); c.translate(p.x, p.y); c.rotate(0.6); c.fillRect(46, -6, 54, 12); c.restore(); dot(c, p.x, p.y, 56, "#2b2b33"); dot(c, p.x, p.y, 48, "#3a3a44");
+        if (p.c >= 0) { var col = p.c < 0.68 ? "#f6e3b4" : p.c <= 1.02 ? "#e0a458" : p.c < 1.15 ? "#8a5a2b" : "#3a2a1a"; dot(c, p.x, p.y, 40, col); if (p.c >= 0.68 && p.c <= 1.02) { dot(c, p.x - 12, p.y - 8, 4, "#c98a4a"); dot(c, p.x + 10, p.y + 6, 3, "#c98a4a"); } } }
+      this.ghost(this.pans[0].x, this.pans[0].y, now);
+    }
+  }), "kitchen");
+
+  /* 19. Semáforos: tocá para cambiar el semáforo y que los autos no choquen */
+  regD("traffic", "Semáforos", "Tocá para cambiar qué calle tiene verde. Que no choquen ni se amontonen.", "#3ddc84", G("Traffic", {
+    init: function () { this.cxi = this.W / 2; this.cyi = this.cy; this.rw = 56; this.gH = true; this.cars = []; this.nh = 0.5; this.nv = 1.2; },
+    act: function () { this.gH = !this.gH; this.acts++; S.flip(); },
+    step: function (dt) {
+      var i, j, rw = this.rw, x0 = this.cxi - rw / 2, x1 = this.cxi + rw / 2, y0 = this.cyi - rw / 2, y1 = this.cyi + rw / 2, rate = Math.max(0.8, 2.2 - this.t * 0.02);
+      this.nh -= dt; if (this.nh <= 0) { this.cars.push({ d: "h", p: -40, v: rnd(110, 150), col: pickOf(["#ff4d6d", "#ffd23f", "#ff9f1c", "#f2f2f2"]) }); this.nh = rnd(0.7, 1.4) * rate; }
+      this.nv -= dt; if (this.nv <= 0) { this.cars.push({ d: "v", p: this.pt - 40, v: rnd(110, 150), col: pickOf(["#c77dff", "#3ddc84", "#ff5fd2", "#f2f2f2"]) }); this.nv = rnd(0.8, 1.6) * rate; }
+      var wait = { h: 0, v: 0 };
+      for (i = 0; i < this.cars.length; i++) {
+        var c = this.cars[i], green = c.d === "h" ? this.gH : !this.gH, stop = c.d === "h" ? x0 - 22 : y0 - 22, front = c.p + 20, lead = 1e9;
+        for (j = 0; j < this.cars.length; j++) { var o = this.cars[j]; if (o !== c && o.d === c.d && o.p > c.p) lead = Math.min(lead, o.p - c.p); }
+        var np = c.p + c.v * dt; if (!green && front <= stop && np + 20 > stop) np = stop - 20; if (lead < 52) np = Math.min(np, c.p + Math.max(0, lead - 52)); if (np - c.p < 1) wait[c.d]++; c.p = np;
+      }
+      var inH = null, inV = null; for (i = 0; i < this.cars.length; i++) { var q = this.cars[i]; if (q.d === "h" && q.p + 20 > x0 && q.p - 20 < x1) inH = q; if (q.d === "v" && q.p + 20 > y0 && q.p - 20 < y1) inV = q; }
+      if (inH && inV) { this.hurt(); inH.dead = inV.dead = true; }
+      if (wait.h >= 6 || wait.v >= 6) { this.hurt(); var d = wait.h >= 6 ? "h" : "v"; this.cars = this.cars.filter(function (q) { return q.d !== d; }); }
+      var W = this.W, H = this.H, me = this; this.cars = this.cars.filter(function (q) { var out = q.d === "h" ? q.p > W + 30 : q.p > H + 30; if (out && !q.dead) me.add(1); return !out && !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i, rw = this.rw, cx = this.cxi, cy = this.cyi;
+      c.fillStyle = "#3a3a44"; c.fillRect(0, cy - rw / 2, this.W, rw); c.fillRect(cx - rw / 2, 0, rw, this.H);
+      c.fillStyle = "rgba(255,255,255,0.4)"; for (i = 0; i < this.W; i += 30) if (Math.abs(i - cx) > rw) c.fillRect(i, cy - 2, 16, 4); for (i = 0; i < this.H; i += 30) if (Math.abs(i - cy) > rw) c.fillRect(cx - 2, i, 4, 16);
+      fillR(c, cx - rw / 2 - 30, cy - rw / 2 - 44, 20, 38, 5, "#17121f"); dot(c, cx - rw / 2 - 20, cy - rw / 2 - 34, 6, this.gH ? "#4a1f24" : "#ff3b3b"); dot(c, cx - rw / 2 - 20, cy - rw / 2 - 16, 6, this.gH ? "#3ddc84" : "#1f4a2e");
+      fillR(c, cx + rw / 2 + 10, cy - rw / 2 - 44, 20, 38, 5, "#17121f"); dot(c, cx + rw / 2 + 20, cy - rw / 2 - 34, 6, !this.gH ? "#4a1f24" : "#ff3b3b"); dot(c, cx + rw / 2 + 20, cy - rw / 2 - 16, 6, !this.gH ? "#3ddc84" : "#1f4a2e");
+      for (i = 0; i < this.cars.length; i++) { var q = this.cars[i]; if (q.d === "h") spCar(c, q.p - 22, cy - 2, 44, 24, q.col, 1); else { c.save(); c.translate(cx + 12, q.p); c.rotate(PI / 2); spCar(c, -22, -12, 44, 24, q.col, 1); c.restore(); } }
+      this.ghost(cx + 80, cy + 80, now);
+    }
+  }), "city");
+
+  /* 20. Avión de paquetes: tocá para soltar el paquete y que caiga en la chimenea */
+  regD("drop", "Avión de paquetes", "Tocá para soltar un paquete desde el avión. Que caiga en las chimeneas.", "#ff9f1c", G("Drop", {
+    init: function () { this.px = -40; this.v = 150; this.pk = []; this.houses = []; this.mk(); },
+    mk: function () { this.houses = []; var n = 3, w = (this.W - 40) / n; for (var k = 0; k < n; k++) this.houses.push({ x: 20 + w * k + rnd(10, w - 90), w: 70, h: rnd(60, 120), cx: 0, done: false }); this.houses.forEach(function (h) { h.cx = h.x + h.w * rnd(0.2, 0.7); }); },
+    act: function () { if (this.px < 0 || this.px > this.W) return; this.pk.push({ x: this.px, y: this.pt + 66, vx: this.v, vy: 0 }); this.acts++; sfx(300, 0.08, "sine", 0.05, 0.6); },
+    step: function (dt) {
+      var i, k, gy = this.H - this.pb - 20; this.px += this.v * dt; if (this.px > this.W + 60) { this.px = -60; this.v = 150 * (1 + Math.min(this.t, 60) * 0.012); if (this.houses.every(function (h) { return h.done; })) this.mk(); else { var left = this.houses.filter(function (h) { return !h.done; }).length; this.hurt(); this.mk(); } }
+      for (i = 0; i < this.pk.length; i++) { var p = this.pk[i]; p.vy += 600 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= 0.995;
+        for (k = 0; k < this.houses.length; k++) { var h = this.houses[k], top = gy - h.h; if (!p.dead && p.y >= top - 30 && p.y <= top - 10 && Math.abs(p.x - h.cx) < 12 && !h.done) { p.dead = true; h.done = true; this.good(2, p.x, p.y, true); } else if (!p.dead && p.y >= top && p.x > h.x && p.x < h.x + h.w) { p.dead = true; } }
+        if (!p.dead && p.y >= gy) p.dead = true; }
+      this.pk = this.pk.filter(function (q) { return !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i, gy = this.H - this.pb - 20; fillR(c, 0, gy, this.W, 30, 0, "#3a6b3a");
+      for (i = 0; i < this.houses.length; i++) { var h = this.houses[i], top = gy - h.h; fillR(c, h.x, top, h.w, h.h, 3, "#c98a4a"); poly(c, [h.x - 8, top, h.x + h.w / 2, top - 26, h.x + h.w + 8, top], "#a3203c"); fillR(c, h.cx - 9, top - 34, 18, 24, 2, h.done ? "#3ddc84" : "#8a4a3a"); fillR(c, h.x + h.w / 2 - 9, gy - 26, 18, 26, 3, "#55555f"); fillR(c, h.x + 10, top + 14, 16, 14, 2, "#ffd23f"); }
+      for (i = 0; i < this.pk.length; i++) { fillR(c, this.pk[i].x - 9, this.pk[i].y - 9, 18, 18, 3, "#c98a4a"); c.fillStyle = "#ff4d6d"; c.fillRect(this.pk[i].x - 1.5, this.pk[i].y - 9, 3, 18); }
+      var x = this.px, y = this.pt + 50; fillR(c, x - 34, y - 9, 68, 18, 9, "#f2f2f2"); poly(c, [x - 6, y, x + 10, y, x - 14, y + 26], "#ff4d6d"); poly(c, [x - 30, y - 6, x - 38, y - 22, x - 24, y - 6], "#ff4d6d"); dot(c, x + 20, y - 2, 4, "#5bc0eb");
+      this.ghost(this.W / 2, this.cy, now);
+    }
+  }), "sky");
+
+  /* 21. Dos autos: tocá a la izquierda o a la derecha para cambiar de carril cada auto */
+  regD("twocars", "Dos autos", "Manejás dos autos a la vez. Tocá a la izquierda o a la derecha para mover cada uno. Juntá los círculos y esquivá los cuadrados.", "#ff4d6d", G("Twocars", {
+    init: function () { this.lane = [0, 1]; this.px = [0, 0]; this.ob = []; this.next = 0.5; this.lw = (this.W - 70) / 4; this.px[0] = this.lx(0); this.px[1] = this.lx(3); },
+    lx: function (i) { return 8 + this.lw * (i + 0.5); },
+    act: function (x) { var k = x < this.W / 2 ? 0 : 1; this.lane[k] = 1 - this.lane[k]; this.acts++; S.flip(); },
+    step: function (dt) {
+      var v = 240 * (1 + Math.min(this.t, 60) * 0.015), i, py = this.H - this.pb - 80; this.next -= dt;
+      for (var k = 0; k < 2; k++) this.px[k] += (this.lx(k * 2 + this.lane[k]) - this.px[k]) * Math.min(1, dt * 18);
+      if (this.next <= 0) { for (k = 0; k < 2; k++) if (Math.random() < 0.75) this.ob.push({ k: k, l: k * 2 + ri(0, 2), y: this.pt - 30 - rnd(0, 60), circ: Math.random() < 0.5 }); this.next = rnd(0.6, 0.9) * Math.max(0.55, 1 - this.t * 0.006); }
+      for (i = 0; i < this.ob.length; i++) { var o = this.ob[i]; o.y += v * dt; if (o.dead) continue; var x = this.lx(o.l); if (Math.abs(o.y - py) < 28 && Math.abs(x - this.px[o.k]) < this.lw * 0.4) { o.dead = true; if (o.circ) this.add(1); else this.hurt(); } else if (o.y > py + 40 && o.circ) { o.dead = true; this.hurt(); } }
+      var H = this.H; this.ob = this.ob.filter(function (q) { return !q.dead && q.y < H + 30; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i, py = this.H - this.pb - 80, w = this.lw * 4;
+      fillR(c, 8, 0, w, this.H, 0, "#2b2b33"); c.fillStyle = "#f2f2f2"; c.fillRect(8 + w / 2 - 2, 0, 4, this.H); c.fillStyle = "rgba(255,255,255,0.3)"; c.fillRect(8 + this.lw - 1, 0, 2, this.H); c.fillRect(8 + this.lw * 3 - 1, 0, 2, this.H);
+      for (i = 0; i < this.ob.length; i++) { var o = this.ob[i], x = this.lx(o.l), col = o.k ? "#ffd23f" : "#ff4d6d"; if (o.circ) { dot(c, x, o.y, 15, col); dot(c, x, o.y, 7, "#2b2b33"); } else fillR(c, x - 15, o.y - 15, 30, 30, 5, col); }
+      c.globalAlpha = this.fadeA(); carV(c, this.px[0], py, 30, 48, "#ff4d6d"); carV(c, this.px[1], py, 30, 48, "#ffd23f"); c.globalAlpha = 1;
+      this.ghost(this.W * 0.25, py - 60, now);
+    }
+  }), "road");
+
+  /* 22. Bateo: tocá para batear cuando la pelota llega */
+  regD("bat", "Bateo", "Tocá para batear justo cuando la pelota llega a vos. Si la dejás pasar, perdés una vida.", "#f2f2f2", G("Bat", {
+    init: function () { this.ball = null; this.wait = 1; this.sw = 0; this.hitB = null; this.zy = this.H - this.pb - 120; },
+    act: function () { if (this.sw > 0) return; this.sw = 0.22; this.acts++; var b = this.ball; if (b && !b.done) { var d = this.zy - b.y; if (Math.abs(d) < 34) { b.done = true; var pf = Math.abs(d) < 10; this.good(pf ? 3 : 1, this.W / 2, this.zy, pf); this.hitB = { x: this.W / 2, y: this.zy, vx: rnd(-200, 200), vy: pf ? -900 : -600 }; this.ball = null; this.wait = 0.8; sfx(pf ? 900 : 600, 0.08, "square", 0.06, 0.5); } } },
+    step: function (dt) {
+      this.sw = Math.max(0, this.sw - dt);
+      if (this.hitB) { var h = this.hitB; h.vy += 500 * dt; h.x += h.vx * dt; h.y += h.vy * dt; if (h.y < -40 || h.y > this.H) this.hitB = null; }
+      if (!this.ball) { this.wait -= dt; if (this.wait <= 0) { var sp = rnd(320, 520) * (1 + Math.min(this.t, 60) * 0.01); this.ball = { y: this.pt + 90, v: sp, cv: Math.random() < 0.3 ? rnd(-1, 1) : 0, slow: Math.random() < 0.2 }; } return; }
+      var b = this.ball; b.y += b.v * (b.slow && b.y > this.cy - 60 && b.y < this.cy + 20 ? 0.45 : 1) * dt;
+      if (b.y > this.zy + 40) { this.hurt(); this.ball = null; this.wait = 0.8; }
+    },
+    draw: function (now) {
+      var c = this.ctx, cx = this.W / 2; buddy(c, cx, this.pt + 70, 16, "#c77dff");
+      c.strokeStyle = "rgba(255,255,255,0.25)"; c.lineWidth = 2; c.strokeRect(cx - 30, this.zy - 34, 60, 68);
+      if (this.ball) { var b = this.ball, k = (b.y - this.pt - 90) / (this.zy - this.pt - 90); spBallLines(c, cx + Math.sin(k * PI) * b.cv * 50, b.y, 7 + 5 * k, "#f2f2f2"); }
+      if (this.hitB) dot(c, this.hitB.x, this.hitB.y, 8, "#f2f2f2");
+      c.save(); c.translate(cx + 40, this.zy + 20); c.rotate(this.sw > 0 ? -2.4 + (this.sw / 0.22) * 1.6 : -0.6); fillR(c, -5, -70, 10, 70, 5, "#c98a4a"); c.restore();
+      c.globalAlpha = this.fadeA(); buddy(c, cx + 50, this.zy + 40, 16, "#ff4d6d", -1); c.globalAlpha = 1;
+      this.ghost(cx - 60, this.zy, now);
+    }
+  }), "court");
+
+  /* 23. Pong circular: arrastrá para girar la paleta alrededor del círculo */
+  regD("cpong", "Pong circular", "Arrastrá a los costados para girar la paleta. Que la pelota no se escape del círculo.", "#3ddc84", G("Cpong", {
+    ctl: "drag",
+    init: function () { this.R = Math.min(this.W / 2 - 20, 150); this.a = PI / 2; this.lx = null; this.serve(); },
+    serve: function () { var a = rnd(0, TAU); this.b = { x: 0, y: 0, vx: Math.cos(a) * 170, vy: Math.sin(a) * 170 }; this.wait = 0.6; },
+    drag: function (x) { if (this.lx !== null) this.a += (x - this.lx) * 0.022; this.lx = x; },
+    release: function () { this.lx = null; },
+    step: function (dt) {
+      if (this.wait > 0) { this.wait -= dt; return; } var b = this.b; b.x += b.vx * dt; b.y += b.vy * dt; var d = Math.hypot(b.x, b.y), arc = 0.9;
+      if (d > this.R - 16) { var ang = Math.atan2(b.y, b.x); if (adiff(ang, this.a) < arc / 2) { var nx = b.x / d, ny = b.y / d, vn = b.vx * nx + b.vy * ny; if (vn > 0) { b.vx -= 2 * vn * nx; b.vy -= 2 * vn * ny; var off = ((ang - this.a + PI * 3) % TAU) - PI; var s = Math.hypot(b.vx, b.vy) * 1.04, na = Math.atan2(b.vy, b.vx) + off * 0.8; b.vx = Math.cos(na) * Math.min(s, 520); b.vy = Math.sin(na) * Math.min(s, 520); this.add(1); sfx(500, 0.05, "square", 0.04); } b.x = nx * (this.R - 17); b.y = ny * (this.R - 17); } else if (d > this.R + 10) { this.hurt(); this.serve(); } }
+    },
+    draw: function (now) {
+      var c = this.ctx, cx = this.W / 2, cy = this.cy; c.strokeStyle = "rgba(255,255,255,0.15)"; c.lineWidth = 3; c.beginPath(); c.arc(cx, cy, this.R, 0, TAU); c.stroke();
+      c.strokeStyle = "#3ddc84"; c.lineWidth = 12; c.lineCap = "round"; c.beginPath(); c.arc(cx, cy, this.R, this.a - 0.45, this.a + 0.45); c.stroke(); c.lineCap = "butt";
+      dot(c, cx + this.b.x, cy + this.b.y, 10, "#f2f2f2"); dot(c, cx, cy, 4, "rgba(255,255,255,0.2)");
+      this.ghostDrag(this.H - this.pb - 50, now);
+    }
+  }), "arcade");
+
+  /* 24. Bungee: mantené para caer, soltá para que el elástico te frene antes del piso */
+  regD("bungee", "Bungee", "Mantené apretado para caer y soltá para que el elástico te frene. Cuanto más cerca del agua, más puntos. No toques el agua.", "#ff9f1c", G("Bungee", {
+    ctl: "hold",
+    init: function () { this.top = this.pt + 60; this.y = 0; this.v = 0; this.ph = "ready"; this.maxd = 0; this.gnd = this.H - this.pb - 60 - this.top; this.st = []; this.mkStars(); },
+    mkStars: function () { this.st = []; for (var k = 0; k < 3; k++) this.st.push({ x: this.W / 2 + rnd(-10, 10), d: this.gnd * rnd(0.55, 0.9) }); },
+    press: function () { if (this.ph === "ready") { this.ph = "fall"; this.maxd = 0; this.acts++; } },
+    release: function () { if (this.ph === "fall") this.ph = "spring"; },
+    step: function (dt) {
+      var i; if (this.ph === "ready") return;
+      if (this.ph === "fall") { this.v += 900 * dt; }
+      else { var L0 = 40, k = 34; this.v += (900 - (this.y > L0 ? k * (this.y - L0) : 0)) * dt - this.v * 0.9 * dt; }
+      this.y += this.v * dt; this.maxd = Math.max(this.maxd, this.y);
+      for (i = 0; i < this.st.length; i++) { var s = this.st[i]; if (!s.got && Math.abs(this.y - s.d) < 18) { s.got = true; this.add(1); } }
+      if (this.y >= this.gnd - 12) { this.hurt(); this.reset2(); return; }
+      if (this.ph === "spring" && this.v < 0 && this.y < 50) { var pts = Math.floor(this.maxd / this.gnd * 6); if (this.maxd > this.gnd * 0.8) this.good(pts, this.W / 2, this.top + this.maxd, true); else this.add(Math.max(0, pts - 2)); this.reset2(); }
+    },
+    reset2: function () { this.ph = "ready"; this.y = 0; this.v = 0; this.mkStars(); },
+    draw: function (now) {
+      var c = this.ctx, x = this.W / 2, y = this.top + this.y, i; fillR(c, x - 60, this.top - 14, 120, 14, 4, "#55555f");
+      c.fillStyle = "#1f7fa8"; c.fillRect(0, this.top + this.gnd, this.W, this.H);
+      c.fillStyle = "rgba(255,77,109,0.35)"; c.fillRect(0, this.top + this.gnd * 0.8, this.W, 3);
+      for (i = 0; i < this.st.length; i++) if (!this.st[i].got) starG(c, this.st[i].x, this.top + this.st[i].d);
+      c.strokeStyle = this.ph === "fall" ? "rgba(255,210,63,0.5)" : "#ffd23f"; c.lineWidth = 3; c.beginPath(); c.moveTo(x, this.top); if (this.ph === "fall") { c.quadraticCurveTo(x + 30, this.top + this.y * 0.5, x, y - 12); } else c.lineTo(x, y - 12); c.stroke();
+      c.globalAlpha = this.fadeA(); buddy(c, x, y, 13, "#ff9f1c"); c.globalAlpha = 1;
+      this.ghostHold(x + 80, this.cy, now);
+    }
+  }), "sea");
+
+  /* 25. Boomerang: tocá a un lado para tirar el boomerang y bajar los pájaros */
+  regD("boomer", "Boomerang", "Tocá a la izquierda o a la derecha para tirar el boomerang hacia ese lado. Bajá los pájaros antes de que lleguen abajo.", "#c98a4a", G("Boomer", {
+    init: function () { this.bm = null; this.birds = []; this.next = 0.6; this.py = this.H - this.pb - 60; },
+    act: function (x) { if (this.bm) return; this.bm = { t: 0, dir: x < this.W / 2 ? -1 : 1 }; this.acts++; sfx(400, 0.1, "sawtooth", 0.03, 1.5); },
+    pos: function () { var b = this.bm, t = b.t, cx = this.W / 2; return { x: cx + b.dir * Math.sin(t * PI) * (this.W * 0.42) * (1 - t * 0.3), y: this.py - Math.sin(t * PI) * (this.py - this.pt - 60) * 0.95 + Math.sin(t * TAU) * 20 }; },
+    step: function (dt) {
+      var i; this.next -= dt;
+      if (this.next <= 0) { this.birds.push({ x: rnd(30, this.W - 30), y: this.pt - 10, v: rnd(40, 70) * (1 + Math.min(this.t, 60) * 0.012), ph: rnd(0, TAU) }); this.next = rnd(1.0, 1.8) * Math.max(0.5, 1 - this.t * 0.008); }
+      if (this.bm) { this.bm.t += dt / 1.3; var p = this.pos(); for (i = 0; i < this.birds.length; i++) { var b = this.birds[i]; if (!b.dead && Math.hypot(b.x - p.x, b.y - p.y) < 26) { b.dead = true; this.add(1); } } if (this.bm.t >= 1) this.bm = null; }
+      for (i = 0; i < this.birds.length; i++) { var q = this.birds[i]; q.y += q.v * dt; q.x += Math.sin(this.t * 2 + q.ph) * 30 * dt; if (!q.dead && q.y > this.py - 20) { q.dead = true; this.hurt(); } }
+      this.birds = this.birds.filter(function (q) { return !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i; for (i = 0; i < this.birds.length; i++) { var b = this.birds[i]; dot(c, b.x, b.y, 11, "#2b2b33"); poly(c, [b.x - 4, b.y - 2, b.x - 18, b.y - 12 + Math.sin(now / 90 + b.ph) * 6, b.x + 2, b.y - 4], "#2b2b33"); poly(c, [b.x + 4, b.y - 2, b.x + 18, b.y - 12 + Math.sin(now / 90 + b.ph) * 6, b.x - 2, b.y - 4], "#2b2b33"); dot(c, b.x, b.y + 2, 2, "#ff9f1c"); }
+      var bx = this.W / 2, by = this.py - 20; if (this.bm) { var p = this.pos(); bx = p.x; by = p.y; }
+      c.save(); c.translate(bx, by); c.rotate(this.bm ? now / 60 : -0.5); c.fillStyle = "#c98a4a"; c.beginPath(); c.moveTo(-18, -4); c.lineTo(0, -6); c.lineTo(4, 14); c.lineTo(-2, 14); c.lineTo(-2, 2); c.lineTo(-18, 4); c.closePath(); c.fill(); c.restore();
+      c.globalAlpha = this.fadeA(); buddy(c, this.W / 2, this.py + 10, 16, "#3ddc84"); c.globalAlpha = 1;
+      this.ghost(this.W * 0.75, this.py - 40, now);
+    }
+  }), "desert");
+
+  /* 26. Rampa: el skater sube solo; tocá en el aire para hacer un truco, antes de caer */
+  regD("halfpipe", "Rampa", "El skater va y viene solo. Tocá cuando está en el aire para hacer un truco, pero con tiempo: si cae a mitad del truco, se cae.", "#ff5fd2", G("Halfpipe", {
+    init: function () { this.ph = 0; this.trick = 0; this.did = false; this.fallen = 0; },
+    air: function () { return Math.abs(Math.sin(this.ph)) > 0.82; },
+    act: function () { if (this.fallen > 0 || this.trick > 0) return; this.acts++; if (this.air() && !this.did) { this.trick = 0.36; this.did = true; sfx(700, 0.08, "triangle", 0.05, 1.5); } else if (!this.air()) { this.hurt(); this.fallen = 0.8; } },
+    step: function (dt) {
+      if (this.fallen > 0) { this.fallen -= dt; return; }
+      var w = 2.2 * (1 + Math.min(this.t, 60) * 0.008), wasAir = this.air(); this.ph += w * dt;
+      if (this.trick > 0) { this.trick -= dt; if (this.trick <= 0) { this.trick = 0; if (this.air()) { this.add(2); } } }
+      if (wasAir && !this.air()) { if (this.trick > 0) { this.hurt(); this.trick = 0; this.fallen = 0.8; } this.did = false; }
+    },
+    draw: function (now) {
+      var c = this.ctx, cx = this.W / 2, R = this.W * 0.42, cy = this.cy - 40;
+      c.strokeStyle = "#c98a4a"; c.lineWidth = 14; c.beginPath(); c.arc(cx, cy, R, 0.1, PI - 0.1); c.stroke(); c.fillStyle = "#8a5a2b"; c.fillRect(cx - R - 20, cy + Math.sin(0.1) * R - 4, 26, this.H); c.fillRect(cx + R - 6, cy + Math.sin(0.1) * R - 4, 26, this.H);
+      var s = Math.sin(this.ph), a = PI / 2 - s * 1.45, x = cx + Math.cos(a) * (R - 18), y = cy + Math.sin(a) * (R - 18), lift = this.air() ? (Math.abs(s) - 0.82) / 0.18 * 70 : 0; y -= lift;
+      c.save(); c.translate(x, y); c.rotate(a - PI / 2 + (this.trick > 0 ? (1 - this.trick / 0.36) * TAU : 0)); fillR(c, -18, 10, 36, 6, 3, "#ff5fd2"); dot(c, -11, 18, 3, "#2b2b33"); dot(c, 11, 18, 3, "#2b2b33"); c.restore();
+      c.globalAlpha = this.fallen > 0 ? 0.5 : this.fadeA(); buddy(c, x, y - 6, 12, "#ffd23f", s > 0 ? 1 : -1); c.globalAlpha = 1;
+      this.ghost(cx, cy + R + 40, now);
+    }
+  }), "city");
+
+  /* 27. Palo en equilibrio: arrastrá para mantener el palo parado */
+  regD("broom", "Palo en equilibrio", "Arrastrá a los costados para mantener el palo parado sobre la mano. Si se cae, perdés una vida.", "#ffd23f", G("Broom", {
+    ctl: "drag",
+    init: function () { this.hx = this.W / 2; this.pv = this.W / 2; this.bt = 0; this.w = 0; this.L = 150; this.acc2 = 0; this.tt = 0; this.wind = 0; },
+    drag: function (x) { this.hx = clamp(x, 30, this.W - 30); },
+    step: function (dt) {
+      var prev = this.pv; this.pv += (this.hx - this.pv) * Math.min(1, dt * 20); var vel = (this.pv - prev) / Math.max(dt, 1e-3); var acc = (vel - (this.lastV || 0)) / Math.max(dt, 1e-3); this.lastV = vel;
+      this.wind = Math.sin(this.t * 0.7) * 0.8 + Math.sin(this.t * 1.9) * 0.4;
+      var g = 9.8 * 40 / this.L * (1 + Math.min(this.t, 60) * 0.01); this.w += (g * Math.sin(this.bt) - clamp(acc, -6000, 6000) / this.L * Math.cos(this.bt) * 0.9 + this.wind * 0.3) * dt; this.w *= 0.99; this.bt += this.w * dt;
+      this.tt += dt; if (this.tt >= 1) { this.tt -= 1; this.add(1); }
+      if (Math.abs(this.bt) > 1.1) { this.hurt(); this.bt = 0; this.w = 0; }
+    },
+    draw: function (now) {
+      var c = this.ctx, hy = this.H - this.pb - 120, tx = this.pv + Math.sin(this.bt) * this.L, ty = hy - Math.cos(this.bt) * this.L;
+      c.strokeStyle = "#c98a4a"; c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(this.pv, hy); c.lineTo(tx, ty); c.stroke(); c.lineCap = "butt";
+      c.save(); c.translate(tx, ty); c.rotate(this.bt); poly(c, [-16, -4, 16, -4, 22, -30, -22, -30], "#ffd23f"); c.restore();
+      c.globalAlpha = this.fadeA(); dot(c, this.pv, hy + 8, 14, "#f2b48a"); fillR(c, this.pv - 8, hy + 14, 16, 60, 6, "#f2b48a"); c.globalAlpha = 1;
+      this.ghostDrag(hy + 50, now);
+    }
+  }), "circus");
+
+  /* 28. Bola de nieve: arrastrá para juntar nieve y crecer; los árboles te achican */
+  regD("snowball", "Bola de nieve", "Arrastrá a los costados. Pasá por la nieve para crecer y esquivá los árboles: si sos más grande que un árbol, lo aplastás.", "#f2f2f2", G("Snowball", {
+    ctl: "drag",
+    init: function () { this.x = this.W / 2; this.tx = this.W / 2; this.r = 18; this.ob = []; this.next = 0.3; this.y = this.pt + 150; },
+    drag: function (x) { this.tx = x; },
+    step: function (dt) {
+      var v = 200 * (1 + Math.min(this.t, 60) * 0.012), i; this.x += (this.tx - this.x) * Math.min(1, dt * 8) ; this.x = clamp(this.x, this.r, this.W - this.r); this.next -= dt;
+      if (this.next <= 0) { var tr = Math.random() < 0.55; this.ob.push({ x: rnd(20, this.W - 20), y: this.H + 30, tr: tr, s: tr ? rnd(16, 34) : rnd(12, 20) }); this.next = rnd(0.25, 0.5); }
+      for (i = 0; i < this.ob.length; i++) { var o = this.ob[i]; o.y -= v * dt; if (o.dead) continue; if (Math.hypot(o.x - this.x, o.y - this.y) < this.r + o.s * 0.6) { o.dead = true; if (!o.tr) { this.r = Math.min(46, this.r + 2.2); this.add(1); } else if (this.r > o.s * 1.2) { this.good(2, o.x, o.y); this.r = Math.max(10, this.r - 1); } else { this.r -= 8; if (this.r < 12) { this.hurt(); this.r = 18; } else sfx(140, 0.1, "square", 0.04); } } }
+      this.r = Math.max(10, this.r - 0.6 * dt);
+      this.ob = this.ob.filter(function (q) { return q.y > -40 && !q.dead; });
+    },
+    draw: function (now) {
+      var c = this.ctx, i; for (i = 0; i < this.ob.length; i++) { var o = this.ob[i]; if (o.tr) tree(c, o.x, o.y, o.s * 1.4); else { dot(c, o.x, o.y, o.s, "#ffffff"); dot(c, o.x - o.s * 0.3, o.y + o.s * 0.2, o.s * 0.6, "#e2ecf7"); } }
+      c.globalAlpha = this.fadeA(); dot(c, this.x, this.y, this.r, "#ffffff"); dot(c, this.x - this.r * 0.3, this.y + this.r * 0.25, this.r * 0.35, "#dde7f2"); dot(c, this.x + this.r * 0.35, this.y - this.r * 0.2, this.r * 0.22, "#dde7f2"); c.globalAlpha = 1;
+      this.ghostDrag(this.y + 90, now);
+    }
+  }), "snow");
+
+  /* 29. Platos chinos: tocá cada palo para que el plato siga girando */
+  regD("plates", "Platos chinos", "Los platos van perdiendo vueltas y se tambalean. Tocá cada palo para hacerlos girar antes de que se caigan.", "#ff9f1c", G("Plates", {
+    init: function () { this.pl = []; this.add2(); this.add2(); this.add2(); this.nt = 18; },
+    add2: function () { this.pl.push({ s: rnd(0.7, 1), d: rnd(0.11, 0.16), ph: rnd(0, TAU) }); this.lay(); },
+    lay: function () { var n = this.pl.length, w = (this.W - 40) / n; for (var k = 0; k < n; k++) this.pl[k].x = 20 + w * (k + 0.5); },
+    act: function (x) { var best = null, bd = 1e9; for (var k = 0; k < this.pl.length; k++) { var d = Math.abs(this.pl[k].x - x); if (d < bd) { bd = d; best = this.pl[k]; } } if (!best) return; this.acts++; if (best.s < 0.25) this.good(2, best.x, this.cy, true); else if (best.s < 0.55) this.add(1); best.s = 1; sfx(600, 0.06, "triangle", 0.04, 1.4); },
+    step: function (dt) {
+      for (var k = 0; k < this.pl.length; k++) { var p = this.pl[k]; p.s -= p.d * (1 + Math.min(this.t, 90) * 0.01) * dt; p.ph += (2 + p.s * 14) * dt; if (p.s <= 0) { this.hurt(); p.s = 1; } }
+      if (this.t > this.nt && this.pl.length < 5) { this.nt += 18; this.add2(); }
+    },
+    draw: function (now) {
+      var c = this.ctx, k, base = this.H - this.pb - 40, top = this.cy - 40;
+      for (k = 0; k < this.pl.length; k++) { var p = this.pl[k], wob = (1 - p.s) * 0.5 * Math.sin(p.ph * 0.6); c.strokeStyle = "#d9dde3"; c.lineWidth = 4; c.beginPath(); c.moveTo(p.x, base); c.lineTo(p.x + Math.sin(wob) * (base - top), top); c.stroke();
+        c.save(); c.translate(p.x + Math.sin(wob) * (base - top), top); c.rotate(wob * 1.4); var col = p.s < 0.25 ? "#ff4d6d" : p.s < 0.55 ? "#ffd23f" : "#f2f2f2"; c.fillStyle = col; c.beginPath(); c.ellipse(0, -4, 34, 9, 0, 0, TAU); c.fill(); c.fillStyle = "rgba(0,0,0,0.15)"; c.beginPath(); c.ellipse(Math.cos(p.ph) * 18, -5, 6, 3, 0, 0, TAU); c.fill(); c.restore(); }
+      fillR(c, 0, base, this.W, 10, 0, "#8a5a2b");
+      this.ghost(this.pl[0].x, top + 60, now);
+    }
+  }), "circus");
+
+  /* 30. Clavados: mantené para girar rápido y soltá para entrar derecho al agua */
+  regD("dive", "Clavados", "Mantené apretado para dar vueltas y soltá para abrirte. Tenés que entrar al agua derecho, de cabeza.", "#5ce1e6", G("Dive", {
+    ctl: "hold",
+    init: function () { this.reset2(); },
+    reset2: function () { this.ph = "ready"; this.y = 0; this.vy = 0; this.a = 0; this.rot = 0; this.wt = 0.5; },
+    press: function () { if (this.ph === "ready" && this.wt <= 0) { this.ph = "air"; this.vy = -420; this.acts++; } },
+    step: function (dt) {
+      if (this.ph === "ready") { this.wt -= dt; return; }
+      if (this.ph === "done") { this.wt -= dt; if (this.wt <= 0) this.reset2(); return; }
+      var sp = this.holding ? 9 : 1.2; this.a += sp * dt; this.rot += sp * dt; this.vy += 900 * dt; this.y += this.vy * dt;
+      var water = this.H - this.pb - 90 - (this.pt + 110);
+      if (this.y >= water) { var err = adiff(this.a, PI); var flips = Math.floor((this.rot + 0.6) / TAU); if (err < 0.5) { this.good(1 + flips * 2, this.W / 2, this.y, err < 0.2); } else this.hurt(); this.ph = "done"; this.wt = 0.8; }
+    },
+    draw: function (now) {
+      var c = this.ctx, bx = this.W * 0.3, by = this.pt + 110, wy = this.H - this.pb - 90; fillR(c, 0, by + 14, bx + 30, 10, 3, "#f2f2f2"); c.fillStyle = "#55555f"; c.fillRect(10, by + 24, 16, this.H);
+      c.fillStyle = "#1f9fb8"; c.fillRect(0, wy + 12, this.W, this.H); c.fillStyle = "rgba(255,255,255,0.3)"; c.fillRect(0, wy + 12, this.W, 4);
+      var x = this.ph === "ready" ? bx : bx + Math.min(110, (this.y + 200) * 0.25), y = by + this.y;
+      c.save(); c.translate(x, y); c.rotate(this.a); c.globalAlpha = this.fadeA(); fillR(c, -7, -6, 14, 30, 6, "#ff4d6d"); buddy(c, 0, -14, 10, "#f2b48a"); c.globalAlpha = 1; c.restore();
+      this.ghostHold(this.W * 0.7, this.cy, now);
+    }
+  }), "sea");
 
   /* ================= catalog and feed ================= */
   var CATALOG = [

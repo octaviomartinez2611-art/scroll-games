@@ -66,6 +66,9 @@ Para cambiar algo, editar la fuente que corresponde y volver a correr `build.sh`
 - Arrastrar solo en horizontal: un arrastre vertical hace scroll del feed.
 - `t28.js` juega los 200 con su control; `t30.js` tiene bots que demuestran que se puede ganar.
 
+## Tanda de 30 mecánicas nuevas (f9.js y f10.js)
+Pidió "300 juegos distintos"; se acordó hacerlo en tandas de 30 mecánicas nuevas de verdad, una sola versión cada una (ids sin guion bajo, así cada uno es su propia familia para el algoritmo). Tanda 1 (15/11): Pinball, Tobogán, Paracaidista, Saltar la soga, Grúa de peluches, Leñador, Pájaro entre pinchos, Dúo, Salto entre planetas, Salto de esquí, Baldosas, Penales, Vóley, Samurái, Montaña rusa, Ladrón, Laberinto giratorio, Panqueques, Semáforos, Avión de paquetes, Dos autos, Bateo, Pong circular, Bungee, Boomerang, Rampa, Palo en equilibrio, Bola de nieve, Platos chinos, Clavados. Total: 167. `t40.js` los juega; `t42.js` tiene bots (planetas, soga, clavados, rampa, panqueques, leñador). Próximas tandas: mecánicas que no estén en esta lista ni en las familias.
+
 ## Funcionamiento
 - Gracia al llegar: en los primeros 3 s de una partida no se pierde vida si todavía no tocaste la pantalla (`this.inp`, en `hurt`). Antes había juegos que te sacaban 1 o 2 vidas antes de entender qué hacer (Peloteo, Seguime, Cajas, Flotador, Cinta).
 - Diagnóstico: `t25.js` (vidas perdidas sin tocar en 3 s y puntaje con toques al azar) y `t11.js` (barrido completo: errores y pantalla vacía).
