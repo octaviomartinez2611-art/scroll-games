@@ -4,6 +4,8 @@
 
 [functions]
   node_bundler = "esbuild"
+  # web-push es CommonJS y usa require() de Node: se deja como módulo aparte, sin empaquetar
+  external_node_modules = ["web-push"]
 
 [[headers]]
   for = "/sw.js"

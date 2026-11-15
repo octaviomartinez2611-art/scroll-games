@@ -540,7 +540,8 @@ R20('  function vib(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } 
     } catch (e) {}
   }
   var PENTA = [1, 1.125, 1.25, 1.5, 1.667, 2, 2.25, 2.5, 3, 3.333, 4], VOICE = { b: 523, ty: "triangle" };
-  function voiceFor(id) { var u = id.indexOf("_"), f = u > 0 ? id.slice(0, u) : id, h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) >>> 0; return { b: [392, 440, 494, 523, 587, 659][h % 6], ty: ["triangle", "triangle", "sine", "square", "triangle", "sine"][(h >> 3) % 6] }; }""")
+  function voiceFor(id) { var u = id.indexOf("_"), f = u > 0 ? id.slice(0, u) : id, h = 0; for (var i = 0; i < f.length; i++) h = (h * 31 + f.charCodeAt(i)) >>> 0; return { b: [392, 440, 494, 523, 587, 659][h % 6], ty: ["triangle", "triangle", "sine", "square", "triangle", "sine"][(h >> 3) % 6] }; }
+  window.TOKI_CAT = function () { return CATALOG.map(function (c) { return [c.id, c.name]; }); };""")
 R20('    hit: function (c) { sfx(520 + Math.min(c || 0, 12) * 36, 0.12, "triangle", 0.09); },\n    perfect: function () { sfx(880, 0.16, "triangle", 0.1); sfx(1320, 0.2, "sine", 0.05); },\n    hurt: function () { sfx(200, 0.28, "sawtooth", 0.06, 0.5); vib(40); },\n    end: function () { sfx(300, 0.5, "triangle", 0.08, 0.45); },',
  '    hit: function (c) { var k = Math.min(c || 0, 10); sfx(VOICE.b * PENTA[k], 0.12, VOICE.ty, VOICE.ty === "square" ? 0.045 : 0.09); vib(8); },\n    perfect: function () { sfx(VOICE.b * 2, 0.16, VOICE.ty, VOICE.ty === "square" ? 0.05 : 0.1); sfx(VOICE.b * 3, 0.2, "sine", 0.05); vib(16); },\n    hurt: function () { sfx(200, 0.28, "sawtooth", 0.06, 0.5); vib(45); },\n    end: function () { sfx(300, 0.5, "triangle", 0.08, 0.45); vib(70); },')
 R20('    rec: function () { sfx(660, 0.1, "triangle", 0.08);', '    rec: function () { vib([20, 50, 30]); sfx(660, 0.1, "triangle", 0.08);')

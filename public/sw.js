@@ -2,7 +2,7 @@
 // La página: se abre al toque con la versión guardada y, mientras jugás, se baja la nueva en segundo plano
 // (la novedad aparece la próxima vez que abrís). Si todavía no hay nada guardado, va a la red.
 // /api/* nunca se guarda: cuenta, amigos y mensajes siempre van al servidor.
-const CACHE = "sa-v3";
+const CACHE = "sa-v4";
 const FILES = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -19,4 +19,18 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   e.respondWith(caches.match(req).then((c) => c || fromNet(req)));
+});
+
+// Avisos: mensajes de amigos y el juego del día. Al tocar el aviso abre el chat o el juego.
+self.addEventListener("push", (e) => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.title || "Toki", { body: d.body || "", icon: "/icon-192.png", badge: "/icon-192.png", tag: d.tag || undefined, renotify: !!d.tag, data: { chat: d.chat || null, game: d.game || null } }));
+});
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close(); const d = e.notification.data || {};
+  const url = d.chat ? "/?chat=" + encodeURIComponent(d.chat) : d.game ? "/#" + String(d.game).replace(/_/g, "-") : "/";
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((cs) => {
+    for (const c of cs) if ("focus" in c) { c.postMessage(d); return c.focus(); }
+    return self.clients.openWindow(url);
+  }));
 });

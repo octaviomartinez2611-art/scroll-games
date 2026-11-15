@@ -339,6 +339,38 @@ rep('''    var h = document.createElement("h2"); h.textContent = "Mensajes repor
     }).catch(function (x) { ul.textContent = x.message; });
     var h = document.createElement("h2"); h.textContent = "Mensajes reportados"; w.appendChild(h);''')
 
+# ---------- avisos al teléfono (Web Push): mensajes de amigos y el juego del día del algoritmo ----------
+def repall(old, new):
+    global s
+    assert s.count(old) >= 1, ('push', old[:70])
+    s = s.replace(old, new)
+rep('      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>',
+    '      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>\n      <button class="toggle" id="ntfBtn" aria-pressed="false">Avisos <em id="ntfState">No</em></button>')
+repall('    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No";',
+    '    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No"; ntfUI();')
+rep('  function signedIn(d) {', '''  function pushOK() { return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; }
+  function b64u(s) { var p = "====".slice((s.length % 4) || 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+  var ntfOn = false;
+  function ntfUI() { var e = $("ntfState"), b = $("ntfBtn"); if (!e) return; e.textContent = !pushOK() ? (IOS && !navigator.standalone ? "Agregá Toki al inicio" : "No se puede") : Notification.permission === "denied" ? "Bloqueados" : ntfOn ? "Sí" : "No"; b.setAttribute("aria-pressed", String(ntfOn)); }
+  function pushSub(ask) {
+    if (!pushOK() || !TOK) return Promise.resolve(false);
+    var perm = ask && Notification.permission === "default" ? Notification.requestPermission() : Notification.permission;
+    return Promise.resolve(perm).then(function (p) {
+      if (p !== "granted") { ntfUI(); return false; }
+      return Promise.all([navigator.serviceWorker.ready, api("push/key")]).then(function (r) { var reg = r[0]; return reg.pushManager.getSubscription().then(function (x) { return x || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(r[1].key) }); }); })
+        .then(function (x) { return api("push/sub", { method: "POST", body: { sub: x.toJSON() } }); })
+        .then(function () { ntfOn = true; if (P.ntf !== true) { P.ntf = true; save(); } ntfUI(); return true; });
+    }).catch(function () { ntfUI(); return false; });
+  }
+  function pushOff() { ntfOn = false; P.ntf = false; save(); ntfUI(); if (!pushOK()) return; navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }).then(function (x) { if (!x) return; var ep = x.endpoint; return x.unsubscribe().then(function () { return api("push/unsub", { method: "POST", body: { endpoint: ep } }); }); }).catch(function () {}); }
+  function openFromPush(d) { if (!d) return; if (d.chat) { chatWith = String(d.chat); setView("chat"); } else if (d.game) { setView("play"); location.hash = String(d.game).replace(/_/g, "-"); } }
+  function chatFromUrl() { var n = new URLSearchParams(location.search).get("chat"); if (n) { try { history.replaceState(null, "", "/" + location.hash); } catch (e) {} openFromPush({ chat: n }); } }
+  if (pushOK()) navigator.serviceWorker.addEventListener("message", function (e) { openFromPush(e.data); });
+  $("ntfBtn").addEventListener("click", function () { if (ntfOn) pushOff(); else if (!TOK) showLogin(); else pushSub(true); });
+  (function () { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.addEventListener("click", function () { if (TOK && !P.ntfAsked && P.ntf !== false && pushOK() && Notification.permission === "default") { P.ntfAsked = true; save(); pushSub(true); } }); })();
+  function signedIn(d) {''')
+rep('applyState(d.state); hideLogin(); loadFriends(); loadBests();', 'applyState(d.state); hideLogin(); loadFriends(); loadBests(); if (P.ntf !== false && pushOK() && Notification.permission === "granted") pushSub(false); chatFromUrl();')
+
 # full document
 k=s.index("</style>")+len("</style>")
 doc='<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="theme-color" content="#000000">\n<link rel="manifest" href="/manifest.webmanifest">\n<link rel="apple-touch-icon" href="/icon-192.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="black">\n<meta name="apple-mobile-web-app-title" content="Toki">\n<link rel="icon" href="/icon-192.png">\n'+s[:k]+'\n</head>\n<body>\n'+s[k:]+'\n</body>\n</html>\n'

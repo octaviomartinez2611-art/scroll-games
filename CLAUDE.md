@@ -96,8 +96,17 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 - Rival: debajo del puntaje dice "Superá a <amigo> · N" con el récord del amigo más cercano por encima; al pasarlo suena y pasa al siguiente; si no queda nadie, "1º entre amigos". Datos de `/api/bests` (`FB` en el cliente).
 - Ranking del juego entre amigos dentro de la hoja del botón "?".
 - Desafío de hoy: mismo juego para todos según la fecha; es el primer juego del día y hay un botón en Perfil.
-- Decidido NO hacer: notificaciones, premios al azar, ni castigos por no entrar.
+- Decidido NO hacer: premios al azar ni castigos por no entrar. (Notificaciones sí: las pidió el 15/11, ver abajo.)
 - No suponer la edad de los usuarios ni preguntarla: el dueño dijo que no es asunto nuestro.
+
+## Avisos al teléfono (Web Push, 15/11)
+- Pidió: mensajes de amigos (incluye "te mandó un juego") y uno por día "con voz del algoritmo" recomendando un juego nuevo. NO quiere aviso de "te superaron un récord".
+- Servidor: `netlify/lib/push.mjs` (claves VAPID generadas solas y guardadas en Blobs `cfg/vapid`, nunca en el repo; suscripciones `p/<usuario>`, hasta 5 teléfonos; las vencidas 404/410 se borran solas). `api.mjs`: `GET /api/push/key`, `POST /api/push/sub`, `POST /api/push/unsub`, y avisa al mandar un mensaje. `netlify/functions/daily.mjs`: función programada `0 21 * * *` (18 h de Argentina): elige con `pickFor` un juego no visto (familia de tus favoritos + "a los que les gusta lo mismo" + popularidad) y arma el texto con `recoText` ("Como te enganchó Dardos, este te va a encantar: Bolos"). No manda si estás jugando (estado de hace <20 min) ni dos veces en 20 h (`pr/<usuario>`). `web-push` va en `external_node_modules` (netlify.toml).
+- Nombres de juegos para el servidor: `netlify/lib/catalog.mjs`, lo genera `src/mkcat.cjs` en cada build (usa `window.TOKI_CAT`).
+- Cliente (build6, sección "avisos al teléfono"): botón "Avisos" en el Perfil; además pide permiso la primera vez que tocás la pestaña Amigos. Tocar el aviso abre el chat (`/?chat=nombre`) o el juego (`/#id`). `sw.js` muestra el aviso (CACHE sa-v4).
+- iPhone: solo si Toki está agregada a la pantalla de inicio (iOS 16.4+); si no, el botón dice "Agregá Toki al inicio".
+- Desde acá no se puede configurar el panel de Netlify (proxy 403), por eso la clave se genera sola en el servidor.
+- Probado: `ntest/pushtest.mjs` en el scratchpad con un servicio de avisos falso (https local): llegan cifrados con VAPID, el texto se lee bien, el diario manda uno solo, las suscripciones vencidas se borran. No probado en teléfono real (el Chromium de prueba no deja suscribirse).
 
 ## Pendientes ofrecidos (no pedidos todavía)
 - Aviso de descanso tras un rato largo, tiempo de juego del día en el Perfil, texto de privacidad y botón para borrar la cuenta.

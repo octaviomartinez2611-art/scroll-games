@@ -7,9 +7,12 @@
 //   m/<a~b>/<tiempo>-<rand>  un mensaje por clave (solo se agregan, nunca se reescriben)
 //   r/<tiempo>-<rand>        reporte de un mensaje
 //   agg/trends               gustos de todos juntos (sin nombres), se recalcula cada 10 minutos
+//   p/<usuario>              teléfonos suscriptos a avisos · pr/<usuario> último aviso del algoritmo · cfg/vapid clave de avisos
 import { getStore } from "@netlify/blobs";
 import { scryptSync, randomBytes, timingSafeEqual, createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
+import { vapid, addSub, rmSub, pushTo } from "../lib/push.mjs";
+import CAT from "../lib/catalog.mjs";
 
 const NAME = /^[a-z0-9_.]{3,16}$/;
 const J = (d, s = 200) => Response.json(d, { status: s });
@@ -111,6 +114,7 @@ async function handle(req) {
       await st.setJSON("agg/trends", { at: Date.now(), data });
       return J(data);
     }
+    if (path === "push/key" && m === "GET") return J({ key: (await vapid(st)).publicKey });
     const me = await who(req, st);
     if (!me) return J({ error: "Tenés que entrar de nuevo." }, 401);
 
@@ -175,8 +179,16 @@ async function handle(req) {
       else { const text = String(body.text || "").trim().slice(0, 300); if (!text) return J({ error: "Mensaje vacío." }, 400); msg.text = text; }
       const k = "m/" + conv(me, n) + "/" + rid();
       await st.setJSON(k, msg);
+      try { await pushTo(st, n, { title: me, body: msg.game ? "Te mandó un juego: " + (CAT[msg.game] || "jugalo") : msg.text, chat: me, tag: "chat-" + me }); } catch (e) { console.error("push", e); }
       return J({ msg: { k, ...msg } });
     }
+    if (path === "push/sub" && m === "POST") {
+      const sub = body.sub || {}, k = sub.keys || {};
+      if (!/^https:\/\/[^\s]{10,900}$/.test(String(sub.endpoint || "")) || !k.p256dh || !k.auth || String(k.p256dh).length > 200 || String(k.auth).length > 100) return J({ error: "Suscripción inválida." }, 400);
+      await addSub(st, me, sub);
+      return J({ ok: true });
+    }
+    if (path === "push/unsub" && m === "POST") { await rmSub(st, me, String(body.endpoint || "")); return J({ ok: true }); }
     if (path === "report" && m === "POST") {
       const n = String(body.with || "").toLowerCase(), k = String(body.k || "");
       if (!NAME.test(n) || !k.startsWith("m/" + conv(me, n) + "/")) return J({ error: "Reporte inválido." }, 400);
