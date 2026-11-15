@@ -61,3 +61,14 @@ export function recoText(cat, r, day) {
     : ["Juego nuevo para vos: " + n + ". Te va a encantar.", n + " está enganchando a todos. ¿Te animás?", "El algoritmo te eligió " + n + ". Probalo."];
   return A[day % A.length];
 }
+
+// Más avisos en el día: además del juego nuevo, "volvé a tu favorito" y "rompé tu récord".
+function engs(P, cat) {
+  const st = (P && P.st) || {}, L = (P && P.likes) || {}, S = (P && P.saved) || {}, out = [];
+  for (const id in st) { if (!cat[id]) continue; const s = st[id] || {}, n = Math.max(s.n || 0, 1); out.push([id, (Math.min(s.t || 0, 3000) / 40 + 0.8 * (s.r || 0) + 1.2 * (s.nb || 0) + 0.8 * (s.rec || 0) - 1.5 * (s.k || 0) + (L[id] ? 4 : 0) + (S[id] ? 6 : 0)) / n, s.ls || 0]); }
+  return out.sort((a, b) => b[1] - a[1]);
+}
+export function favFor(P, cat, now, skip) { const c = engs(P, cat).filter((x) => x[1] > 0.8 && now - x[2] > 6 * 3600e3 && !skip.has(x[0])).slice(0, 5); return c.length ? c[Math.floor(Math.random() * c.length)][0] : null; }
+export function recFor(P, cat, skip) { const b = (P && P.best) || {}, c = Object.keys(b).filter((id) => cat[id] && b[id] >= 5 && !skip.has(id)).sort((x, y) => b[y] - b[x]).slice(0, 6); return c.length ? c[Math.floor(Math.random() * c.length)] : null; }
+export function favText(cat, id, k) { const n = cat[id]; return ["Hace rato no jugás " + n + ". Tu favorito te espera.", "¿Una de " + n + "? Siempre te engancha.", n + " te extraña. Una partidita y listo."][k % 3]; }
+export function recText(cat, id, best, k) { const n = cat[id]; return ["Tu récord en " + n + " es " + best + ". ¿Hoy lo rompés?", "Estás a nada de superar tu récord en " + n + " (" + best + ").", "Hoy es el día: tu récord de " + n + " (" + best + ") puede caer."][k % 3]; }
