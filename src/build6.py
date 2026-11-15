@@ -61,8 +61,7 @@ rep('/* ---- sheets ---- */','''.login { position: fixed; inset: 0; z-index: 30;
 rep('html, body { height: 100%; }','html, body { height: 100%; margin: 0; }\nbody { height: 100dvh; }')
 rep('.bar { display: flex; gap: 6px; flex: none; padding: 6px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px));',
     '.bar { display: flex; gap: 6px; flex: none; padding: 6px max(16px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));')
-# Netlify pone su cartel abajo a la derecha: los botones van a la izquierda y le dejan ese lugar
-rep('/* ---- sheets ---- */','.bar { padding-right: 200px !important; }\n@media (min-width: 560px) { .bar { padding-right: 16px !important; } }\n/* ---- sheets ---- */')
+# (Antes se dejaban 200 px a la derecha para el cartel de Netlify del plan gratis; con el plan pago se sacó.)
 
 # ---------- state sync hook ----------
 rep('  function save() { try { localStorage.setItem("swipe-arcade-v3", JSON.stringify(P)); } catch (e) {} }',
