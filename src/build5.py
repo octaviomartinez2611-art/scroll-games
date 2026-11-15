@@ -553,5 +553,26 @@ R20('    $("sndBtn").setAttribute("aria-pressed", String(P.sound)); $("sndState"
 R20('  $("sndBtn").addEventListener("click", toggleSound);',
  '  $("sndBtn").addEventListener("click", toggleSound);\n  $("vibBtn").addEventListener("click", function () { P.vib = P.vib === false; save(); $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No"; if (P.vib !== false) { hapT = 0; vib(30); } });')
 print('ok20')
+
+# ===== ok21: como TikTok, al perder pasa solo al juego siguiente (tocar = reintentar) =====
+def R21(a, b):
+    global s
+    assert s.count(a) == 1, ('ok21', a[:70])
+    s = s.replace(a, b, 1)
+R21('if (g.state === "over" && now > g.restartAt) { stOf(g.cfg.id).r++; g.reset(); g.begin(); }',
+    'if (g.state === "over" && now > g.restartAt) { if (P.auto !== false && slides[act + 1]) { if (now > g.overAt + AUTO_MS && !g._adv) { g._adv = true; feed.scrollTo({ top: (act + 1) * h, behavior: "smooth" }); } } else { stOf(g.cfg.id).r++; g.reset(); g.begin(); } }')
+R21('else if (this.state === "over" && performance.now() - this.overAt > 450) { this.reset(); this.begin(); }',
+    'else if (this.state === "over" && performance.now() - this.overAt > 450 && !this._adv) { stOf(this.cfg.id).r++; this.reset(); this.begin(); }')
+R21('    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();\n  };',
+    '    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();\n    if (this.state === "over" && P.auto !== false && !this._adv) { var ak = clamp((performance.now() - this.overAt) / AUTO_MS, 0, 1); c.save(); c.setTransform(d, 0, 0, d, 0, 0); c.fillStyle = "rgba(255,255,255,0.18)"; c.fillRect(0, this.H - 3, this.W, 3); c.fillStyle = "rgba(255,255,255,0.85)"; c.fillRect(0, this.H - 3, this.W * ak, 3); c.restore(); }\n  };')
+R21('  var PENTA = [', '  var AUTO_MS = 1800;\n  var PENTA = [')
+R21('      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>',
+    '      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>\n      <button class="toggle" id="autoBtn" aria-pressed="true">Pasar solo al perder <em id="autoState">Sí</em></button>')
+s = s.replace('    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No";',
+    '    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No";\n    $("autoBtn").setAttribute("aria-pressed", String(P.auto !== false)); $("autoState").textContent = P.auto !== false ? "Sí" : "No";')
+R21('  $("vibBtn").addEventListener("click", function () {',
+    '  $("autoBtn").addEventListener("click", function () { P.auto = P.auto === false; save(); $("autoBtn").setAttribute("aria-pressed", String(P.auto !== false)); $("autoState").textContent = P.auto !== false ? "Sí" : "No"; });\n  $("vibBtn").addEventListener("click", function () {')
+R21('lastAct = act; viewT = 0;', 'lastAct = act; viewT = 0; var ng0 = cache[act]; if (ng0 && ng0.state === "over") { ng0._adv = false; ng0.reset(); }')
+print('ok21')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')
