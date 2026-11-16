@@ -574,5 +574,36 @@ R21('  $("vibBtn").addEventListener("click", function () {',
     '  $("autoBtn").addEventListener("click", function () { P.auto = P.auto === false; save(); $("autoBtn").setAttribute("aria-pressed", String(P.auto !== false)); $("autoState").textContent = P.auto !== false ? "Sí" : "No"; });\n  $("vibBtn").addEventListener("click", function () {')
 R21('lastAct = act; viewT = 0;', 'lastAct = act; viewT = 0; var ng0 = cache[act]; if (ng0 && ng0.state === "over") { ng0._adv = false; ng0.reset(); }')
 print('ok21')
+# ===== ok22: más color (15/11 23:30, pidió "mucho más colores, más vibrante") =====
+# Todo lo que dibujan los juegos sale más saturado y brillante; botones de la derecha en círculos de color con su base
+# sólida corrida (mismo volumen tipo juguete, sin difuminado); pestañas con color; el puntaje cambia de color a cada punto.
+def R22(a, b):
+    global s
+    assert s.count(a) == 1, ('ok22', a[:70])
+    s = s.replace(a, b, 1)
+R22('</style>', '''/* ok22: más color */
+.slide canvas { filter: saturate(1.3) brightness(1.05); }
+.rail button:not(.spd) { width: 48px; height: 48px; padding: 0; margin-bottom: 6px; justify-content: center; border-radius: 50%; background: var(--rc); box-shadow: 0 4px 0 var(--rd); }
+.rail button:not(.spd) svg { width: 27px; height: 27px; stroke: #fff; stroke-width: 2.4; }
+#rLike { --rc: #ff2e63; --rd: #9e1038; } #rSave { --rc: #ffb400; --rd: #a06f00; } #rSend { --rc: #1fcf6f; --rd: #0c7c40; } #rHelp { --rc: #9058ff; --rd: #5527b5; }
+.rail .on svg { fill: #fff; stroke: #fff; }
+.rail .spd { background: #ff7a1a; color: #fff; box-shadow: 0 4px 0 #a64700; margin-bottom: 6px; }
+.rail .spd[aria-pressed="true"] { background: #fff; color: #000; box-shadow: 0 4px 0 #9a9a9a; }
+.bar { border-top: 0 !important; background-image: linear-gradient(90deg, #ff2e63 0 25%, #ffb400 25% 50%, #1fcf6f 50% 75%, #9058ff 75% 100%) !important; background-size: 100% 3px !important; background-repeat: no-repeat !important; }
+.tab[data-v="play"] { --tc: #ff2e63; } .tab[data-v="friends"] { --tc: #ffb400; } .tab[data-v="profile"] { --tc: #1fcf6f; }
+.tab[aria-current="page"] { color: var(--tc); } .tab[aria-current="page"] svg { fill: var(--tc); stroke: var(--tc); }
+.score { color: var(--sc, #fff); text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); }
+.pf .avatar { background-color: #9058ff; color: #fff; box-shadow: 0 4px 0 #5527b5; }
+.lvlchip { background: #ffb400; color: #000; }
+.stat:nth-child(1) b { color: #ff2e63; } .stat:nth-child(2) b { color: #1fcf6f; } .stat:nth-child(3) b { color: #ffb400; } .stat:nth-child(4) b { color: #b57bff; }
+.lvlbar .track i { background: #ffd23f; }
+.tabs2 button[aria-selected="true"] { color: #ff2e63; border-bottom-color: #ff2e63; }
+</style>''')
+R22('if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)";',
+    'if (this.score > (this._ls || 0)) { se.style.setProperty("--sc", SCOL[this.score % SCOL.length]); se.style.transform = "scale(1.18)";')
+R22('  var AUTO_MS = 1800;', '  var AUTO_MS = 1800;\n  var SCOL = ["#ffffff", "#ffd23f", "#3ddc84", "#ff5c8a", "#ff8a3d", "#b57bff"];')
+R22('c.fillStyle = "rgba(255,255,255,0.85)"; c.fillRect(0, this.H - 3, this.W * ak, 3);', 'c.fillStyle = "#ffd23f"; c.fillRect(0, this.H - 3, this.W * ak, 3);')
+R22('  function hsl(h, s, l, a) { return', '  function hsl(h, s, l, a) { s = Math.min(95, s * 1.8 + 18); l = Math.min(85, l * 1.18 + 2); return')
+print('ok22')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')
