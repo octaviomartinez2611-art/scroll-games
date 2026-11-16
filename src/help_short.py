@@ -188,6 +188,8 @@ H['tr_ball'] = ["Arrastrá la cama", "Que reboten hasta la otra punta", "Perdés
 fam('tu_', "Tocá para disparar", {k: "Disparales cuando apuntás" for k in ['base', 'fast', 'rev', 'tri', 'tank', 'swarm', 'slow', 'bug', 'ufo', 'rock']}, "Perdés si llegan al centro")
 fam('rp_', "Tocá para soltar", {k: "Que caiga en el vaso" for k in ['base', 'fast', 'small', 'long', 'short', 'two', 'wind', 'moon', 'candy', 'mix']}, "Perdés si cae afuera")
 
+# Cronómetros (16/11)
+H.update({"cl_fast": ["Tocá la pantalla", "Frená justo en el tiempo", "Perdés si errás por mucho"], "cl_long": ["Tocá la pantalla", "Frená justo en el tiempo", "Perdés si errás por mucho"], "cl_blind": ["Tocá la pantalla", "Frená justo en el tiempo", "Perdés si errás por mucho"], "cl_fine": ["Tocá la pantalla", "Frená justo en el tiempo", "Perdés si errás un poquito"], "cl_bar": ["Tocá la pantalla", "Frená la barra en la raya", "Perdés si errás por mucho"], "cl_bar2": ["Tocá la pantalla", "Frená la barra en la raya", "Perdés si errás por mucho"], "cl_tun": ["Tocá la pantalla", "Frená la pelota en la raya", "Perdés si errás por mucho"], "cl_tun2": ["Tocá la pantalla", "Frená la pelota en la raya", "Perdés si errás por mucho"]})
 missing = [i for i in ids if i not in H]
 extra = [i for i in H if i not in ids]
 longest = sorted(((sum(len(x.split()) for x in v), k) for k, v in H.items() if k in ids), reverse=True)[:5]
