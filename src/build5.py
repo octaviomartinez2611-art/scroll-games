@@ -586,11 +586,6 @@ R22('</style>', '''/* ok22: más color */
 .tab[data-v="play"] { --tc: #ff2e63; } .tab[data-v="friends"] { --tc: #ffb400; } .tab[data-v="profile"] { --tc: #1fcf6f; }
 .tab[aria-current="page"] { color: var(--tc); } .tab[aria-current="page"] svg { fill: var(--tc); stroke: var(--tc); }
 .score { color: var(--sc, #fff); text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); }
-.pf .avatar { background-color: #9058ff; color: #fff; box-shadow: 0 4px 0 #5527b5; }
-.lvlchip { background: #ffb400; color: #000; }
-.stat:nth-child(1) b { color: #ff2e63; } .stat:nth-child(2) b { color: #1fcf6f; } .stat:nth-child(3) b { color: #ffb400; } .stat:nth-child(4) b { color: #b57bff; }
-.lvlbar .track i { background: #ffd23f; }
-.tabs2 button[aria-selected="true"] { color: #ff2e63; border-bottom-color: #ff2e63; }
 </style>''')
 R22('if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)";',
     'if (this.score > (this._ls || 0)) { se.style.setProperty("--sc", SCOL[this.score % SCOL.length]); se.style.transform = "scale(1.18)";')
