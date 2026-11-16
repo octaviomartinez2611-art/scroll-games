@@ -111,7 +111,7 @@ open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print(
 s=open('swipe-arcade.html',encoding='utf-8').read()
 old="  CATALOG = CATALOG.concat(EXTRA);"
 assert s.count(old)==1
-s=s.replace(old,'  var MENOS = ["q_to100", "q_miss", "q_half", "q_side", "q_hmin", "q_hplus", "q_mid3", "q_prim", "q_sum3", "q_prev", "q_pct", "q_to10", "q_m3", "q_dec", "q_mul7", "q_smul", "q_nextn", "q_sml3", "q_big4", "q_third", "q_sub2", "q_big3", "q_div", "q_rnd", "q_cmp", "q_mod", "q_week", "q_sqr", "q_par", "k_dd", "k_g100", "k_imp", "k_x5", "k_m3", "k_m5", "k_pri", "g_zero", "g_par", "g_odd", "c_odd", "c_x4", "c_pri", "c_gt5", "c_lt4", "t_g5", "t_pri", "t_od", "t_l5", "t_t3", "x_nim", "lights", "q_sub", "q_vow", "e_c3", "q_mes", "q_ant", "q_eng", "m_s3", "y_l", "q_heavy", "q_leg", "m_s32", "q_mul", "q_ceng", "q_dbl", "q_cap", "q_fl", "m_s2", "y_f", "m_s42", "q_sign", "q_alp", "e_c43", "q_cont", "y_c", "q_sum", "q_col", "y_n2", "q_dots", "q_pla", "q_dmo", "q_plu", "q_len", "q_mis", "y_n", "q_dia", "q_bigc", "q_sadd", "q_rom", "q_clk", "q_aeng", "q_chg", "e_c5", "q_shp", "q_neng", "m_sn", "e_c4", "k_veg", "k_ani", "k_nl", "k_blt", "k_pais", "k_rest", "k_bsh", "k_fru", "k_par", "k_cal", "k_g50", "k_mam", "k_s10", "k_vow", "k_bco", "g_a", "g_sev", "g_dif", "g_rep", "t_con", "t_vow", "t_ev", "t_g50", "t_m5", "c_gt10", "c_con", "c_x3", "c_even", "c_vow", "mines", "pairs", "stroop", "more", "simon", "hilo", "truth", "four", "ttt", "rps", "k_tc", "k_cc", "k_gc", "k_yp", "k_rv", "k_rnd", "k_arr", "k_arv"];\n  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].concat(MENOS).indexOf(g.id) < 0; }); /* sin apuestas y sin juegos de pensar: solo acción y reflejos */')
+s=s.replace(old,'  var MENOS = ["q_to100", "q_miss", "q_half", "q_side", "q_hmin", "q_hplus", "q_mid3", "q_prim", "q_sum3", "q_prev", "q_pct", "q_to10", "q_m3", "q_dec", "q_mul7", "q_smul", "q_nextn", "q_sml3", "q_big4", "q_third", "q_sub2", "q_big3", "q_div", "q_rnd", "q_cmp", "q_mod", "q_week", "q_sqr", "q_par", "k_dd", "k_g100", "k_imp", "k_x5", "k_m3", "k_m5", "k_pri", "g_zero", "g_par", "g_odd", "c_odd", "c_x4", "c_pri", "c_gt5", "c_lt4", "t_g5", "t_pri", "t_od", "t_l5", "t_t3", "x_nim", "lights", "q_sub", "q_vow", "e_c3", "q_mes", "q_ant", "q_eng", "m_s3", "y_l", "q_heavy", "q_leg", "m_s32", "q_mul", "q_ceng", "q_dbl", "q_cap", "q_fl", "m_s2", "y_f", "m_s42", "q_sign", "q_alp", "e_c43", "q_cont", "y_c", "q_sum", "q_col", "y_n2", "q_dots", "q_pla", "q_dmo", "q_plu", "q_len", "q_mis", "y_n", "q_dia", "q_bigc", "q_sadd", "q_rom", "q_clk", "q_aeng", "q_chg", "e_c5", "q_shp", "q_neng", "m_sn", "e_c4", "k_veg", "k_ani", "k_nl", "k_blt", "k_pais", "k_rest", "k_bsh", "k_fru", "k_par", "k_cal", "k_g50", "k_mam", "k_s10", "k_vow", "k_bco", "g_a", "g_sev", "g_dif", "g_rep", "t_con", "t_vow", "t_ev", "t_g50", "t_m5", "c_gt10", "c_con", "c_x3", "c_even", "c_vow", "mines", "pairs", "stroop", "more", "simon", "hilo", "truth", "four", "ttt", "rps", "k_tc", "k_cc", "k_gc", "k_yp", "k_rv", "k_rnd", "k_arr", "k_arv", "clock"];\n  CATALOG = CATALOG.concat(EXTRA).filter(function (g) { return ["wheel", "x_21", "x_dice"].concat(MENOS).indexOf(g.id) < 0; }); /* sin apuestas y sin juegos de pensar: solo acción y reflejos */')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok5')
 s=open('swipe-arcade.html',encoding='utf-8').read()
@@ -583,7 +583,7 @@ def R22(a, b):
     s = s.replace(a, b, 1)
 R22('</style>', '''/* ok22: más color */
 .slide canvas { filter: saturate(1.15); }
-.tab[data-v="play"] { --tc: #ff2e63; } .tab[data-v="friends"] { --tc: #ffb400; } .tab[data-v="profile"] { --tc: #1fcf6f; }
+.tab { --tc: #ff2e63; }
 .tab[aria-current="page"] { color: var(--tc); } .tab[aria-current="page"] svg { fill: var(--tc); stroke: var(--tc); }
 .score { color: var(--sc, #fff); text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); }
 </style>''')
@@ -593,5 +593,20 @@ R22('  var AUTO_MS = 1800;', '  var AUTO_MS = 1800;\n  var SCOL = ["#ffffff", "#
 R22('c.fillStyle = "rgba(255,255,255,0.85)"; c.fillRect(0, this.H - 3, this.W * ak, 3);', 'c.fillStyle = "#ffd23f"; c.fillRect(0, this.H - 3, this.W * ak, 3);')
 R22('  function hsl(h, s, l, a) { return', '  function hsl(h, s, l, a) { s = Math.min(90, s * 1.4 + 10); l = Math.min(85, l * 1.08 + 1); return')
 print('ok22')
+# ===== ok23 (16/11): arranca al toque + cada partida se pone más intensa =====
+def R23(a, b):
+    global s
+    assert s.count(a) == 1, ('ok23', a[:70])
+    s = s.replace(a, b, 1)
+# 1) Precarga: mientras jugás, arma y dibuja el juego siguiente (y el anterior) para que al deslizar ya esté listo.
+R23('    var ag = cache[act], show = !!ag && ag.state === "over";',
+    '    if (lo === hi && viewT > 0.35) { var pn = slides[act + 1] && !cache[act + 1] ? act + 1 : (slides[act - 1] && !cache[act - 1] ? act - 1 : -1); if (pn >= 0) { var pg = ensure(pn); if (pg && !pg.drawn) { pg.render(now); pg.drawn = true; } } }\n    var ag = cache[act], show = !!ag && ag.state === "over";')
+# 2) Intensidad: todo el juego va acelerando con el tiempo jugado y los puntos, hasta +45 %.
+R23('    if (this.state === "play") this.step(dt); else if (this.state === "ready") this.idle(dt); else this.after(dt);',
+    '    if (this.state === "play") { this._pt = (this._pt || 0) + dt; this.step(dt * this.ramp()); } else if (this.state === "ready") this.idle(dt); else this.after(dt);')
+R23('  Game.prototype.tick = function (dt) {',
+    '  Game.prototype.ramp = function () { return 1 + Math.min(0.45, (this._pt || 0) * 0.006 + this.score * 0.01); };\n  Game.prototype.tick = function (dt) {')
+R23('this._rv = undefined; this._ls = 0;', 'this._rv = undefined; this._ls = 0; this._pt = 0;')
+print('ok23')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')

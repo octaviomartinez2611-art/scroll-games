@@ -290,7 +290,7 @@
       for (i = this.bul.length - 1; i >= 0; i--) {
         var b = this.bul[i]; b.y -= 520 * dt; var hitI = -1;
         for (j = 0; j < this.al.length; j++) { p = this.apos(this.al[j]); if (Math.abs(b.x - p.x) < 15 && Math.abs(b.y - p.y) < 11) { hitI = j; break; } }
-        if (hitI >= 0) { this.al.splice(hitI, 1); this.bul.splice(i, 1); this.add(1); S.hit(this.score); if (!this.al.length) { this.wave++; this.newWave(); this.bul = []; this.eb = []; } }
+        if (hitI >= 0) { this.al.splice(hitI, 1); this.bul.splice(i, 1); this.add(1); S.hit(this.score); if (!this.al.length) { this.wave++; this.newWave(); this.bul = []; this.eb = []; break; } }
         else if (b.y < -10) this.bul.splice(i, 1);
       }
       for (i = this.eb.length - 1; i >= 0; i--) {
@@ -352,8 +352,8 @@
   /* Alunizaje */
   var Land = G("Land", {
     ctl: "drag",
-    init: function () { this.gy = this.H - this.pb - 10; this.tx = this.cx; this.pw = 100; this.newRound(); },
-    newRound: function () { this.x = rnd(60, this.W - 60); this.y = this.pt + 30; this.vx = 0; this.vy = 0; this.padx = rnd(16, this.W - 16 - this.pw); },
+    init: function () { this.gy = this.H - this.pb - 10; this.tx = this.cx; this.pw = 140; this.newRound(); },
+    newRound: function () { this.x = rnd(60, this.W - 60); this.y = this.pt + (this.gy - this.pt) * 0.4; this.vx = 0; this.vy = 0; this.padx = rnd(16, this.W - 16 - this.pw); },
     drag: function (x) { this.tx = x; },
     step: function (dt) {
       var thr = this.holding;
@@ -362,7 +362,7 @@
       this.vx = clamp(this.vx, -140, 140); this.x += this.vx * dt; this.y += this.vy * dt;
       if (this.x < 14) { this.x = 14; this.vx = 0; } if (this.x > this.W - 14) { this.x = this.W - 14; this.vx = 0; } if (this.y < this.pt - 10) { this.y = this.pt - 10; this.vy = 0; }
       if (this.y + 14 >= this.gy) {
-        var onPad = this.x - 10 >= this.padx && this.x + 10 <= this.padx + this.pw, soft = this.vy < 130 && Math.abs(this.vx) < 70;
+        var onPad = this.x - 10 >= this.padx && this.x + 10 <= this.padx + this.pw, soft = this.vy < 200 && Math.abs(this.vx) < 110;
         if (onPad && soft) { this.good(1, this.x, this.gy - 40, false); } else this.hurt();
         if (this.state === "play") this.newRound();
       }

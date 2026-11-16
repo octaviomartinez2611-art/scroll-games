@@ -236,7 +236,7 @@
     { id: "dense", name: "Muchos pinchos", how: "Pinchos uno atrás de otro.", gap: 130, acc: "#ff9f1c" },
     { id: "ice", name: "Paredes de hielo", how: "Cada vez más rápido por las paredes de hielo.", ramp: 0.025, wc: "#bfe3f2", col: "#ff9f1c", acc: "#f2f2f2", scene: "snow" },
     { id: "lava", name: "Paredes de fuego", how: "Las paredes tienen fuego en vez de pinchos.", fire: 1, wc: "#4a1f14", acc: "#ff9f1c", scene: "volcano" },
-    { id: "slow", name: "Salto pesado", how: "El salto es lento. Calculá antes.", jt: 0.42, v: 200, acc: "#f2f2f2" },
+    { id: "slow", name: "Salto pesado", how: "El salto es lento. Saltá antes.", jt: 0.42, v: 200, acc: "#f2f2f2" },
     { id: "mix", name: "Paredes locas", how: "Rápido, con bichos y gemas.", mid: 1, gems: 1, v: 290, acc: "#ff4d6d", scene: "build" }
   ].forEach(mkWall);
 
@@ -427,7 +427,7 @@
   /* --- 20. Soltá: tocá para soltar lo que se balancea y que caiga en el vaso --- */
   function mkSwing(o) {
     var C = G("Swing_" + o.id, {
-      init: function () { this.ax0 = this.W / 2; this.ax = this.ax0; this.ay = this.pt + 20; this.avx = 0; this.L = o.L || 150; this.A = 0.95; this.ph = 0; this.it = null; this.cw = o.cw || 74; this.cy3 = this.H - this.pb - 50; this.wait = 0; this.cups = [{ x: this.W * 0.3, v: o.cv || 90 }]; if (o.two) this.cups.push({ x: this.W * 0.7, v: -(o.cv || 90) }); },
+      init: function () { this.ax0 = this.W / 2; this.ax = this.ax0; this.ay = this.pt + 20; this.avx = 0; this.L = o.L || 150; this.A = 0.95; this.ph = 0; this.it = null; this.cw = (o.cw || 74) * 1.5; this.cy3 = this.H - this.pb - 50; this.wait = 0; this.cups = [{ x: this.W * 0.3, v: o.cv || 90 }]; if (o.two) this.cups.push({ x: this.W * 0.7, v: -(o.cv || 90) }); },
       ang: function () { return this.A * Math.sin(this.ph); },
       act: function () { if (this.it || this.wait > 0) return; var w = Math.sqrt((o.g || 900) / this.L), th = this.ang(), v = this.L * this.A * w * Math.cos(this.ph); this.it = { x: this.ax + Math.sin(th) * this.L, y: this.ay + Math.cos(th) * this.L, vx: v * Math.cos(th) + this.avx, vy: -v * Math.sin(th) }; this.acts++; sfx(340, 0.08, "triangle", 0.05, 0.7); },
       step: function (dt) {
@@ -454,7 +454,7 @@
   }
   [
     { id: "base", name: "Soltá", how: "Tocá para soltar lo que se balancea. Tiene que caer adentro del vaso.", acc: "#ff4d6d" },
-    { id: "fast", name: "Vaso escurridizo", how: "El vaso se mueve rápido. Calculá dónde va a estar.", cv: 170, acc: "#ff9f1c" },
+    { id: "fast", name: "Vaso escurridizo", how: "El vaso se mueve rápido.", cv: 170, acc: "#ff9f1c" },
     { id: "small", name: "Vaso chiquito", how: "El vaso es angosto. Puntería fina.", cw: 50, acc: "#c77dff" },
     { id: "long", name: "Soga larga", how: "La soga es larga y se balancea lento.", L: 230, acc: "#3ddc84" },
     { id: "short", name: "Soga cortita", how: "La soga es corta y se balancea rapidísimo.", L: 80, acc: "#ffd23f" },
