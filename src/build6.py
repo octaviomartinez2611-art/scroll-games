@@ -51,7 +51,7 @@ rep('/* ---- sheets ---- */','''.login { position: fixed; inset: 0; z-index: 30;
 .admlink { color: var(--dim); font: 600 13px/1 var(--body); padding: 8px 0; align-self: center; }
 .bub.them, .gcard.them { align-self: flex-start; }
 .bub.pend, .gcard.pend { opacity: 0.45; }
-.urow { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #17171c; } .urow small { color: #8a8a99; font-size: 13px; }
+.urow { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #17171c; } .urow small { color: #8a8a99; font-size: 13px; } .admsub { display: block; margin: 14px 0 4px; font-size: 14px; color: #ff2e63; }
 .pendnote { align-self: flex-end; margin: -2px 2px 0; font-size: 12px; color: var(--muted, #8a8a99); }
 .bub.them { background: var(--panel2); border-radius: 18px 18px 18px 4px; }
 .repbtn { align-self: flex-start; font: 700 12px/1 var(--body); color: #ff6b81; padding: 4px 6px; }
@@ -323,7 +323,23 @@ rep('''    if (tickN % 90 === 0) loadBests();''','''    if (tickN % 600 === 0) l
 rep('''  loadTrends(); setInterval(loadTrends, 600000);''','''  loadTrends(); setInterval(function () { if (!document.hidden) loadTrends(); }, 1800000);''')
 
 # ---------- panel de administrador: lista de cuentas ----------
-rep('''    var h = document.createElement("h2"); h.textContent = "Mensajes reportados"; w.appendChild(h);''','''    var hu = document.createElement("h2"); hu.textContent = "Cuentas"; w.appendChild(hu);
+rep('''    var h = document.createElement("h2"); h.textContent = "Mensajes reportados"; w.appendChild(h);''','''    var hg = document.createElement("h2"); hg.textContent = "Juegos"; w.appendChild(hg);
+    var gl = document.createElement("div"); gl.className = "adm"; gl.textContent = "Cargando…"; w.appendChild(gl);
+    api("gamestats").then(function (d) {
+      gl.textContent = ""; hg.textContent = "Juegos (datos de " + d.players + (d.players === 1 ? " jugador)" : " jugadores)");
+      function lista(tit, arr, txt) {
+        var t = document.createElement("b"); t.className = "admsub"; t.textContent = tit; gl.appendChild(t);
+        if (!arr.length) { var v = document.createElement("small"); v.textContent = "Todavía no hay datos suficientes."; gl.appendChild(v); return; }
+        arr.slice(0, 15).forEach(function (g) {
+          var c = document.createElement("div"); c.className = "urow"; c.style.cursor = "pointer";
+          var b = document.createElement("b"); b.textContent = g.name; var sm = document.createElement("small"); sm.textContent = txt(g);
+          c.appendChild(b); c.appendChild(sm); c.onclick = function () { location.hash = g.id.replace(/_/g, "-"); setView("play"); }; gl.appendChild(c);
+        });
+      }
+      lista("Los que más se saltean", d.skipped, function (g) { return "Lo pasaron sin jugar " + Math.round(g.skip * 100) + "% de las veces · " + g.n + " veces · " + g.p + (g.p === 1 ? " persona" : " personas"); });
+      lista("Los que más enganchan", d.best, function (g) { return g.sec + " s por vez · " + g.n + " veces · " + g.p + (g.p === 1 ? " persona" : " personas") + (g.like ? " · " + g.like + " me gusta" : "") + (g.save ? " · " + g.save + " guardado" + (g.save === 1 ? "" : "s") : ""); });
+    }).catch(function (x) { gl.textContent = x.message; });
+    var hu = document.createElement("h2"); hu.textContent = "Cuentas"; w.appendChild(hu);
     var ul = document.createElement("div"); ul.className = "adm"; ul.textContent = "Cargando…"; w.appendChild(ul);
     function cuando(t) { if (!t) return "nunca"; var m = Math.floor((Date.now() - t) / 60000); if (m < 2) return "recién"; if (m < 60) return "hace " + m + " min"; var hh = Math.floor(m / 60); if (hh < 24) return "hace " + hh + " h"; var dd = Math.floor(hh / 24); return dd === 1 ? "ayer" : "hace " + dd + " días"; }
     api("users").then(function (d) {

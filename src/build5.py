@@ -618,5 +618,31 @@ R24('function regD(id, name, how, acc, cls, scene) { reg(id, name, how, acc, cls
 R24('  Game.prototype.ramp = function () { return 1 +', '  Game.prototype.ramp = function () { if (this.noRamp) return 1; return 1 +')
 R24('  var Clock = G("Clock", {\n', '  var Clock = G("Clock", {\n    noRamp: true,\n')
 print('ok24')
+# ===== ok25 (16/11): la vibración "nunca anda" =====
+# Android: los pulsos de 8-16 ms son demasiado cortos para el motor; mínimo 30 ms.
+# iPhone: el truco del <input switch> solo vibra dentro de un gesto que cuenta como "activación" (levantar el dedo),
+# no al apoyarlo ni desde el juego. Si no hay activación en ese momento, queda pendiente y vibra al levantar el dedo.
+def R25(a, b):
+    global s
+    assert s.count(a) == 1, ('ok25', a[:70])
+    s = s.replace(a, b, 1)
+i = s.index('  function vib(ms) {\n    if (P.vib === false) return;'); j = s.index('  var PENTA = [', i)
+keep = [L for L in s[i:j].split('\n') if L.startswith(('  var AUTO_MS', '  var SCOL'))]
+print('ok25 conserva', len(keep))
+s = s[:i] + '\n'.join(keep) + '\n' + '''  var hapPend = 0, hapN = 0;
+  function hapNow(n) {
+    for (var k = 0; k < n; k++) setTimeout(function () { try { var l = document.createElement("label"); l.setAttribute("aria-hidden", "true"); l.style.display = "none"; var x = document.createElement("input"); x.type = "checkbox"; x.setAttribute("switch", ""); l.appendChild(x); document.head.appendChild(l); l.click(); document.head.removeChild(l); } catch (e) {} }, k * 110);
+  }
+  function vib(ms) {
+    if (P.vib === false) return; var now = performance.now(); if (now - hapT < 45) return; hapT = now;
+    var big = Array.isArray(ms) ? 2 : ms >= 40 ? 2 : 1;
+    try {
+      if (navigator.vibrate) { navigator.vibrate(Array.isArray(ms) ? ms.map(function (v, i) { return i % 2 ? v : Math.max(35, v); }) : Math.round(Math.max(30, ms * 1.4))); return; }
+      if (IOS) { var ua = navigator.userActivation; if (ua && ua.isActive) hapNow(big); else { hapPend = now; hapN = Math.max(hapN, big); } }
+    } catch (e) {}
+  }
+  if (IOS) { var hapUp = function () { if (hapPend && performance.now() - hapPend < 700) hapNow(hapN); hapPend = 0; hapN = 0; }; document.addEventListener("touchend", hapUp, true); document.addEventListener("pointerup", hapUp, true); }
+''' + s[j:]
+print('ok25')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')

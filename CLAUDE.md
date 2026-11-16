@@ -34,6 +34,7 @@ Feed vertical de minijuegos, estilo TikTok: deslizás y en vez de videos hay jue
 - Versión sin servidor como Artifact de Claude: https://claude.ai/artifact/1Fm8HHioxx9KuSJ8m9dL3U (amigos y chat solo locales ahí).
 - `public/index.html`: la app generada (no editar a mano).
 - `netlify/functions/api.mjs`: servidor. Cuentas con usuario + PIN (scrypt), sesiones, estado del jugador, amigos, mensajes, reportes y panel de admin. Guarda en Netlify Blobs (store `arcade`), una clave por mensaje y por amistad para no pisar datos. La sesión se guarda en `localStorage` (`sa-token`) y además en una cookie HttpOnly de un año (`sa`), así el sitio recuerda al usuario sin pedir el PIN otra vez.
+- Panel de admin → "Juegos (datos de N jugadores)" (16/11, eligió la opción 3): `GET /api/gamestats` (solo admin, `computeGameStats` en api.mjs, sin nombres de jugadores): "Los que más se saltean" (veces que lo pasaron sin tocar en <3 s / veces que apareció, mínimo 3 veces) y "Los que más enganchan" (enganche medio por persona, sin los que se saltean más de la mitad). Tocar uno abre el juego. Prueba `ntest/gstats.js`.
 - Panel de admin (Perfil, solo admin): "Cuentas (N)" con cada usuario, cuándo jugó por última vez y cuándo se creó (endpoint `GET /api/users`, solo admin, nunca devuelve PINs); y "Mensajes reportados". Desde acá no se pueden leer las cuentas de Netlify: hay que mirarlas en ese panel.
 - Código de admin: variable de entorno `ADMIN_CODE` en Netlify. NUNCA ponerlo en el repo (es público). Se usa una sola vez por cuenta desde Perfil → "Soy el administrador".
 
@@ -96,6 +97,7 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 ## Vibración y sonido (15/11)
 - `vib()` en build5 ok20: Android con `navigator.vibrate`; iPhone (iOS 18+) con el truco del `<input type=checkbox switch>` escondido, que solo vibra si viene de un toque. Vibra cortito al sumar, un poco más en perfecto, al perder vida, al terminar y patrón en récord nuevo. Botón "Vibración" en el Perfil (`P.vib`, por defecto sí).
 - Cada familia de juegos tiene su "voz" (`voiceFor`: nota base y tipo de onda), y los puntos seguidos suben por una escala pentatónica.
+- 16/11 dijo "la vibración nunca anda". Arreglo (build5 ok25): Android: pulsos de 8–16 ms eran muy cortos para el motor → mínimo 30 ms (×1,4). iPhone: el `<input switch>` solo vibra dentro de una activación de usuario (levantar el dedo: touchend/pointerup), no al apoyarlo ni desde el juego; si no hay `navigator.userActivation.isActive`, queda pendiente y vibra al levantar el dedo (hasta 700 ms después). Se crea un `<label>` nuevo en `<head>` cada vez (como la librería ios-haptics); golpes fuertes = 2 toques. OJO: ok25 reemplaza desde `function vib` hasta `var PENTA` y conserva `AUTO_MS` y `SCOL` que viven ahí (se borraron una vez por error). Prueba `ntest/vibt.js` (emula Pixel 7 e iPhone 14).
 - No probado en teléfono real (Chromium de compu no vibra).
 
 ## Enganche (pedido: "mucho más adictivo")

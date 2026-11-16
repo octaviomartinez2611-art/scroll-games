@@ -64,6 +64,24 @@ export function computeTrends(states) {
   for (const a in co) { const arr = []; for (const b in co[a]) { const sm = co[a][b] / Math.sqrt(lc[a] * lc[b]); if (co[a][b] >= 2 && sm > 0.15) arr.push([b, +sm.toFixed(2)]); } arr.sort((x, y) => y[1] - x[1]); if (arr.length) nb[a] = arr.slice(0, 8); }
   return { pop, nb, users: liked.length };
 }
+// Para el administrador: qué juegos se saltean más y cuáles enganchan más, con los datos reales de todos (sin nombres).
+export function computeGameStats(states, cat) {
+  const G = {}; let players = 0;
+  for (const P of states) {
+    if (!P || !P.st) continue; players++;
+    const L = P.likes || {}, S = P.saved || {};
+    for (const id in P.st) {
+      if (cat && !cat[id]) continue;
+      const s = P.st[id] || {}, n = Math.max(s.n || 0, (s.t > 2 || s.k > 0) ? 1 : 0); if (!n) continue;
+      const g = G[id] || (G[id] = { id, name: (cat && cat[id]) || id, n: 0, k: 0, t: 0, p: 0, like: 0, save: 0, e: 0 });
+      g.n += n; g.k += Math.min(s.k || 0, n); g.t += Math.min(s.t || 0, 3000); g.p++; if (L[id]) g.like++; if (S[id]) g.save++; g.e += engOf(s, L, S, id) || 0;
+    }
+  }
+  const all = Object.values(G).filter((g) => g.n >= 3).map((g) => ({ id: g.id, name: g.name, n: g.n, p: g.p, skip: +(g.k / g.n).toFixed(2), sec: Math.round(g.t / g.n), like: g.like, save: g.save, e: +(g.e / g.p).toFixed(2) }));
+  const skipped = all.filter((g) => g.skip > 0).sort((a, b) => b.skip - a.skip || b.n - a.n).slice(0, 20);
+  const best = all.filter((g) => g.e > 0 && g.skip < 0.5).sort((a, b) => b.e - a.e || b.sec - a.sec).slice(0, 20);
+  return { players, games: Object.keys(G).length, skipped, best };
+}
 async function isFriend(st, a, b) { return (await st.get("f/" + a + "/" + b)) !== null; }
 
 // Ahorro de datos: si lo que pide el teléfono no cambió, responde "igual que antes" (304) sin mandar nada.
@@ -223,6 +241,12 @@ async function handle(req) {
         return { name: u.name, created: u.created || 0, last: (s && s.ts) || 0, admin: !!u.admin };
       }))).filter(Boolean).sort((a, b) => (b.last ? 1 : 0) - (a.last ? 1 : 0) || (b.last - a.last) || (b.created - a.created));
       return J({ users });
+    }
+    if (path === "gamestats" && m === "GET") {
+      if (!admin) return J({ error: "Solo administradores." }, 403);
+      const { blobs } = await st.list({ prefix: "st/" });
+      const states = await Promise.all(blobs.map((b) => st.get(b.key, { type: "json" }).catch(() => null)));
+      return J(computeGameStats(states, CAT));
     }
     if (path === "resolve" && m === "POST") {
       if (!admin) return J({ error: "Solo administradores." }, 403);
