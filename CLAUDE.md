@@ -92,7 +92,7 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 - Récord nuevo: suena un arpegio una vez y "Récord nuevo" se pone dorado.
 
 ## Pasa solo al siguiente (15/11, pidió "más pasivo, como TikTok")
-- Al perder, a los 1,8 s (`AUTO_MS`) el feed pasa solo al juego siguiente; mientras tanto una rayita blanca abajo se va llenando. Tocar antes = reintentar el mismo. Si volvés atrás a un juego perdido, arranca de nuevo. Botón "Pasar solo al perder" en el Perfil (`P.auto`, por defecto sí). build5 ok21. Prueba `auto.js` en el scratchpad.
+- Al perder, a los 0,8 s (`AUTO_MS`; 16/11 pidió más rápido: "uno ya pasa antes de eso"; ok26 deja pasar sin esperar `restartAt`) el feed pasa solo al juego siguiente; mientras tanto una rayita blanca abajo se va llenando. Tocar antes = reintentar el mismo. Si volvés atrás a un juego perdido, arranca de nuevo. Botón "Pasar solo al perder" en el Perfil (`P.auto`, por defecto sí). build5 ok21. Prueba `auto.js` en el scratchpad.
 
 ## Vibración y sonido (15/11)
 - `vib()` en build5 ok20: Android con `navigator.vibrate`; iPhone (iOS 18+) con el truco del `<input type=checkbox switch>` escondido, que solo vibra si viene de un toque. Vibra cortito al sumar, un poco más en perfecto, al perder vida, al terminar y patrón en récord nuevo. Botón "Vibración" en el Perfil (`P.vib`, por defecto sí).

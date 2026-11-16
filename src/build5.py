@@ -565,7 +565,7 @@ R21('else if (this.state === "over" && performance.now() - this.overAt > 450) { 
     'else if (this.state === "over" && performance.now() - this.overAt > 450 && !this._adv) { stOf(this.cfg.id).r++; this.reset(); this.begin(); }')
 R21('    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();\n  };',
     '    c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.drawImage(TMP, 0, Math.round(4 * d)); c.drawImage(LAY, 0, 0); c.restore();\n    if (this.state === "over" && P.auto !== false && !this._adv) { var ak = clamp((performance.now() - this.overAt) / AUTO_MS, 0, 1); c.save(); c.setTransform(d, 0, 0, d, 0, 0); c.fillStyle = "rgba(255,255,255,0.18)"; c.fillRect(0, this.H - 3, this.W, 3); c.fillStyle = "rgba(255,255,255,0.85)"; c.fillRect(0, this.H - 3, this.W * ak, 3); c.restore(); }\n  };')
-R21('  var PENTA = [', '  var AUTO_MS = 1800;\n  var PENTA = [')
+R21('  var PENTA = [', '  var AUTO_MS = 800;\n  var PENTA = [')
 R21('      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>',
     '      <button class="toggle" id="vibBtn" aria-pressed="true">Vibración <em id="vibState">Sí</em></button>\n      <button class="toggle" id="autoBtn" aria-pressed="true">Pasar solo al perder <em id="autoState">Sí</em></button>')
 s = s.replace('    $("vibBtn").setAttribute("aria-pressed", String(P.vib !== false)); $("vibState").textContent = P.vib !== false ? "Sí" : "No";',
@@ -589,7 +589,7 @@ R22('</style>', '''/* ok22: más color */
 </style>''')
 R22('if (this.score > (this._ls || 0)) { se.style.transform = "scale(1.18)";',
     'if (this.score > (this._ls || 0)) { se.style.setProperty("--sc", SCOL[this.score % SCOL.length]); se.style.transform = "scale(1.18)";')
-R22('  var AUTO_MS = 1800;', '  var AUTO_MS = 1800;\n  var SCOL = ["#ffffff", "#ffd23f", "#3ddc84", "#ff5c8a", "#ff8a3d", "#b57bff"];')
+R22('  var AUTO_MS = 800;', '  var AUTO_MS = 800;\n  var SCOL = ["#ffffff", "#ffd23f", "#3ddc84", "#ff5c8a", "#ff8a3d", "#b57bff"];')
 R22('c.fillStyle = "rgba(255,255,255,0.85)"; c.fillRect(0, this.H - 3, this.W * ak, 3);', 'c.fillStyle = "#ffd23f"; c.fillRect(0, this.H - 3, this.W * ak, 3);')
 R22('  function hsl(h, s, l, a) { return', '  function hsl(h, s, l, a) { s = Math.min(90, s * 1.4 + 10); l = Math.min(85, l * 1.08 + 1); return')
 print('ok22')
@@ -644,5 +644,10 @@ s = s[:i] + '\n'.join(keep) + '\n' + '''  var hapPend = 0, hapN = 0;
   if (IOS) { var hapUp = function () { if (hapPend && performance.now() - hapPend < 700) hapNow(hapN); hapPend = 0; hapN = 0; }; document.addEventListener("touchend", hapUp, true); document.addEventListener("pointerup", hapUp, true); }
 ''' + s[j:]
 print('ok25')
+# ===== ok26 (16/11): pasa al siguiente a los 0,8 s de perder ("uno ya pasa antes de eso") =====
+_a = 'if (g.state === "over" && now > g.restartAt) { if (P.auto !== false && slides[act + 1]) {'
+assert s.count(_a) == 1
+s = s.replace(_a, 'if (g.state === "over" && (now > g.restartAt || (P.auto !== false && slides[act + 1]))) { if (P.auto !== false && slides[act + 1]) {')
+print('ok26')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')
