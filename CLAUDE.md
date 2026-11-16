@@ -101,6 +101,7 @@ Pidió que sea "tan bueno como el de Instagram". Mismos principios (sin sus mill
 - No probado en teléfono real (Chromium de compu no vibra).
 
 ## Enganche (pedido: "mucho más adictivo")
+- OBJETIVO = PUNTOS (16/11 15:50: "no tiene objetivo, tiene que enganchar más que TikTok… ¿cuál es el objetivo? Podemos poner puntos"; NO quiso que le ofrezca menús de opciones: "no me entendiste"). build5 ok27: debajo de los corazones de cada juego va "Nv N" + barrita amarilla que se llena en vivo con cada punto (`lvPaint`, envuelve `Game.prototype.hud`; nivel = `xpInfo(P.xp + puntaje actual)`, `need(l) = 40 + 20(l−1)`); al subir de nivel suena `S.rec`, vibra y "Nv" se pone dorado 1,5 s. `P.wk = {k: lunes, p}` = puntos de la semana. build6: Liga de la semana en Amigos (vos + amigos ordenados por puntos desde el lunes, `leagueBox`), y al lado del nivel el puesto ("2º") vía `LEAGUE`; el servidor manda `weeks` en `/api/bests`. OJO: `var LEAGUE` sin inicializar en build5 (build6 lo asigna antes en la página). Pruebas `ntest/league.js`, `sweep/lvup.js`.
 - Racha: 10 puntos seguidos sin perder vida → los puntos valen ×2 (puntaje en amarillo, "×2" al lado del récord) hasta perder una vida.
 - Rival: debajo del puntaje dice "Superá a <amigo> · N" con el récord del amigo más cercano por encima; al pasarlo suena y pasa al siguiente; si no queda nadie, "1º entre amigos". Datos de `/api/bests` (`FB` en el cliente).
 - Ranking del juego entre amigos dentro de la hoja del botón "?".

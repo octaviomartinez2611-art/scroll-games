@@ -162,9 +162,9 @@ async function handle(req) {
       return J({ friends });
     }
     if (path === "bests" && m === "GET") {
-      const pre = "f/" + me + "/", { blobs } = await st.list({ prefix: pre }), bests = {};
-      await Promise.all(blobs.map(async (b) => { const n = b.key.slice(pre.length), s = await st.get("st/" + n, { type: "json" }); bests[n] = (s && s.best) || {}; }));
-      return J({ bests });
+      const pre = "f/" + me + "/", { blobs } = await st.list({ prefix: pre }), bests = {}, weeks = {};
+      await Promise.all(blobs.map(async (b) => { const n = b.key.slice(pre.length), s = await st.get("st/" + n, { type: "json" }); bests[n] = (s && s.best) || {}; if (s && s.wk && typeof s.wk.p === "number") weeks[n] = { k: String(s.wk.k || ""), p: s.wk.p }; }));
+      return J({ bests, weeks });
     }
     if (path === "friends" && m === "POST") {
       const n = String(body.name || "").trim().replace(/^@/, "").toLowerCase();

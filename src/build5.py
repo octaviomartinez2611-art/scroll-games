@@ -649,5 +649,35 @@ _a = 'if (g.state === "over" && now > g.restartAt) { if (P.auto !== false && sli
 assert s.count(_a) == 1
 s = s.replace(_a, 'if (g.state === "over" && (now > g.restartAt || (P.auto !== false && slides[act + 1]))) { if (P.auto !== false && slides[act + 1]) {')
 print('ok26')
+# ===== ok27 (16/11): objetivo = juntar puntos ("¿cuál es el objetivo? podemos poner puntos") =====
+# Cada punto de cualquier juego llena la barra de nivel que está debajo de los corazones; al subir de nivel suena y vibra.
+# Puntos de la semana (P.wk) para la liga con amigos (build6 pone LEAGUE para mostrar el puesto).
+def R27(a, b):
+    global s
+    assert s.count(a) == 1, ('ok27', a[:70])
+    s = s.replace(a, b, 1)
+R27('</style>', '''/* ok27: nivel en cada juego */
+.lv { display: flex; align-items: center; gap: 6px; font: 800 12px/1 var(--display); color: #fff; pointer-events: none; }
+.lv i { display: block; width: 58px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.22); overflow: hidden; }
+.lv i s { display: block; height: 100%; width: 0; background: #ffd23f; transition: width 0.2s; }
+.lv em { font-style: normal; color: rgba(255, 255, 255, 0.8); }
+.lv.up b { color: #ffd23f; }
+</style>''')
+R27("""<span class="hearts">' + HEART + HEART + HEART + '</span></div>""", """<span class="hearts">' + HEART + HEART + HEART + '</span><span class="lv"><b>Nv 1</b><i><s></s></i><em></em></span></div>""")
+R27('P.xp += xp; P.coins += coins; P.plays++;', 'P.xp += xp; P.coins += coins; P.plays++; var wk0 = weekKey(); if (!P.wk || P.wk.k !== wk0) P.wk = { k: wk0, p: 0 }; P.wk.p += xp;')
+R27('  function paintAv() {', '''  function weekKey() { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function weekPts() { return P.wk && P.wk.k === weekKey() ? P.wk.p : 0; }
+  var LEAGUE, lvShown = 0; // LEAGUE lo pone build6 (más arriba en la página): no inicializar acá o se pisa
+  function lvPaint(g) {
+    var hd = g && g.el && g.el.score && g.el.score.closest(".hud"), lv = hd && hd.querySelector(".lv"); if (!lv) return;
+    var live = g.state === "play" ? g.score : 0, inf = xpInfo((P.xp || 0) + live);
+    lv.firstChild.textContent = "Nv " + inf.lvl; lv.querySelector("s").style.width = Math.round(100 * inf.rem / inf.need) + "%";
+    var rk = LEAGUE ? LEAGUE(weekPts() + live) : null; lv.querySelector("em").textContent = rk ? rk + "º" : "";
+    if (g.state === "play" && lvShown && inf.lvl > lvShown) { S.rec(); vib([30, 60, 40]); lv.classList.add("up"); setTimeout(function () { lv.classList.remove("up"); }, 1500); }
+    lvShown = inf.lvl;
+  }
+  var hud0 = Game.prototype.hud; Game.prototype.hud = function () { hud0.apply(this, arguments); try { lvPaint(this); } catch (e) {} };
+  function paintAv() {''')
+print('ok27')
 open('swipe-arcade.html','w',encoding='utf-8').write(s)
 open('chk.js','w').write(s[s.index('<script>')+8:s.rindex('</script>')]); print('ok19')

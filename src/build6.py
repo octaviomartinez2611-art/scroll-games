@@ -51,7 +51,7 @@ rep('/* ---- sheets ---- */','''.login { position: fixed; inset: 0; z-index: 30;
 .admlink { color: var(--dim); font: 600 13px/1 var(--body); padding: 8px 0; align-self: center; }
 .bub.them, .gcard.them { align-self: flex-start; }
 .bub.pend, .gcard.pend { opacity: 0.45; }
-.urow { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #17171c; } .urow small { color: #8a8a99; font-size: 13px; } .admsub { display: block; margin: 14px 0 4px; font-size: 14px; color: #ff2e63; }
+.league { margin: 4px 0 14px; padding: 12px 14px; border-radius: 14px; background: #17171c; } .lgh { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; } .lgh small { color: #8a8a99; font-size: 12px; } .lgr { display: flex; gap: 10px; align-items: center; padding: 7px 0; font-size: 15px; } .lgr .pos { width: 26px; color: #8a8a99; font-weight: 800; } .lgr .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; } .lgr .pt { font-weight: 800; } .lgr.me .nm, .lgr.me .pt { color: #ffd23f; } .lgr.top .pos { color: #ff2e63; } .urow { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #17171c; } .urow small { color: #8a8a99; font-size: 13px; } .admsub { display: block; margin: 14px 0 4px; font-size: 14px; color: #ff2e63; }
 .pendnote { align-self: flex-end; margin: -2px 2px 0; font-size: 12px; color: var(--muted, #8a8a99); }
 .bub.them { background: var(--panel2); border-radius: 18px 18px 18px 4px; }
 .repbtn { align-self: flex-start; font: 700 12px/1 var(--body); color: #ff6b81; padding: 4px 6px; }
@@ -109,7 +109,22 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
   function hueOf(s) { var h = 0; for (var k = 0; k < s.length; k++) h = (h * 31 + s.charCodeAt(k)) % 360; return h; }
   function isNew(f) { return !!f.last && f.last.from !== ME && f.lastKey > (P.read[f.name] || ""); }
   function badge() { var t = document.querySelector('.tab[data-v="friends"]'); if (t) t.classList.toggle("dot", FR.some(isNew)); }
-  function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; var g = cache[activeIdx()]; if (g) g.hud(); }).catch(function () {}); }
+  var FW = {};
+  function loadBests() { if (!TOK) return; api("bests").then(function (d) { FB = d.bests || {}; FW = d.weeks || {}; var g = cache[activeIdx()]; if (g) g.hud(); if (view === "friends") renderFriends(); }).catch(function () {}); }
+  // Liga de la semana: puntos juntados desde el lunes, vos contra tus amigos.
+  function wkOf(n) { var w = FW[n]; return w && w.k === weekKey() ? w.p : 0; }
+  LEAGUE = function (mine) { if (!TOK || !FR.length) return null; var r = 1; FR.forEach(function (f) { if (wkOf(f.name) > mine) r++; }); return r; };
+  function leagueBox(l) {
+    var rows = FR.map(function (f) { return { n: f.name, p: wkOf(f.name) }; }); rows.push({ n: ME, p: weekPts(), me: true });
+    rows.sort(function (a, b) { return b.p - a.p || (a.me ? -1 : 1); });
+    var box = document.createElement("div"); box.className = "league";
+    var h = document.createElement("div"); h.className = "lgh"; h.innerHTML = "<b>Liga de la semana</b><small>Puntos desde el lunes</small>"; box.appendChild(h);
+    rows.slice(0, 10).forEach(function (r, i) {
+      var d = document.createElement("div"); d.className = "lgr" + (r.me ? " me" : "") + (i === 0 && r.p > 0 ? " top" : "");
+      d.innerHTML = '<span class="pos">' + (i + 1) + 'º</span><span class="nm">' + esc(r.me ? "Vos" : r.n) + '</span><span class="pt">' + r.p + '</span>'; box.appendChild(d);
+    });
+    l.appendChild(box);
+  }
   function loadTrends() { api("trends").then(function (d) { if (d && d.pop) TR = d; }).catch(function () {}); }
   loadTrends(); setInterval(loadTrends, 600000);
   function loadFriends() { if (!TOK) return; api("friends").then(function (d) { FR = d.friends || []; badge(); if (view === "friends") renderFriends(); }).catch(function () {}); }
@@ -120,6 +135,7 @@ s=s[:i]+r'''  /* ---------- servidor: cuenta, amigos y mensajes ---------- */
       var b = document.createElement("button"); b.className = "btn"; b.textContent = "Entrar"; b.onclick = showLogin; l.appendChild(b); return;
     }
     if (!FR.length) { var e2 = document.createElement("p"); e2.className = "empty"; e2.textContent = "Todavía no agregaste a nadie. Escribí el usuario de un compañero arriba y tocá Agregar."; l.appendChild(e2); return; }
+    leagueBox(l);
     FR.forEach(function (f) {
       var b = document.createElement("button"), last = f.last, nw = isNew(f); b.className = "frow";
       var prev = last ? (last.from === ME ? "Vos: " : "") + (last.game ? "Juego: " + (byId[last.game] ? byId[last.game].name : "") : last.text) : "Tocá para chatear";
